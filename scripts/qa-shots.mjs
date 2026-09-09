@@ -34,10 +34,9 @@ async function run(name, ctxOpts, { fullPage = true, settle = 4500, scrollThroug
     scrollWidth: document.documentElement.scrollWidth,
     hero: document.documentElement.dataset.hero,
     motion: document.documentElement.dataset.motion,
-    notesMoved: [...document.querySelectorAll('.note')].filter((n) => /translate3d/.test(n.style.transform)).length,
-    canvas: !!document.querySelector('#hero-3d canvas'),
-    stopsOn: document.querySelectorAll('.stop.is-on').length,
-    firstCounter: document.querySelector('.counter__value')?.textContent,
+    preloaderGone: !document.querySelector('.preloader:not([hidden])'),
+    gameCanvas: !!document.querySelector('canvas.game__canvas'),
+    levelsIn: document.querySelectorAll('.level.is-in').length,
   }));
   console.log(name, JSON.stringify(metrics));
   await ctx.close();
@@ -45,36 +44,6 @@ async function run(name, ctxOpts, { fullPage = true, settle = 4500, scrollThroug
 
 await run('desktop', { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
 
-// interaction checks on desktop: fan the 3D stack, drag a note
-{
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  const page = await ctx.newPage();
-  page.on('pageerror', (e) => errors.push(`[interact] pageerror: ${e.message}`));
-  await page.goto(base, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(4500);
-  const stack = await page.locator('#hero-3d').boundingBox();
-  if (stack) { await page.mouse.move(stack.x + stack.width / 2, stack.y + stack.height / 2); await page.waitForTimeout(900); }
-  await page.screenshot({ path: `${out}/desktop-fan.png`, clip: { x: 700, y: 380, width: 740, height: 520 } });
-  const note = await page.locator('.note').first().boundingBox();
-  if (note) {
-    await page.mouse.move(note.x + note.width / 2, note.y + note.height / 2);
-    await page.mouse.down();
-    for (let i = 1; i <= 20; i++) { await page.mouse.move(note.x + note.width / 2 - i * 14, note.y + note.height / 2 - i * 18); await page.waitForTimeout(16); }
-    await page.screenshot({ path: `${out}/desktop-drag.png` });
-    await page.mouse.up();
-    await page.waitForTimeout(1500);
-    await page.screenshot({ path: `${out}/desktop-thrown.png` });
-  }
-  // demo card: hover preview, and the media links out to Screen Studio
-  await page.locator('#built').scrollIntoViewIfNeeded(); await page.waitForTimeout(700);
-  const media = page.locator('.card__media--video').first();
-  await media.hover(); await page.waitForTimeout(1400);
-  const previewing = await media.evaluate((el) => ({ cls: el.classList.contains('is-previewing'), playing: !el.querySelector('video').paused }));
-  await page.screenshot({ path: `${out}/desktop-card-hover.png`, clip: { x: 100, y: 120, width: 1240, height: 640 } });
-  const link = await media.evaluate((el) => ({ href: el.getAttribute('href'), target: el.getAttribute('target'), rel: el.getAttribute('rel') }));
-  console.log('interact', JSON.stringify({ stack: !!stack, note: !!note, previewing, link }));
-  await ctx.close();
-}
 await run('laptop', { viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 }, { fullPage: false, scrollThrough: false });
 await run('tablet', { ...devices['iPad (gen 7)'], viewport: { width: 810, height: 1080 } });
 await run('phone', { viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true }); // DPR 1: tall captures tile badly with smooth scroll at 2x

@@ -2,7 +2,7 @@
 import { writeFile, mkdir } from 'node:fs/promises';
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36';
-const url = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=Manrope:wght@400..800&family=Caveat:wght@500..700&display=swap';
+const url = 'https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Manrope:wght@400..800&display=swap';
 
 const css = await (await fetch(url, { headers: { 'User-Agent': UA } })).text();
 await mkdir('public/fonts', { recursive: true });

@@ -1,32 +1,29 @@
 import { renderAll, initCopyEmail } from './modules/render';
-import { initScroll } from './modules/scroll';
+import { initScroll, lenis } from './modules/scroll';
+import { runPreloader } from './modules/preloader';
+import { initHero } from './modules/hero-intro';
 import { initReveals } from './modules/reveal';
-import { initHeroIntro } from './modules/hero-intro';
-import { initTimeline } from './modules/timeline';
 import { initProjects } from './modules/projects';
-import { initCounters } from './modules/counters';
-import { richHero, hasWebGL, q } from './modules/prefs';
+import { initLevelMap } from './modules/levelmap';
+import { mountGame } from './game';
+import { richHero } from './modules/prefs';
 
 renderAll();
 initScroll();
-initProjects();
+
+const gameCtl = mountGame({ onPlay() { lenis?.stop(); }, onStop() { lenis?.start(); } });
+const goPlay = () => {
+  const target = document.getElementById('play')!;
+  if (lenis) lenis.scrollTo(target, { duration: 1 }); else target.scrollIntoView();
+  setTimeout(() => gameCtl.play(), lenis ? 1050 : 50);
+};
+const heroIntro = initHero(goPlay);
 initCopyEmail();
-initCounters();
-initTimeline();
 
-document.fonts.ready.then(() => {
-  initReveals();
-  initHeroIntro(() => {
-    if (richHero) import('./modules/hero-physics').then((m) => m.startPhysics()).catch(() => {});
-  });
-});
+document.fonts.ready.then(() => runPreloader().then(() => heroIntro?.()));
 
-if (richHero) {
-  import('./modules/cursor').then((m) => m.initCursor());
-  if (hasWebGL()) {
-    const go = () => import('./modules/hero-3d').then((m) => m.mount(q('#hero-3d'))).catch(() => {});
-    window.addEventListener('load', () => {
-      'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 800);
-    }, { once: true });
-  }
-}
+const later = () => {
+  initReveals(); initProjects(); initLevelMap();
+  if (richHero) { import('./modules/cursor').then((m) => m.initCursor()); import('./modules/magnetic').then((m) => m.initMagnetic()); }
+};
+window.addEventListener('load', () => ('requestIdleCallback' in window ? requestIdleCallback(later, { timeout: 1500 }) : setTimeout(later, 300)), { once: true });

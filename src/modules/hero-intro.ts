@@ -1,59 +1,26 @@
-// Page-load choreography for the hero, then hands off to the notes (physics or static bounce).
 import { gsap } from './scroll';
-import { q, qa, richHero, reducedMotion } from './prefs';
+import { q, qa, reducedMotion } from './prefs';
+import { mountIdle } from '../game/idle';
 
-function splitChars(word: HTMLElement) {
-  const text = word.textContent ?? '';
-  word.setAttribute('aria-hidden', 'true');
-  word.innerHTML = [...text].map((c) => `<span class="ch-mask"><span class="ch">${c}</span></span>`).join('');
-  return qa('.ch', word);
-}
-
-export function initHeroIntro(onNotes: () => void) {
-  const name = q('.hero__name');
-  const words = qa('.hero__name .word');
-  const tagline = qa('.hero__tagline .line-inner');
-  const meta = q('.hero__meta');
-  const cta = q('.hero__cta');
-  const hint = qa('.hero__hint');
-  const photo = q('.hero__photo-wrap');
-  const notes = qa('.note');
-
-  const heroEl = q('.hero');
-  if (reducedMotion) { heroEl.classList.add('is-ready'); onNotes(); return; }
-
-  // screen readers get one clean string; the animated letters are decorative
-  const sr = document.createElement('span');
-  sr.className = 'sr-only';
-  sr.textContent = words.map((w) => w.textContent).join(' ');
-  name.prepend(sr);
-
-  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-
-  if (richHero) {
-    const chars = words.flatMap(splitChars);
-    tl.from(chars, { yPercent: 115, duration: 1.05, stagger: 0.032 }, 0.05)
-      .from(tagline, { yPercent: 110, duration: 0.85, stagger: 0.1 }, 0.5)
-      .from(meta, { opacity: 0, y: 8, duration: 0.6 }, 0.55)
-      .from(photo, { y: 28, rotation: 3, duration: 1.1 }, 0.3)
-      .from(cta, { opacity: 0, y: 12, duration: 0.6 }, 0.95)
-      .from(hint, { opacity: 0, duration: 0.6 }, 1.6)
-      .add(onNotes, 0.8);
-    heroEl.classList.add('is-ready');
-  } else {
-    tl.from(name, { opacity: 0, y: 22, duration: 0.9 }, 0.05)
-      .from(tagline, { yPercent: 110, duration: 0.8, stagger: 0.1 }, 0.35)
-      .from(meta, { opacity: 0, y: 8, duration: 0.5 }, 0.4)
-      .from(photo, { y: 22, duration: 0.9 }, 0.4)
-      .from(cta, { opacity: 0, y: 12, duration: 0.6 }, 0.8)
-      .from(notes, { y: -320, rotation: 'random(-40, 40)', opacity: 0, ease: 'bounce.out', duration: 1.15, stagger: 0.07 }, 0.6)
-      .from(hint, { opacity: 0, duration: 0.6 }, 1.8)
-      .add(onNotes, 0.6);
-    heroEl.classList.add('is-ready');
-
-    // tap to wiggle
-    notes.forEach((n) => n.addEventListener('pointerdown', () => {
-      gsap.fromTo(n, { rotation: '+=0' }, { rotation: '+=9', duration: 0.12, yoyo: true, repeat: 3, ease: 'sine.inOut', overwrite: 'auto' });
-    }));
-  }
+export function initHero(onPlay: () => void) {
+  const hero = q('.hero'), words = qa('.hero__word'), meta = q('#hero-meta'), tag = q('#hero-tag'), cta = q('.hero__cta'), hint = q('#hero-hint'), hoop = q('.hoop');
+  if (!reducedMotion) mountIdle(q<HTMLCanvasElement>('#hero-idle'));
+  hint.addEventListener('click', onPlay);
+  window.addEventListener('keydown', (e) => {
+    if (e.code !== 'Space' || e.target !== document.body || document.documentElement.classList.contains('is-playing')) return;
+    if (hero.getBoundingClientRect().bottom > window.innerHeight * 0.5) { e.preventDefault(); onPlay(); }
+  });
+  if (reducedMotion) return;
+  gsap.set(words, { yPercent: 110 });
+  gsap.set([meta, tag, cta, hint], { opacity: 0, y: 12 });
+  gsap.set(hoop, { scale: 0.55 });
+  return () => {
+    gsap.timeline({ defaults: { ease: 'power4.out' } })
+      .to(words, { yPercent: 0, duration: 1.1, stagger: 0.12 }, 0.05)
+      .to(hoop, { scale: 1, duration: 1, ease: 'back.out(1.7)' }, 0.25)
+      .to(meta, { opacity: 1, y: 0, duration: 0.6 }, 0.4)
+      .to(tag, { opacity: 1, y: 0, duration: 0.7 }, 0.55)
+      .to(cta, { opacity: 1, y: 0, duration: 0.6 }, 0.75)
+      .to(hint, { opacity: 1, y: 0, duration: 0.6 }, 1.0);
+  };
 }

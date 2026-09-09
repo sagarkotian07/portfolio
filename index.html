@@ -1,32 +1,31 @@
 <!doctype html>
-<html lang="en" data-motion="full" data-hero="physics">
+<html lang="en" data-motion="full" data-preload="show">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sagar Kotian</title>
-  <meta name="description" content="First non-eng hire. I bring in the demand, keep the customers, and grade the AI's homework. Founder's Office, GTM and Customer Success at Superjoin, Bengaluru." />
-  <meta name="theme-color" content="#F7F3EC" />
+  <meta name="description" content="Sagar Kotian. Founder’s office at Superjoin, Bengaluru. I like the part of a startup where nothing has an owner yet. There is a ball game in here." />
+  <meta name="theme-color" content="#BFE3FF" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="https://sagar-kotian.vercel.app/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Sagar Kotian" />
-  <meta property="og:description" content="First non-eng hire. I bring in the demand, keep the customers, and grade the AI's homework." />
+  <meta property="og:description" content="Founder’s office at Superjoin, Bengaluru. I like the part of a startup where nothing has an owner yet. There is a ball game in here." />
   <meta property="og:url" content="https://sagar-kotian.vercel.app/" />
   <meta property="og:image" content="https://sagar-kotian.vercel.app/og.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/fredoka.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" as="image" fetchpriority="high" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" imagesizes="(max-width: 767px) min(72vw, 340px), 400px" />
+  <link rel="preload" as="image" fetchpriority="high" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w" imagesizes="(max-width: 899px) min(64vw, 300px), 380px" />
   <script>
     (function () {
       var d = document.documentElement;
       var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var fine = matchMedia('(pointer: fine)').matches && matchMedia('(hover: hover)').matches;
-      var small = matchMedia('(max-width: 767px)').matches;
       d.dataset.motion = rm ? 'reduced' : 'full';
-      d.dataset.hero = (!rm && fine && !small) ? 'physics' : 'static';
+      var seen = false; try { seen = !!sessionStorage.getItem('seen'); } catch (e) {}
+      d.dataset.preload = (rm || seen) ? 'skip' : 'show';
     })();
   </script>
   <link rel="stylesheet" href="/src/styles/tokens.css" />
@@ -38,88 +37,126 @@
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <div class="cursor" aria-hidden="true"><div class="cursor__ring"><span class="cursor__label"></span></div><div class="cursor__dot"></div></div>
+  <div class="cursor" aria-hidden="true"><div class="cursor__ball"><i></i><i></i></div><div class="cursor__label"></div></div>
+
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <canvas class="preloader__canvas" id="pre-canvas"></canvas>
+    <div class="preloader__rings" id="pre-rings"><i></i><i></i><i></i></div>
+  </div>
+
+  <header class="nav" id="nav">
+    <a class="nav__logo" href="#top" aria-label="Sagar Kotian, back to top">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#E8402F"/><circle cx="14" cy="16" r="4.2" fill="#fff"/><circle cx="26" cy="16" r="4.2" fill="#fff"/><circle cx="15" cy="17" r="2" fill="#14120F"/><circle cx="27" cy="17" r="2" fill="#14120F"/><path d="M14 26 Q20 31 26 26" stroke="#14120F" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <span>Sagar</span>
+    </a>
+    <nav class="nav__links" aria-label="Sections">
+      <a href="#play">Play</a><a href="#work">Work</a><a href="#built">Built</a><a href="#about">About</a><a href="#contact">Say hi</a>
+    </nav>
+    <a class="nav__resume" href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </header>
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-name">
-      <header class="nav wrap">
-        <a class="nav__logo" href="#top" aria-label="SK, back to top">SK</a>
-        <nav class="nav__links" aria-label="Sections">
-          <a href="#startups">Startups</a>
-          <a href="#built">Built</a>
-          <a href="#about">About</a>
-          <a href="#contact">Say hi</a>
-          <a href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
-        </nav>
-      </header>
-
-      <div class="hero__inner wrap">
-        <h1 class="hero__name" id="hero-name"><span class="word">Sagar</span><span class="word">Kotian</span></h1>
-
+      <div class="clouds" aria-hidden="true"><i class="cloud cloud--1"></i><i class="cloud cloud--2"></i><i class="cloud cloud--3"></i></div>
+      <div class="wrap hero__grid">
         <div class="hero__text">
-          <p class="hero__meta" id="hero-meta"></p>
-          <p class="hero__tagline" id="hero-tagline"></p>
+          <p class="hero__meta" id="hero-meta">Founder’s office · Superjoin · Bengaluru</p>
+          <h1 class="hero__name" id="hero-name">
+            <span class="hero__line"><span class="hero__word" id="hero-first">Sagar</span></span>
+            <span class="hero__line"><span class="hero__word hero__word--last" id="hero-last">Kotian</span></span>
+          </h1>
+          <p class="hero__tag" id="hero-tag">I like the part of a startup where nothing has an owner yet.</p>
           <div class="hero__cta">
-            <a class="btn" href="#built">See what I built <span aria-hidden="true">↓</span></a>
-            <a class="btn btn--ghost" href="#contact">Say hi</a>
+            <a class="btn btn--ball" data-magnetic href="#play" data-cursor="play">Play</a>
+            <a class="btn" data-magnetic id="hero-whatsapp" href="#" target="_blank" rel="noopener" data-cursor="open">Say hi on WhatsApp</a>
           </div>
-          <p class="hero__hint hero__hint--physics" aria-hidden="true">the notes are real. drag them.</p>
-          <p class="hero__hint hero__hint--static" aria-hidden="true">tap a note.</p>
+          <button class="hero__hint" id="hero-hint" type="button" data-cursor="play">press space to play</button>
         </div>
-
-        <figure class="hero__photo-wrap">
-          <picture class="hero__photo">
-            <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" sizes="(max-width: 767px) min(72vw, 340px), 400px" />
-            <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-640.webp 640w, /img/hero-800.webp 800w, /img/hero-1280.webp 1280w" sizes="(max-width: 767px) min(72vw, 340px), 400px" />
-            <img src="/img/hero.jpg" width="1279" height="1600" alt="Sagar Kotian in a dark blazer, smiling, standing in front of a wall of green ivy." fetchpriority="high" decoding="async" />
-          </picture>
-          <div class="hero__stack" id="hero-3d" data-cursor="fan" aria-hidden="true"></div>
+        <figure class="hero__photo">
+          <div class="hoop">
+            <picture>
+              <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w" sizes="(max-width: 899px) min(64vw, 300px), 380px" />
+              <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-640.webp 640w, /img/hero-800.webp 800w" sizes="(max-width: 899px) min(64vw, 300px), 380px" />
+              <img src="/img/hero.jpg" width="1279" height="1600" alt="Sagar Kotian in a dark blazer, smiling, in front of a wall of green ivy." fetchpriority="high" decoding="async" />
+            </picture>
+          </div>
         </figure>
       </div>
-
-      <ul class="notes" id="notes" aria-label="Quick facts"></ul>
+      <canvas class="hero__idle" id="hero-idle" aria-hidden="true"></canvas>
     </section>
 
-    <section class="section startups" id="startups" aria-labelledby="startups-h">
-      <div class="wrap">
-        <p class="eyebrow">before I graduated</p>
-        <h2 class="h2" id="startups-h" data-reveal>Three startups, one degree.</h2>
-        <p class="lede" data-reveal>Chief of staff, then founder’s office twice. All of it between lectures I was technically supposed to be attending.</p>
-      </div>
-      <div class="timeline wrap" id="timeline">
-        <svg class="timeline__svg" aria-hidden="true" preserveAspectRatio="none"><path class="timeline__path" pathLength="1" d="M0 0" /></svg>
-        <ol class="stops" id="stops"></ol>
+    <section class="game" id="play" aria-labelledby="game-title">
+      <div class="game__stage" id="game-stage">
+        <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer. Arrow keys to roll, space to jump."></canvas>
+        <div class="game__hud" id="hud" aria-live="off">
+          <span class="hud__rings"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="#F5B400" stroke-width="4"/></svg><b id="hud-rings">0/0</b></span>
+          <span class="hud__lives" id="hud-lives" role="img" aria-label="Lives"></span>
+          <span class="hud__time"><b id="hud-time">0:00</b></span>
+        </div>
+        <div class="game__touch" id="game-touch" aria-hidden="true">
+          <div class="touch__pad"><button type="button" data-key="left" aria-label="Roll left">◀</button><button type="button" data-key="right" aria-label="Roll right">▶</button></div>
+          <button type="button" class="touch__jump" data-key="jump" aria-label="Jump"><i></i></button>
+        </div>
+        <div class="game__overlay" id="game-start">
+          <p class="section__label">Play</p>
+          <h2 class="game__title" id="game-title"></h2>
+          <p class="game__intro" id="game-intro"></p>
+          <button class="btn btn--ball btn--big" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
+          <p class="game__controls" id="game-controls"></p>
+        </div>
+        <div class="game__overlay" id="game-end" hidden>
+          <p class="section__label" id="game-end-label"></p>
+          <h2 class="game__title game__title--sm" id="game-end-title"></h2>
+          <p class="game__intro" id="game-end-line"></p>
+          <div class="game__actions">
+            <button class="btn btn--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
+            <a class="btn" href="#" id="game-sayhi" target="_blank" rel="noopener" data-magnetic data-cursor="open">Say hi on WhatsApp</a>
+          </div>
+        </div>
+        <button class="game__leave" id="game-leave" type="button" hidden>esc · leave</button>
       </div>
     </section>
 
-    <section class="section built" id="built" aria-labelledby="built-h">
+    <div class="hill" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,10 480,130 720,70 C960,10 1200,130 1440,70 L1440,120 L0,120 Z" fill="#3E8F33"/><path d="M0,86 C240,30 480,140 720,86 C960,30 1200,140 1440,86 L1440,120 L0,120 Z" fill="#5FBF4B"/></svg></div>
+
+    <section class="work" id="work" aria-labelledby="work-h">
       <div class="wrap">
-        <p class="eyebrow">things I built</p>
-        <h2 class="h2" id="built-h" data-reveal>Not an engineer. Builds anyway.</h2>
-        <p class="lede" data-reveal>Most of these exist because I got tired of waiting for someone else to build them.</p>
+        <p class="section__label">Work</p>
+        <h2 class="h2" id="work-h" data-reveal>Three startups,<br>one degree.</h2>
+        <div class="levelmap" id="levelmap">
+          <svg class="levelmap__svg" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
+            <path class="levelmap__hills" d="M0,260 L0,200 C120,120 220,120 340,200 C440,270 560,270 660,190 C760,110 860,110 960,190 C1060,255 1140,255 1200,215 L1200,260 Z"/>
+            <path class="levelmap__path" pathLength="1" d="M60,196 C160,120 240,120 320,196 C420,262 540,262 640,186 C740,110 840,110 940,186 C1030,246 1110,246 1170,214"/>
+          </svg>
+          <ol class="levels" id="levels"></ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="built" id="built" aria-labelledby="built-h">
+      <div class="wrap">
+        <p class="section__label">Built</p>
+        <h2 class="h2" id="built-h" data-reveal>Things I<br>made.</h2>
         <div class="cards" id="cards"></div>
       </div>
     </section>
 
-    <section class="section numbers" id="numbers" aria-label="Numbers">
-      <div class="wrap"><div class="numbers__band"><ul class="counters" id="counters"></ul></div></div>
-    </section>
+    <div class="hill hill--flip" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,10 480,130 720,70 C960,10 1200,130 1440,70 L1440,120 L0,120 Z" fill="#3E8F33"/><path d="M0,86 C240,30 480,140 720,86 C960,30 1200,140 1440,86 L1440,120 L0,120 Z" fill="#5FBF4B"/></svg></div>
 
-    <section class="section about" id="about" aria-labelledby="about-h">
+    <section class="about" id="about" aria-labelledby="about-h">
       <div class="wrap about__grid">
         <div class="about__text">
-          <p class="eyebrow">how I work</p>
-          <h2 class="h2" id="about-h" data-reveal>Whatever is on fire this week.</h2>
+          <p class="section__label">About</p>
+          <h2 class="h2" id="about-h" data-reveal>A bit<br>about me.</h2>
           <ul class="about__lines" id="about-lines"></ul>
         </div>
         <div class="about__photos">
           <figure class="about__wall" data-fade>
             <picture>
-              <source type="image/avif" srcset="/img/wall-720.avif 720w, /img/wall-1200.avif 1200w, /img/wall-1686.avif 1686w" sizes="(max-width: 767px) 92vw, 540px" />
-              <source type="image/webp" srcset="/img/wall-720.webp 720w, /img/wall-1200.webp 1200w, /img/wall-1686.webp 1686w" sizes="(max-width: 767px) 92vw, 540px" />
+              <source type="image/avif" srcset="/img/wall-720.avif 720w, /img/wall-1200.avif 1200w" sizes="(max-width: 899px) 92vw, 520px" />
+              <source type="image/webp" srcset="/img/wall-720.webp 720w, /img/wall-1200.webp 1200w" sizes="(max-width: 899px) 92vw, 520px" />
               <img src="/img/wall.jpg" width="1686" height="868" alt="Sagar at his desk, glasses on, with a whiteboard of sticky notes behind him." loading="lazy" decoding="async" />
             </picture>
-            <figcaption>the wall this site is named after</figcaption>
           </figure>
           <figure class="about__casual" data-fade>
             <picture>
@@ -132,21 +169,20 @@
       </div>
     </section>
 
-    <section class="section contact" id="contact" aria-labelledby="contact-h">
+    <section class="sayhi" id="contact" aria-labelledby="sayhi-h">
       <div class="wrap">
-        <p class="eyebrow">that’s the whole wall</p>
-        <h2 class="contact__h" id="contact-h" data-reveal>Say <em>hi.</em></h2>
-        <ul class="contact__links" id="contact-links"></ul>
-        <p class="contact__line" id="contact-line"></p>
+        <p class="section__label">Say hi</p>
+        <h2 class="h2 sayhi__h" id="sayhi-h" data-reveal>Say hi.</h2>
+        <ul class="sayhi__links" id="sayhi-links"></ul>
+        <p class="sayhi__line">Coffee in Bengaluru: yes.</p>
       </div>
     </section>
   </main>
 
   <footer class="footer wrap">
-    <p id="footer-line"></p>
+    <p>Built by hand. The ball is an homage, not a copy.</p>
     <p>© 2026 Sagar Kotian</p>
   </footer>
-
 
   <script type="module" src="/src/main.ts"></script>
 </body>
