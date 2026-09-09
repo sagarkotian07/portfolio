@@ -107,7 +107,7 @@ export function drawBackdrop(ctx: CanvasRenderingContext2D, L: Level, camX: numb
   }
 }
 
-const isBody = (v: number) => v === 1 || v === 3 || v === 5;
+const isBody = (v: number) => v === 1 || v === 3 || v === 5 || v === 6;
 export function drawTiles(ctx: CanvasRenderingContext2D, L: Level, solid: Uint8Array, x0: number, x1: number, y0: number, y1: number) {
   const at = (x: number, y: number) => (x < 0 || x >= L.w || y < 0 || y >= L.h ? 0 : solid[y * L.w + x]);
   const { loops, caps } = contours(L, solid);
@@ -145,6 +145,12 @@ export function drawTiles(ctx: CanvasRenderingContext2D, L: Level, solid: Uint8A
       x += len;
     }
   }
+}
+/** Secret passages are painted over the ball, nearly opaque, so the ball only shows faintly while inside. */
+export function drawSecret(ctx: CanvasRenderingContext2D, L: Level, solid: Uint8Array, x0: number, x1: number, y0: number, y1: number) {
+  ctx.fillStyle = C.body; ctx.globalAlpha = 0.86;
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (x >= 0 && y >= 0 && x < L.w && y < L.h && solid[y * L.w + x] === 6) ctx.fillRect(x * T - 1, y * T - 1, T + 2, T + 2);
+  ctx.globalAlpha = 1;
 }
 export function ropeTopFn(L: Level, solid: Uint8Array, row: number) {
   return (col: number) => { for (let yy = row - 1; yy >= Math.max(0, row - 10); yy--) { const v = yy * L.w + col >= 0 && col < L.w ? solid[yy * L.w + col] : 0; if (isBody(v)) return (yy + 1) * T - 4; } return row * T - 10 * T; };

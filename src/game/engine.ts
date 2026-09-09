@@ -2,7 +2,7 @@
 import { T, FORMS, type Form, type InputState, type Level, type DebugInfo, type Waypoint, type Platform } from './types';
 import { parseLevel, PARAMS } from './level';
 import { invalidateContours } from './contour';
-import { ropeTopFn, drawBall, drawSky, drawBackdrop, drawTiles, drawSpike, drawEgg, drawSpring, drawButton, drawGate, drawPlatform, drawFan, drawCheckpoint, drawPad, drawExit, drawDecor, C } from './draw';
+import { ropeTopFn, drawSecret, drawBall, drawSky, drawBackdrop, drawTiles, drawSpike, drawEgg, drawSpring, drawButton, drawGate, drawPlatform, drawFan, drawCheckpoint, drawPad, drawExit, drawDecor, C } from './draw';
 
 interface Particle { x: number; y: number; vx: number; vy: number; life: number; c: string; r: number }
 export interface Hooks { onHud(eggs: number, total: number, time: number): void; onWin(eggs: number, total: number, time: number): void; onDeath(): void }
@@ -233,7 +233,7 @@ export class Game {
       for (const p of L.platforms) if (this.overlaps(p, hb) && this.prevBottom <= p.y + Math.abs(p.vy) * 0.04 + 3) { this.y = p.y - hb; res = 'floor'; this.ridingOn = p; }
       for (const g of L.gates) { const gh = (g.bottom - g.top + 1) * T; const box = { x: g.cx * T + 8, y: g.top * T - gh * g.open, w: T - 16, h: gh }; if (g.open < 1 && this.overlaps(box, hb) && this.prevBottom <= box.y + 2) { this.y = box.y - hb; res = 'floor'; } }
       // springs and buttons live in their tiles; touching from above triggers them
-      for (const s of L.springs) if (this.overlapsTile(s.cx, s.cy, hb) && this.vy >= 0) { const jump = Math.sqrt(2 * 2200 * F.grav * PARAMS.springTiles * T); this.vy = -jump; this.jumping = false; s.t = 0; this.y = s.cy * T + T - hb - 6; this.sx = 0.75; this.sy = 1.3; this.grounded = false; return null; }
+      for (const s of L.springs) if (this.overlapsTile(s.cx, s.cy, hb) && this.vy >= 0) { const jump = Math.sqrt(2 * 2200 * F.grav * (s.power ?? PARAMS.springTiles) * T); this.vy = -jump; this.jumping = false; s.t = 0; this.y = s.cy * T + T - hb - 6; this.sx = 0.75; this.sy = 1.3; this.grounded = false; return null; }
       for (const b of L.buttons) if (!b.pressed && this.overlapsTile(b.cx, b.cy, hb)) { b.pressed = true; const g = L.gates[b.gate]; if (g && g.open === 0) g.open = 0.001; this.burst((b.cx + 0.5) * T, b.cy * T + T - 10, C.grass, 8); }
     } else {
       const cy = Math.floor((this.y - hb) / T);
@@ -309,6 +309,7 @@ export class Game {
       if (gy >= 0) { const dist = Math.max(0, gy - (this.y + gr)), k = Math.max(0.25, 1 - dist / (8 * T)); ctx.fillStyle = `rgba(20,18,15,${0.14 * k})`; ctx.beginPath(); ctx.ellipse(this.x, gy + 2, gr * 0.9 * this.sx * k, 4 * k, 0, 0, Math.PI * 2); ctx.fill(); }
       drawBall(ctx, this.x, this.y, FORMS[this.form].r, this.form, this.sx, this.sy, this.eyeDir * (0.5 + Math.min(1, Math.abs(this.vx) / 300)), this.blink, this.t);
     }
+    drawSecret(ctx, L, this.solid, x0, x1, y0, y1);
     for (const p of this.parts) { ctx.globalAlpha = Math.min(1, p.life * 2.5); ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); }
     ctx.globalAlpha = 1;
   }

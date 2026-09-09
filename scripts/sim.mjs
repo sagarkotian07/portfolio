@@ -16,19 +16,20 @@ const { Game } = await import(pathToFileURL(simDir + '/engine.bundle.mjs').href)
 const lvl = await build({ entryPoints: [root + '/src/game/level.ts'], outfile: simDir + '/level.bundle.mjs' }).then(() => import(pathToFileURL(simDir + '/level.bundle.mjs').href));
 const maxS = Number(process.argv[2] ?? 200);
 const g = new Game(canvas, { onHud() {}, onWin() {}, onDeath() {} }, () => false);
-g.start(); g.autopilot(lvl.WAYPOINTS);
+const WPS = process.argv.includes('--hidden') ? lvl.HIDDEN_WAYPOINTS : lvl.WAYPOINTS;
+g.start(); g.autopilot(WPS);
 const trace = []; let lastWp = -1;
 for (let i = 0; i < 60 * maxS; i++) {
   g.tick(1 / 60);
   const d = g.debug();
   if (i % 15 === 0 || d.wp !== lastWp) trace.push({ t: +(i / 60).toFixed(2), x: +(d.x / 40).toFixed(2), y: +(d.y / 40).toFixed(2), vx: Math.round(d.vx), vy: Math.round(d.vy), g: d.grounded ? 1 : 0, d: d.deaths, e: d.eggs, wp: d.wp });
-  if (d.wp !== lastWp && lvl.WAYPOINTS[d.wp]?.step && process.argv.includes('--steps')) console.log(`step ${d.wp} at t=${(i / 60).toFixed(2)} x=${(d.x / 40).toFixed(2)} y=${(d.y / 40).toFixed(2)} eggs=${d.eggs} deaths=${d.deaths}`);
+  if (d.wp !== lastWp && WPS[d.wp]?.step && process.argv.includes('--steps')) console.log(`step ${d.wp} at t=${(i / 60).toFixed(2)} x=${(d.x / 40).toFixed(2)} y=${(d.y / 40).toFixed(2)} eggs=${d.eggs} deaths=${d.deaths}`);
   lastWp = d.wp;
   if (g.state === 'won') break;
 }
 const d = g.debug();
 console.log('eggs left:', g.level.eggs.filter((e) => !e.taken).map((e) => `${e.x / 40 - 0.5},${e.y / 40 - 0.5}`).join(' '));
-console.log(JSON.stringify({ state: g.state, deaths: d.deaths, eggs: d.eggs, of: g.level.eggTotal, x: +(d.x / 40).toFixed(2), y: +(d.y / 40).toFixed(2), wp: d.wp, wps: lvl.WAYPOINTS.length, t: +(g.time).toFixed(1) }));
-if (g.state !== 'won') { let k = trace.length - 1; while (k > 0 && Math.abs(trace[k].x - trace[k - 1].x) < 0.01 && Math.abs(trace[k].y - trace[k - 1].y) < 0.01) k--; console.log('stall from', trace[k].t, 's; waypoint', d.wp, JSON.stringify(lvl.WAYPOINTS[d.wp] ?? null, (k, v) => typeof v === 'function' ? '[fn]' : v)); console.log(trace.slice(Math.max(0, k - 12), k + 2).map((r) => JSON.stringify(r)).join('\n')); }
+console.log(JSON.stringify({ state: g.state, deaths: d.deaths, eggs: d.eggs, of: g.level.eggTotal, x: +(d.x / 40).toFixed(2), y: +(d.y / 40).toFixed(2), wp: d.wp, wps: WPS.length, t: +(g.time).toFixed(1) }));
+if (g.state !== 'won') { let k = trace.length - 1; while (k > 0 && Math.abs(trace[k].x - trace[k - 1].x) < 0.01 && Math.abs(trace[k].y - trace[k - 1].y) < 0.01) k--; console.log('stall from', trace[k].t, 's; waypoint', d.wp, JSON.stringify(WPS[d.wp] ?? null, (k, v) => typeof v === 'function' ? '[fn]' : v)); console.log(trace.slice(Math.max(0, k - 12), k + 2).map((r) => JSON.stringify(r)).join('\n')); }
 const win = process.argv.find((a) => a.startsWith('--from=')); if (win) { const [f, t] = win.slice(7).split(':').map(Number); console.log(trace.filter((r) => r.t >= f && r.t <= t).map((r) => JSON.stringify(r)).join('\n')); }
 if (process.argv.includes('--deaths')) console.log('deaths trace:', JSON.stringify(trace.filter((r, i, a) => i && r.d !== a[i - 1].d)));

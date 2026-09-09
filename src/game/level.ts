@@ -15,7 +15,7 @@ const ledge = (row: number, c0: number, c1: number) => rect(c0, c1, row, row, '#
 rect(0, W - 1, 61, 63, '#'); rect(14, 17, 61, 62, ' '); for (let c = 14; c <= 17; c++) put(c, 62, '^');
 // the two trunks: two tiles thick with a third column that comes and goes, so the sides wave instead of running straight
 rect(0, 1, 6, 60, 'T'); rect(42, 43, 0, 60, 'T');
-const WAIST_A = [[9, 11], [17, 24], [29, 31], [35, 38], [42, 43], [48, 51], [55, 57]], WAIST_B = [[2, 6], [13, 14], [18, 19], [24, 28], [33, 36], [42, 47], [53, 55]];
+const WAIST_A = [[9, 11], [17, 24], [29, 31], [35, 38], [42, 43], [55, 59]], WAIST_B = [[2, 6], [13, 14], [18, 19], [24, 28], [33, 36], [42, 47], [53, 55]];
 for (let r = 6; r <= 60; r++) if (!WAIST_A.some(([a, b]) => r >= a && r <= b)) put(2, r, 'T');
 for (let r = 0; r <= 60; r++) if (!WAIST_B.some(([a, b]) => r >= a && r <= b)) put(41, r, 'T');
 // stations, bottom to top (planks are three tiles wide so the ball has room to stop)
@@ -53,8 +53,11 @@ rect(27, 28, 42, 45, 'T'); rect(26, 27, 46, 49, 'T');   // under IS, an S bend
 rect(28, 29, 24, 27, 'T'); rect(27, 28, 28, 30, 'T');   // under L10
 rect(12, 13, 16, 17, 'T'); rect(11, 12, 18, 19, 'T');   // under L13
 rect(19, 20, 8, 9, 'T');                                // under L16
+// the hidden path: the notch by the start is the way in, a strong vine spring on its floor fires the ball up a secret shaft inside the trunk and out beside the first flag
+for (let r = 44; r <= 54; r++) put(2, r, 'h');
 // start, springs, goal
-put(4, 60, 'P'); put(19, 52, 'S'); put(3, 32, 'S'); put(6, 4, 'E');
+put(4, 60, 'P'); put(19, 52, 'S'); put(3, 32, 'S'); put(2, 59, 'S'); put(6, 4, 'E');
+const SPRING_POWER: Record<string, number> = { '2,59': 16.6 };
 // checkpoints: signposts on the branches, arrow in the route direction
 const CPS: [number, number, Dir][] = [[28, 58, 'right'], [37, 56, 'left'], [21, 52, 'left'], [6, 44, 'right'], [25, 40, 'right'], [21, 34, 'left'], [8, 32, 'left'], [16, 24, 'right'], [37, 20, 'left'], [13, 14, 'right'], [36, 10, 'left']];
 for (const [c, r] of CPS) put(c, r, 'C');
@@ -63,7 +66,7 @@ const EGGS: [number, number][] = [[8, 60], [15, 57], [16, 57], [30, 58], [29, 58
 for (const [c, r] of EGGS) put(c, r, 'o');
 // decor
 const DECOR: [number, number, string][] = [
-  [2, 60, 'f'], [6, 60, 'r'], [10, 60, 'b'], [20, 60, 'w'], [24, 60, 'b'], [30, 60, 'b'], [36, 60, 'b'], [38, 60, 'b'],
+  [2, 60, 'f'], [10, 60, 'b'], [20, 60, 'w'], [24, 60, 'b'], [30, 60, 'b'], [36, 60, 'b'], [38, 60, 'b'],
   [39, 56, 'f'], [36, 56, 'b'], [5, 44, 'f'], [13, 44, 'b'], [11, 44, 'w'], [8, 44, 'b'], [28, 40, 'b'], [35, 38, 'b'], [39, 38, 'f'], [36, 38, 'w'],
   [23, 34, 'f'], [7, 32, 'b'], [14, 24, 'f'], [18, 24, 'b'], [15, 24, 'b'], [28, 22, 'b'], [25, 22, 'w'], [39, 20, 'f'], [35, 20, 'b'], [22, 16, 'b'], [19, 16, 'b'], [12, 14, 'w'], [11, 14, 'b'],
   [24, 12, 'b'], [21, 12, 'w'], [34, 10, 'b'], [31, 10, 'f'], [19, 6, 'b'], [20, 6, 'b'], [3, 4, 'b'], [9, 4, 'w'], [12, 4, 'b'], [14, 4, 'w'],
@@ -89,7 +92,8 @@ export function parseLevel(): Level {
       case '-': L.solid[i] = 2; break;
       case '^': case 'v': case '}': case '{': L.spikes.push({ cx: x, cy: y, dir: dirOf[ch] }); break;
       case 'o': L.eggs.push({ x: (x + 0.5) * T, y: (y + 0.5) * T, taken: false, t: (seed % 600) / 100 }); break;
-      case 'S': L.springs.push({ cx: x, cy: y, t: 1 }); break;
+      case 'h': L.solid[i] = 6; break;
+      case 'S': L.springs.push({ cx: x, cy: y, t: 1, power: SPRING_POWER[x + ',' + y] }); break;
       case 'C': { const cp = CPS.find(([c, r]) => c === x && r === y); L.checkpoints.push({ cx: x, cy: y, hit: false, dir: cp?.[2] ?? 'up' }); break; }
       case 'E': L.exit = { cx: x, cy: y }; break;
       case 'P': L.start = { cx: x, cy: y }; break;
@@ -170,3 +174,13 @@ export function buildWaypoints(route: Step[]): Waypoint[] {
   return out;
 }
 export const WAYPOINTS = buildWaypoints(ROUTE);
+/** The hidden path from the start: hop into the notch by the trunk, ride the vine up the shaft, roll out beside the first flag. */
+export const HIDDEN_WAYPOINTS: Waypoint[] = [
+  { act: 'left', step: true, home: 61 },
+  { col: 3.6, dir: 'left', row: 60, act: 'jump', hold: 0.5 },
+  { act: 'wait', until: (d) => d.vy < -1000 },
+  { act: 'wait', until: (d) => d.y < 45 * T },
+  { act: 'right' },
+  { act: 'wait', until: onRow(45) },
+  { act: 'stop' }, { act: 'wait', until: still },
+];

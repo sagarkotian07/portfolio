@@ -10,7 +10,7 @@ export interface InputState { left: boolean; right: boolean; jumpPressed: boolea
 export type Dir = 'up' | 'down' | 'left' | 'right';
 export interface Spike { cx: number; cy: number; dir: Dir }
 export interface Egg { x: number; y: number; taken: boolean; t: number }
-export interface Spring { cx: number; cy: number; t: number }
+export interface Spring { cx: number; cy: number; t: number; power?: number }
 export interface Button { cx: number; cy: number; pressed: boolean; gate: number }
 export interface Gate { cx: number; top: number; bottom: number; open: number }
 export interface Platform { x: number; y: number; w: number; h: number; axis: 'x' | 'y'; min: number; max: number; dir: number; speed: number; vx: number; vy: number }
@@ -19,7 +19,7 @@ export interface Checkpoint { cx: number; cy: number; hit: boolean; dir: Dir }
 export interface Pad { cx: number; cy: number; form: Form }
 export type DecorKind = 'bush' | 'flower' | 'whiteflower' | 'sign' | 'island' | 'stalk';
 export interface Decor { kind: DecorKind; cx: number; cy: number; dir?: Dir; seed: number }
-/** solid codes: 0 empty, 1 grass block, 2 plank (one-way), 3 cracked, 4 housing, 5 trunk */
+/** solid codes: 0 empty, 1 grass block, 2 plank (one-way), 3 cracked, 4 housing, 5 trunk, 6 secret passage (drawn as trunk, no collision) */
 export interface Level {
   w: number; h: number; solid: Uint8Array;
   spikes: Spike[]; eggs: Egg[]; springs: Spring[]; buttons: Button[]; gates: Gate[]; platforms: Platform[]; fans: Fan[];

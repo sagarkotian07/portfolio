@@ -6,7 +6,7 @@ export interface Loop { pts: Pt[]; minX: number; minY: number; maxX: number; max
 export interface Cap { x0: number; x1: number; y: number }
 export interface Contours { loops: Loop[]; caps: Cap[] }
 
-const isBody = (v: number) => v === 1 || v === 3 || v === 5;
+const isBody = (v: number) => v === 1 || v === 3 || v === 5 || v === 6;
 const cache = new WeakMap<Uint8Array, Contours>();
 export function invalidateContours(solid: Uint8Array) { cache.delete(solid); }
 
