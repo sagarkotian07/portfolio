@@ -1,7 +1,7 @@
 import { gsap, ScrollTrigger } from './scroll';
 import { q, qa } from './prefs';
 
-/** The ball rolls along the hill path from Level 01 to Level 03 as the page scrolls through the map. */
+/** The ball rolls along the hill path from the first card to the last as the page scrolls through the map. */
 export function initLevelMap() {
   const map = q('#levelmap'), svg = map.querySelector<SVGSVGElement>('.levelmap__svg')!, path = map.querySelector<SVGPathElement>('.levelmap__path')!, ball = map.querySelector<HTMLElement>('.levelmap__ball')!, levels = qa('.level', map);
   const len = path.getTotalLength(), R = 22;

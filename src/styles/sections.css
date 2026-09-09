@@ -62,14 +62,12 @@ html[data-motion="full"] .levelmap__path { stroke-dashoffset: 1; }
 .levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 28px); margin-top: -10px; }
 .level { background: var(--cloud); border-radius: var(--radius); padding: 22px 22px 24px; box-shadow: var(--shadow); opacity: 0; transform: translateY(18px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .level.is-in { opacity: 1; transform: none; }
-.level__flag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 700; color: var(--ball-2); font-size: var(--step-0); }
-.level__flag::before { content: ''; width: 12px; height: 14px; background: var(--ball); clip-path: polygon(0 0, 100% 25%, 0 50%); }
-.level__org { font-family: var(--font-display); font-weight: 700; font-size: var(--step-2); line-height: 1.05; margin-top: 10px; }
+.level__org { font-family: var(--font-display); font-weight: 700; font-size: var(--step-2); line-height: 1.05; }
 .level__link { display: inline-flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; border-radius: 12px; }
 .level__link:hover .level__arrow, .level__link:focus-visible .level__arrow { transform: translate(3px, -3px); color: var(--ball); }
 .level__logo { width: 36px; height: 36px; border-radius: 10px; background: #fff; box-shadow: inset 0 0 0 1px rgba(20,18,15,0.12); padding: 4px; object-fit: contain; flex: none; }
 .level__arrow { font-size: 0.6em; color: var(--ink-3); transition: transform 0.25s var(--ease), color 0.25s var(--ease); margin-left: -2px; }
-.level__role { font-weight: 600; color: var(--ink-2); margin-top: 4px; }
+.level__role { font-weight: 600; color: var(--ink-2); margin-top: 12px; }
 .level__dates { font-size: var(--step--1); color: var(--ink-3); font-weight: 600; margin-top: 2px; }
 .level__line { margin-top: 14px; color: var(--ink); }
 @media (max-width: 899px) { .levels { grid-template-columns: 1fr; } .levelmap__svg { display: none; } .levelmap__ball { display: none; } .levels { margin-top: 0; } }
