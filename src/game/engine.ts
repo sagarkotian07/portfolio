@@ -1,11 +1,12 @@
 // Bounce: an original ball platformer. Pure tick(dt) so tests can drive it without frames.
 import { T, FORMS, type Form, type InputState, type Level, type DebugInfo, type Waypoint, type Platform } from './types';
 import { parseLevel, PARAMS } from './level';
-import { drawBall, drawSky, drawTiles, drawSpike, drawRing, drawSpring, drawButton, drawGate, drawPlatform, drawFan, drawCheckpoint, drawPad, drawExit, C } from './draw';
+import { invalidateContours } from './contour';
+import { ropeTopFn, drawBall, drawSky, drawBackdrop, drawTiles, drawSpike, drawEgg, drawSpring, drawButton, drawGate, drawPlatform, drawFan, drawCheckpoint, drawPad, drawExit, drawDecor, C } from './draw';
 
 interface Particle { x: number; y: number; vx: number; vy: number; life: number; c: string; r: number }
-export interface Hooks { onHud(rings: number, total: number, lives: number, time: number): void; onWin(rings: number, total: number, time: number): void; onOver(): void; onDeath(): void }
-export type State = 'idle' | 'running' | 'dead' | 'won' | 'over';
+export interface Hooks { onHud(eggs: number, total: number, time: number): void; onWin(eggs: number, total: number, time: number): void; onDeath(): void }
+export type State = 'idle' | 'running' | 'dead' | 'won';
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 export class Game {
@@ -15,12 +16,12 @@ export class Game {
   form: Form = 'normal';
   x = 0; y = 0; vx = 0; vy = 0; grounded = false; private ridingOn: Platform | null = null; private prevBottom = 0;
   private coyote = 0; private buffer = 0; private jumpHeld = false; private jumping = false;
-  lives = 3; time = 0; rings = 0; private t = 0;
+  deaths = 0; time = 0; eggs = 0; private t = 0; private cssW = 800; private cssH = 440; private baseScale = 1; private zoom = 1;
   private cx = 0; private cy = 0; private vw = 0; private vh = 0; private scale = 1; private dpr = 1;
   private checkpoint = { x: 0, y: 0 };
   private sx = 1; private sy = 1; private blink = 0; private blinkT = 2; private eyeDir = 1;
   private parts: Particle[] = []; private deadT = 0; private shake = 0;
-  private wps: Waypoint[] = []; private wpi = 0; private holdT = 0; private hopping = false; private afterWait = false;
+  private wps: Waypoint[] = []; private wpi = 0; private holdT = 0; private afterWait = false;
   private raf = 0; private last = 0; private visible = false;
   readonly input: InputState = { left: false, right: false, jumpPressed: false, jumpHeld: false };
 
@@ -37,15 +38,15 @@ export class Game {
   // ---------- lifecycle ----------
   start() {
     this.solid = new Uint8Array(this.level.solid);
-    for (const r of this.level.rings) r.taken = false;
+    for (const e of this.level.eggs) e.taken = false;
     for (const b of this.level.buttons) b.pressed = false;
     for (const g of this.level.gates) g.open = 0;
-    for (const c of this.level.checkpoints) c.hit = false;
+    this.level.checkpoints.forEach((c, i) => (c.hit = i === 0));
     for (const p of this.level.platforms) { if (p.axis === 'x') { p.x = p.min; p.dir = 1; } else { p.y = p.max; p.dir = -1; } }
-    this.form = 'normal'; this.lives = 3; this.time = 0; this.rings = 0; this.parts = [];
+    this.form = 'normal'; this.deaths = 0; this.time = 0; this.eggs = 0; this.parts = [];
     this.checkpoint = { x: (this.level.start.cx + 0.5) * T, y: (this.level.start.cy + 0.5) * T };
-    this.resetBall(true); this.state = 'running'; this.wpi = 0; this.afterWait = false; this.holdT = 0; this.hopping = false;
-    this.hooks.onHud(0, this.level.ringTotal, this.lives, 0);
+    this.resetBall(true); this.state = 'running'; this.wpi = 0; this.afterWait = false; this.holdT = 0;
+    this.hooks.onHud(0, this.level.eggTotal, 0);
   }
   private resetBall(snapCam = false) {
     this.x = this.checkpoint.x; this.y = this.checkpoint.y + T / 2 - FORMS[this.form].r; this.vx = 0; this.vy = 0; this.grounded = false; this.ridingOn = null;
@@ -54,22 +55,26 @@ export class Game {
   leave() { this.state = 'idle'; }
   private rewindRoute() {
     if (!this.wps.length) return;
-    const inp = this.input; inp.left = inp.right = inp.jumpHeld = inp.jumpPressed = false;
-    this.holdT = 0; this.hopping = false; this.afterWait = false;
-    let i = 0; while (i < this.wps.length && this.wps[i].col * T <= this.checkpoint.x + 4) i++;
-    this.wpi = Math.max(0, i - 1); // re-run the last action before the checkpoint (usually a 'run')
+    const cpRow = Math.round(this.checkpoint.y / T - 0.5) + 1; // the flag sits in the cell above its platform
+    const i = this.wps.findIndex((w) => w.step && w.home === cpRow);
+    this.wpi = i < 0 ? 0 : i; this.afterWait = false; this.holdT = 0;
+    this.input.left = this.input.right = this.input.jumpHeld = false;
   }
-  autopilot(wps: Waypoint[]) { this.wps = wps.map((w) => ({ ...w, col: (this.level.chunkOffsets[w.chunk] + w.col) })); this.wpi = 0; }
+
+  autopilot(wps: Waypoint[]) { this.wps = wps.slice(); this.wpi = 0; }
   teleport(x: number, y: number) { this.x = x; this.y = y; this.vx = 0; this.vy = 0; }
 
   private resize() {
     const r = this.canvas.getBoundingClientRect();
     this.dpr = Math.min(devicePixelRatio || 1, 2);
     this.canvas.width = Math.round(r.width * this.dpr); this.canvas.height = Math.round(r.height * this.dpr);
-    this.scale = this.phone() ? Math.min(r.height / (11 * T), r.width / (9 * T)) : r.height / (11 * T);
-    this.vw = r.width / this.scale; this.vh = r.height / this.scale;
+    this.cssW = r.width; this.cssH = r.height;
+    this.baseScale = this.phone() ? Math.min(Math.max(r.width / (6.25 * T), r.height / (13 * T)), r.height / (9 * T)) : r.height / (11 * T);
+    this.applyZoom();
     this.clampCam();
   }
+  /** The view pulls back a little during a spring flight so the landing is on screen. */
+  private applyZoom() { this.scale = this.baseScale * this.zoom; this.vw = this.cssW / this.scale; this.vh = this.cssH / this.scale; }
 
   // ---------- loop ----------
   private loop(now: number) {
@@ -82,11 +87,10 @@ export class Game {
   tick(dt: number) {
     this.t += dt;
     if (this.state === 'running') { if (this.wps.length) this.runAutopilot(dt); this.time += dt; this.step(dt); }
-    else if (this.state === 'dead') { this.deadT -= dt; if (this.deadT <= 0) { this.state = 'running'; this.resetBall(); this.rewindRoute(); } }
+    else if (this.state === 'dead') { this.deadT -= dt; if (this.deadT <= 0) { this.state = 'running'; this.resetBall(true); this.rewindRoute(); } }
     this.blinkT -= dt; if (this.blinkT <= 0) { this.blink = 1; this.blinkT = rand(2, 5); } this.blink = Math.max(0, this.blink - dt * 8);
     this.sx += (1 - this.sx) * Math.min(1, dt * 12); this.sy += (1 - this.sy) * Math.min(1, dt * 12);
     if (this.shake > 0) this.shake -= dt;
-    for (const r of this.level.rings) r.t += dt;
     for (const s of this.level.springs) s.t += dt;
     for (const p of this.parts) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 1600 * dt; p.life -= dt; }
     if (this.parts.length > 160) this.parts.splice(0, this.parts.length - 160);
@@ -96,17 +100,19 @@ export class Game {
 
   private runAutopilot(dt: number) {
     const inp = this.input;
-    if (this.holdT > 0 && (this.holdT -= dt) <= 0) { inp.jumpHeld = false; if (this.hopping) { inp.right = false; this.hopping = false; } }
+    if (this.holdT > 0 && (this.holdT -= dt) <= 0) inp.jumpHeld = false;
     const wp = this.wps[this.wpi]; if (!wp) return;
-    if (!this.afterWait && this.x < wp.col * T - 4) return;
+    if (!this.afterWait && wp.col !== undefined) {
+      const passed = wp.dir === 'left' ? this.x <= wp.col * T + 4 : this.x >= wp.col * T - 4;
+      const rowOk = wp.row === undefined || Math.abs(this.y / T - (wp.row + 0.5)) < 1.6;
+      if (!passed || !rowOk) return;
+    }
     switch (wp.act) {
-      case 'run': inp.right = true; inp.left = false; this.hopping = false; break;
-      case 'stop': inp.right = inp.left = false; this.hopping = false; break;
-      case 'left': inp.left = true; inp.right = false; this.hopping = false; break;
+      case 'right': inp.right = true; inp.left = false; break;
+      case 'left': inp.left = true; inp.right = false; break;
+      case 'stop': inp.right = inp.left = false; break;
       case 'jump': inp.jumpPressed = true; inp.jumpHeld = true; this.holdT = wp.hold ?? 0.45; break;
-      case 'jumplow': if (this.y > (wp.below ?? 12) * T) { inp.jumpPressed = true; inp.jumpHeld = true; this.holdT = wp.hold ?? 0.45; } break;
-      case 'hop': inp.right = true; inp.jumpPressed = true; inp.jumpHeld = true; this.holdT = wp.hold ?? 0.25; this.hopping = true; break;
-      case 'wait': inp.right = inp.left = false; if (!wp.until!(this.debug())) return; break;
+      case 'wait': if (!wp.until!(this.debug())) return; break;
     }
     this.afterWait = wp.act === 'wait';
     this.wpi++;
@@ -130,14 +136,14 @@ export class Game {
     // hazards after movement
     const r = F.r;
     for (const s of L.spikes) { if (this.circleHitsSpike(s.cx, s.cy, s.dir, r)) { this.die(); return; } }
-    if (this.y - r > L.h * T + T) { this.die(); return; }
-    for (const ring of L.rings) if (!ring.taken && Math.hypot(ring.x - this.x, ring.y - this.y) < r + 12) { ring.taken = true; this.rings++; this.burst(ring.x, ring.y, C.ring, 10); this.hooks.onHud(this.rings, L.ringTotal, this.lives, this.time); }
+    if (this.y - r > L.h * T + T || this.y > this.checkpoint.y + 9 * T) { this.die(); return; }
+    for (const egg of L.eggs) if (!egg.taken && Math.hypot(egg.x - this.x, egg.y - this.y) < r + 12) { egg.taken = true; this.eggs++; this.burst(egg.x, egg.y, C.eggShade, 10); this.hooks.onHud(this.eggs, L.eggTotal, this.time); }
     for (const pad of L.pads) if (Math.hypot((pad.cx + 0.5) * T - this.x, (pad.cy + 0.5) * T - this.y) < r + 14 && this.form !== pad.form) { this.form = pad.form; this.burst(this.x, this.y, pad.form === 'rock' ? C.rock : pad.form === 'light' ? C.light : C.ball, 16); this.sx = 1.35; this.sy = 0.7; }
-    for (const c of L.checkpoints) if (!c.hit && Math.abs((c.cx + 0.5) * T - this.x) < T * 0.8 && (c.cy + 0.5) * T - this.y > -T && (c.cy + 0.5) * T - this.y < 2.5 * T) { c.hit = true; this.checkpoint = { x: (c.cx + 0.5) * T, y: (c.cy + 0.5) * T }; this.burst(this.x, this.y - r, C.grass, 8); }
+    for (const c of L.checkpoints) if (!c.hit && Math.abs((c.cx + 0.5) * T - this.x) < T * 0.8 && (c.cy + 0.5) * T - this.y > -T && (c.cy + 0.5) * T - this.y < 2.5 * T) { c.hit = true; this.checkpoint = { x: (c.cx + 0.5) * T, y: (c.cy + 0.5) * T }; this.burst(this.x, this.y - r, C.ring, 10); }
     const ex = (L.exit.cx + 0.5) * T, ey = (L.exit.cy - 0.5) * T;
-    if (Math.abs(ex - this.x) < r + 6 && Math.abs(ey - this.y) < 34 + r) { this.state = 'won'; this.burst(ex, ey, C.ring, 40); this.hooks.onWin(this.rings, L.ringTotal, this.time); }
+    if (Math.abs(ex - this.x) < r + 14 && Math.abs(ey - this.y) < 34 + r) { this.state = 'won'; this.burst(ex, ey, C.flower, 40); this.hooks.onWin(this.eggs, L.eggTotal, this.time); }
     // hud time once a second
-    if (Math.floor(this.time) !== Math.floor(this.time - dt)) this.hooks.onHud(this.rings, L.ringTotal, this.lives, this.time);
+    if (Math.floor(this.time) !== Math.floor(this.time - dt)) this.hooks.onHud(this.eggs, L.eggTotal, this.time);
   }
 
   private substep(dt: number, F: (typeof FORMS)['normal']) {
@@ -202,10 +208,10 @@ export class Game {
     const y0 = Math.floor((this.y - hb + 1) / T), y1 = Math.floor((this.y + hb - 1) / T);
     if (this.vx > 0) {
       const cx = Math.floor((this.x + hb) / T);
-      for (let cy = y0; cy <= y1; cy++) { const v = this.cellSolid(cx, cy); if (v === 1 || v === 4 || v === 3) { if (v === 3 && F === FORMS.rock) { this.smash(cx, cy); continue; } this.x = cx * T - hb; hit = true; } }
+      for (let cy = y0; cy <= y1; cy++) { const v = this.cellSolid(cx, cy); if (v === 1 || v === 4 || v === 3 || v === 5) { if (v === 3 && F === FORMS.rock) { this.smash(cx, cy); continue; } this.x = cx * T - hb; hit = true; } }
     } else if (this.vx < 0) {
       const cx = Math.floor((this.x - hb) / T);
-      for (let cy = y0; cy <= y1; cy++) { const v = this.cellSolid(cx, cy); if (v === 1 || v === 4 || v === 3) { if (v === 3 && F === FORMS.rock) { this.smash(cx, cy); continue; } this.x = (cx + 1) * T + hb; hit = true; } }
+      for (let cy = y0; cy <= y1; cy++) { const v = this.cellSolid(cx, cy); if (v === 1 || v === 4 || v === 3 || v === 5) { if (v === 3 && F === FORMS.rock) { this.smash(cx, cy); continue; } this.x = (cx + 1) * T + hb; hit = true; } }
     }
     // gates and platforms as boxes
     for (const g of L.gates) { const gh = (g.bottom - g.top + 1) * T; const box = { x: g.cx * T + 8, y: g.top * T - gh * g.open, w: T - 16, h: gh }; if (g.open < 1 && this.overlaps(box, hb)) { if (this.vx > 0) this.x = box.x - hb; else if (this.vx < 0) this.x = box.x + box.w + hb; hit = true; } }
@@ -219,7 +225,7 @@ export class Game {
       const cy = Math.floor((this.y + hb) / T);
       for (let cx = x0; cx <= x1; cx++) {
         const v = this.cellSolid(cx, cy);
-        if (v === 1 || v === 4 || v === 3 || (v === 2 && this.prevBottom <= cy * T + 1)) {
+        if (v === 1 || v === 4 || v === 3 || v === 5 || (v === 2 && this.prevBottom <= cy * T + 1)) {
           if (v === 3 && F === FORMS.rock && this.vy > 200) { this.smash(cx, cy); continue; }
           this.y = cy * T - hb; res = 'floor';
         }
@@ -227,11 +233,11 @@ export class Game {
       for (const p of L.platforms) if (this.overlaps(p, hb) && this.prevBottom <= p.y + Math.abs(p.vy) * 0.04 + 3) { this.y = p.y - hb; res = 'floor'; this.ridingOn = p; }
       for (const g of L.gates) { const gh = (g.bottom - g.top + 1) * T; const box = { x: g.cx * T + 8, y: g.top * T - gh * g.open, w: T - 16, h: gh }; if (g.open < 1 && this.overlaps(box, hb) && this.prevBottom <= box.y + 2) { this.y = box.y - hb; res = 'floor'; } }
       // springs and buttons live in their tiles; touching from above triggers them
-      for (const s of L.springs) if (this.overlapsTile(s.cx, s.cy, hb) && this.vy >= 0) { const jump = Math.sqrt(2 * 2200 * F.grav * 10.5 * T); this.vy = -jump; this.jumping = false; s.t = 0; this.y = s.cy * T + T - hb - 6; this.sx = 0.75; this.sy = 1.3; this.grounded = false; return null; }
+      for (const s of L.springs) if (this.overlapsTile(s.cx, s.cy, hb) && this.vy >= 0) { const jump = Math.sqrt(2 * 2200 * F.grav * PARAMS.springTiles * T); this.vy = -jump; this.jumping = false; s.t = 0; this.y = s.cy * T + T - hb - 6; this.sx = 0.75; this.sy = 1.3; this.grounded = false; return null; }
       for (const b of L.buttons) if (!b.pressed && this.overlapsTile(b.cx, b.cy, hb)) { b.pressed = true; const g = L.gates[b.gate]; if (g && g.open === 0) g.open = 0.001; this.burst((b.cx + 0.5) * T, b.cy * T + T - 10, C.grass, 8); }
     } else {
       const cy = Math.floor((this.y - hb) / T);
-      for (let cx = x0; cx <= x1; cx++) { const v = this.cellSolid(cx, cy); if (v === 1 || v === 4 || v === 3) { if (v === 3 && F === FORMS.rock) { this.smash(cx, cy); continue; } this.y = (cy + 1) * T + hb; res = 'ceil'; } }
+      for (let cx = x0; cx <= x1; cx++) { const v = this.cellSolid(cx, cy); if (v === 1 || v === 4 || v === 3 || v === 5) { if (v === 3 && F === FORMS.rock) { this.smash(cx, cy); continue; } this.y = (cy + 1) * T + hb; res = 'ceil'; } }
       for (const p of L.platforms) if (this.overlaps(p, hb)) { this.y = p.y + p.h + hb; res = 'ceil'; }
     }
     return res;
@@ -245,26 +251,31 @@ export class Game {
     const nx = Math.max(box.x, Math.min(this.x, box.x + box.w)), ny = Math.max(box.y, Math.min(this.y, box.y + box.h));
     return Math.hypot(this.x - nx, this.y - ny) < r - 3;
   }
-  private smash(cx: number, cy: number) { this.solid[cy * this.level.w + cx] = 0; this.burst((cx + 0.5) * T, (cy + 0.5) * T, '#D9CFBB', 14); this.shake = 0.15; }
+  private smash(cx: number, cy: number) { this.solid[cy * this.level.w + cx] = 0; invalidateContours(this.solid); this.burst((cx + 0.5) * T, (cy + 0.5) * T, '#D9CFBB', 14); this.shake = 0.15; }
   private die() {
     if (this.state !== 'running') return;
-    this.lives--; this.burst(this.x, this.y, C.ball, 30); this.shake = 0.3; this.hooks.onDeath();
-    this.hooks.onHud(this.rings, this.level.ringTotal, Math.max(0, this.lives), this.time);
-    if (this.lives <= 0) { this.state = 'over'; this.hooks.onOver(); return; }
+    this.deaths++; this.burst(this.x, this.y, C.ball, 30); this.shake = 0.3; this.hooks.onDeath();
+    // the nearest flag the ball has already passed
+    let best = this.checkpoint, bd = Infinity;
+    for (const c of this.level.checkpoints) { if (!c.hit) continue; const cx = (c.cx + 0.5) * T, cy = (c.cy + 0.5) * T; const d = Math.hypot(cx - this.x, cy - this.y); if (d < bd) { bd = d; best = { x: cx, y: cy }; } }
+    this.checkpoint = best;
     this.state = 'dead'; this.deadT = 0.7;
   }
   private burst(x: number, y: number, c: string, n: number) { for (let i = 0; i < n; i++) this.parts.push({ x, y, vx: rand(-260, 260), vy: rand(-420, 60), life: rand(0.3, 0.7), c, r: rand(2, 5) }); }
 
   // ---------- camera ----------
   private updateCam(dt: number) {
-    const look = this.eyeDir * 90 * Math.min(1, Math.abs(this.vx) / 200 + 0.3);
-    const tx = this.x + look - this.vw * 0.42, ty = this.y - this.vh * 0.58;
+    const ph = this.phone();
+    const flying = !this.grounded && this.vy < -350 && Math.abs(this.vx) > 200; // a spring launch: lead further so the landing is on screen
+    const zt = flying || (!this.grounded && this.vy < -900) ? (ph ? 0.82 : 0.88) : 1; this.zoom += (zt - this.zoom) * Math.min(1, dt * 2.5); this.applyZoom();
+    const look = flying ? Math.sign(this.vx) * this.vw * 0.3 : this.eyeDir * 90 * Math.min(1, Math.abs(this.vx) / 200 + 0.3);
+    const tx = this.x + look - this.vw * 0.42, ty = this.y - this.vh * (flying ? (ph ? 0.74 : 0.7) : this.vy < -200 ? (ph ? 0.58 : 0.66) : ph ? 0.5 : 0.58);
     const k = Math.min(1, dt * 6);
     this.cx += (tx - this.cx) * k;
     const dz = 50; if (ty > this.cy + dz) this.cy += (ty - dz - this.cy) * k; else if (ty < this.cy - dz) this.cy += (ty + dz - this.cy) * k;
     this.clampCam();
   }
-  private clampCam() { const L = this.level; this.cx = Math.max(0, Math.min(L.w * T - this.vw, this.cx)); this.cy = Math.max(-2 * T, Math.min(L.h * T - this.vh + T, this.cy)); }
+  private clampCam() { const L = this.level; this.cx = Math.max(0, Math.min(L.w * T - this.vw, this.cx)); this.cy = Math.max(-2 * T, Math.min(L.h * T - this.vh, this.cy)); }
 
   // ---------- draw ----------
   draw() {
@@ -272,26 +283,30 @@ export class Game {
     const s = this.scale * this.dpr;
     const shx = this.shake > 0 ? rand(-4, 4) * this.shake * 3 : 0, shy = this.shake > 0 ? rand(-3, 3) * this.shake * 3 : 0;
     ctx.setTransform(s, 0, 0, s, (-this.cx + shx) * s, (-this.cy + shy) * s);
-    drawSky(ctx, this.cx, this.cy, this.vw, this.vh, this.t);
+    drawSky(ctx, this.cx, this.cy, this.vw, this.vh, this.t, L.h * T);
+    drawBackdrop(ctx, L, this.cx, this.cy, this.vw, this.vh, this.t);
     const x0 = Math.max(0, Math.floor(this.cx / T) - 1), x1 = Math.min(L.w - 1, Math.floor((this.cx + this.vw) / T) + 1);
     const y0 = Math.max(0, Math.floor(this.cy / T) - 1), y1 = Math.min(L.h - 1, Math.floor((this.cy + this.vh) / T) + 1);
-    // ground haze under the level
-    ctx.fillStyle = '#EAF4FF'; ctx.fillRect(this.cx, L.h * T, this.vw, this.vh);
     drawTiles(ctx, L, this.solid, x0, x1, y0, y1);
+    for (const p of L.platforms) if (p.x + p.w > this.cx && p.x < this.cx + this.vw) drawPlatform(ctx, p.x, p.y, p.w, ropeTopFn(L, this.solid, Math.round(p.y / T)));
     const inView = (cx: number, cy: number) => cx >= x0 - 2 && cx <= x1 + 2 && cy >= y0 - 2 && cy <= y1 + 2;
+    for (const d of L.decor) if (inView(d.cx, d.cy)) drawDecor(ctx, d, this.t);
     for (const f of L.fans) if (inView(f.cx, f.cy)) drawFan(ctx, f.cx, f.cy, f.dir, f.reach, this.t);
     for (const g of L.gates) if (inView(g.cx, g.top)) drawGate(ctx, g.cx, g.top, g.bottom, g.open);
     for (const b of L.buttons) if (inView(b.cx, b.cy)) drawButton(ctx, b.cx, b.cy, b.pressed);
     for (const sp of L.springs) if (inView(sp.cx, sp.cy)) drawSpring(ctx, sp.cx, sp.cy, sp.t);
     for (const sp of L.spikes) if (inView(sp.cx, sp.cy)) drawSpike(ctx, sp.cx, sp.cy, sp.dir);
-    for (const c of L.checkpoints) if (inView(c.cx, c.cy)) drawCheckpoint(ctx, c.cx, c.cy, c.hit, this.t);
+    for (const c of L.checkpoints) if (inView(c.cx, c.cy)) drawCheckpoint(ctx, c.cx, c.cy, c.hit, c.dir, this.t);
     for (const p of L.pads) if (inView(p.cx, p.cy)) drawPad(ctx, p.cx, p.cy, p.form, this.t);
-    for (const p of L.platforms) if (p.x + p.w > this.cx && p.x < this.cx + this.vw) drawPlatform(ctx, p.x, p.y, p.w, p.h);
-    for (const r of L.rings) if (!r.taken && r.x > this.cx - T && r.x < this.cx + this.vw + T) drawRing(ctx, r.x, r.y, r.t);
+    for (const e of L.eggs) if (!e.taken && e.x > this.cx - T && e.x < this.cx + this.vw + T && e.y > this.cy - T && e.y < this.cy + this.vh + T) drawEgg(ctx, e.x, e.y, e.t + this.t);
     drawExit(ctx, L.exit.cx, L.exit.cy, this.t);
     if (this.state !== 'dead') {
       // shadow
-      ctx.fillStyle = 'rgba(20,18,15,0.12)'; ctx.beginPath(); ctx.ellipse(this.x, this.y + FORMS[this.form].r + 2, FORMS[this.form].r * 0.9 * this.sx, 4, 0, 0, Math.PI * 2); ctx.fill();
+      // shadow projected onto the ground below the ball
+      const gr = FORMS[this.form].r; const bx = Math.floor(this.x / T); let gy = -1;
+      for (let cy = Math.floor((this.y + gr) / T); cy < Math.min(L.h, Math.floor((this.y + gr) / T) + 10); cy++) { const v = this.cellSolid(bx, cy); if (v === 1 || v === 3 || v === 4 || v === 5 || v === 2) { gy = cy * T; break; } }
+      for (const pl of L.platforms) if (this.x > pl.x - 4 && this.x < pl.x + pl.w + 4 && pl.y >= this.y + gr - 2 && (gy < 0 || pl.y < gy)) gy = pl.y;
+      if (gy >= 0) { const dist = Math.max(0, gy - (this.y + gr)), k = Math.max(0.25, 1 - dist / (8 * T)); ctx.fillStyle = `rgba(20,18,15,${0.14 * k})`; ctx.beginPath(); ctx.ellipse(this.x, gy + 2, gr * 0.9 * this.sx * k, 4 * k, 0, 0, Math.PI * 2); ctx.fill(); }
       drawBall(ctx, this.x, this.y, FORMS[this.form].r, this.form, this.sx, this.sy, this.eyeDir * (0.5 + Math.min(1, Math.abs(this.vx) / 300)), this.blink, this.t);
     }
     for (const p of this.parts) { ctx.globalAlpha = Math.min(1, p.life * 2.5); ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); }
@@ -305,10 +320,8 @@ export class Game {
     for (let cx = bx; cx < Math.min(L.w, bx + 14); cx++) {
       const spike = L.spikes.find((s) => s.cx === cx && Math.abs(s.cy - by) <= 4);
       if (spike) { hazard = { kind: 'spike', x: cx * T, dist: cx * T - this.x }; break; }
-      let anySolid = false; for (let y = 0; y < L.h; y++) if (this.solid[y * L.w + cx]) { anySolid = true; break; }
-      if (!anySolid) { hazard = { kind: 'gap', x: cx * T, dist: cx * T - this.x }; break; }
     }
-    return { state: this.state, x: this.x, y: this.y, vx: this.vx, vy: this.vy, grounded: this.grounded, form: this.form, lives: this.lives, rings: this.rings, ringsLeft: L.ringTotal - this.rings, hazard, platforms: L.platforms.map((p) => ({ x: p.x, y: p.y, vx: p.vx, vy: p.vy })) };
+    return { state: this.state, x: this.x, y: this.y, vx: this.vx, vy: this.vy, grounded: this.grounded, form: this.form, deaths: this.deaths, eggs: this.eggs, eggsLeft: L.eggTotal - this.eggs, wp: this.wpi, hazard, platforms: L.platforms.map((p) => ({ x: p.x, y: p.y, vx: p.vx, vy: p.vy })) };
   }
   destroy() { cancelAnimationFrame(this.raf); }
 }

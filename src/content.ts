@@ -42,11 +42,9 @@ export const links = {
 
 export const game = {
   title: 'Bounce.',
-  intro: 'A red ball, some rings, a few spikes. Get to the hoop at the end.',
+  intro: 'A red ball in a sky forest. Climb the vines, collect the eggs, find the flower at the top.',
   controls: 'arrows or A D to roll · space to jump · the Nokia keys 4 6 5 work too',
   touch: 'hold the arrows to roll, tap the dot to jump',
-  win: (rings: number, total: number, time: string) => `You bounced through. ${rings} of ${total} rings in ${time}.`,
-  winLine: 'The ball would like to thank you.',
-  over: 'Out of lives.',
-  overLine: 'The spikes send their regards.',
+  win: (eggs: number, total: number, time: string) => `You bounced through. ${eggs} of ${total} eggs in ${time}.`,
+  winLine: 'The flower says thanks.',
 };

@@ -1,27 +1,35 @@
 /* ---------- game ---------- */
 .game { background: var(--paper); }
-.game__stage { position: relative; height: 100svh; min-height: 520px; overflow: hidden; background: linear-gradient(var(--sky), var(--sky-2)); }
+.game__stage { position: relative; height: 100svh; min-height: 520px; overflow: hidden; background: #5EC5F5; }
 .game__canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; outline: none; }
 html.is-playing .game__canvas:focus-visible { outline: none; }
 .game__hud {
   position: absolute; top: 66px; left: var(--gutter); right: var(--gutter); display: flex; align-items: center; gap: clamp(14px, 3vw, 34px);
   font-family: var(--font-display); font-weight: 600; font-size: var(--step-1); color: var(--ink); pointer-events: none;
 }
-.hud__rings { display: inline-flex; align-items: center; gap: 8px; }
-.hud__rings svg { width: 22px; height: 22px; }
-.hud__lives { display: inline-flex; gap: 6px; }
-.hud__lives i { width: 16px; height: 16px; border-radius: 50%; background: var(--ball); box-shadow: inset -3px -3px 0 rgba(0,0,0,0.18); }
-.hud__lives i.is-lost { background: transparent; box-shadow: inset 0 0 0 2px rgba(20,18,15,0.25); }
-.hud__time { margin-left: auto; font-variant-numeric: tabular-nums; }
+.game__hud { color: #fff; text-shadow: 0 2px 0 rgba(20,18,15,0.45), 0 0 2px rgba(20,18,15,0.6); -webkit-text-stroke: 0.8px rgba(20,18,15,0.6); font-size: 1.55rem; }
+html.is-playing .game__hud { top: max(14px, env(safe-area-inset-top)); }
+html.is-playing .game__leave { top: max(16px, env(safe-area-inset-top)); }
+@media (max-width: 899px) {
+  .game__hud { font-size: 1.6rem; -webkit-text-stroke: 1px rgba(20,18,15,0.6); }
+  .hud__eggs svg { width: 36px; height: 42px; }
+  .hud__clock { width: 38px; height: 38px; }
+  .game__leave { width: 28px; height: 28px; opacity: 0.75; }
+  .game__leave svg { width: 14px; height: 14px; }
+}
+.hud__eggs { display: inline-flex; align-items: center; gap: 8px; }
+.hud__eggs svg { width: 36px; height: 42px; filter: drop-shadow(0 2px 0 rgba(20,18,15,0.3)); }
+.hud__time { margin-left: auto; font-variant-numeric: tabular-nums; margin-right: 44px; display: inline-flex; align-items: center; gap: 8px; }
+.hud__clock { width: 38px; height: 38px; filter: drop-shadow(0 2px 0 rgba(20,18,15,0.3)); }
 .game__touch { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 18px calc(18px + env(safe-area-inset-bottom)); display: none; justify-content: space-between; align-items: flex-end; z-index: 2; pointer-events: none; }
 @media (pointer: coarse) { html.is-playing .game__touch { display: flex; } }
 .touch__pad { display: flex; gap: 12px; pointer-events: auto; }
 .touch__pad button, .touch__jump {
-  width: 68px; height: 68px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); box-shadow: inset 0 0 0 2px var(--ink), 0 6px 0 -2px rgba(20,18,15,0.25);
+  width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, 0.72); box-shadow: inset 0 0 0 2px var(--ink), 0 6px 0 -2px rgba(20,18,15,0.25);
   font-size: 22px; color: var(--ink); touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; pointer-events: auto;
 }
 .touch__pad button:active, .touch__jump:active, .touch__pad button.is-down, .touch__jump.is-down { transform: translateY(3px); background: var(--ring); }
-.touch__jump { width: 84px; height: 84px; display: grid; place-items: center; }
+.touch__jump { width: 74px; height: 74px; display: grid; place-items: center; }
 .touch__jump i { width: 30px; height: 30px; border-radius: 50%; background: var(--ball); box-shadow: inset -4px -4px 0 rgba(0,0,0,0.18); }
 .game__overlay { position: absolute; inset: 0; z-index: 3; display: grid; place-content: center; text-align: center; gap: 16px; padding: 24px; background: rgba(228, 242, 255, 0.72); }
 .game__overlay[hidden] { display: none; }
@@ -32,9 +40,9 @@ html.is-playing .game__canvas:focus-visible { outline: none; }
 .game__controls { font-weight: 600; color: var(--ink-3); font-size: var(--step--1); }
 .game__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 .game__overlay .btn { justify-self: center; }
-.game__leave { position: absolute; right: var(--gutter); top: 62px; z-index: 3; font-family: var(--font-display); font-weight: 600; color: var(--ink-3); background: rgba(255,255,255,0.7); padding: 8px 14px; border-radius: 999px; }
+.game__leave { position: absolute; right: var(--gutter); top: 66px; z-index: 3; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.75); color: var(--ink); display: grid; place-items: center; box-shadow: 0 2px 0 rgba(20,18,15,0.25); }
+.game__leave svg { width: 16px; height: 16px; }
 .game__leave:hover { color: var(--ball); }
-@media (pointer: coarse) { .game__leave { top: auto; bottom: calc(112px + env(safe-area-inset-bottom)); right: 18px; } }
 .game__stage.is-shaking { animation: shake 0.28s linear; }
 @keyframes shake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-6px, 3px); } 40% { transform: translate(5px, -3px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(3px, -2px); } }
 

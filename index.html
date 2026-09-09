@@ -86,12 +86,11 @@
     </section>
 
     <section class="game" id="play" aria-labelledby="game-title">
-      <div class="game__stage" id="game-stage">
-        <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer. Arrow keys to roll, space to jump."></canvas>
+      <div class="game__stage" id="game-stage" style="background:#5EC5F5">
+        <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer in a sky forest. Arrow keys to roll, space to jump."></canvas>
         <div class="game__hud" id="hud" aria-live="off">
-          <span class="hud__rings"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="#F5B400" stroke-width="4"/></svg><b id="hud-rings">0/0</b></span>
-          <span class="hud__lives" id="hud-lives" role="img" aria-label="Lives"></span>
-          <span class="hud__time"><b id="hud-time">0:00</b></span>
+          <span class="hud__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><path d="M14 6c4 3 6 9 5.5 14-1 5-4 7-7 7 5-2 6-8 5-13-1-4-2-6-3.5-8z" fill="#DE9A3C"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><b id="hud-eggs">0/0</b></span>
+          <span class="hud__time"><b id="hud-time">0:00</b><svg class="hud__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#3A2A1A" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="#3A2A1A" stroke-width="2.2" stroke-linecap="round"/></svg></span>
         </div>
         <div class="game__touch" id="game-touch" aria-hidden="true">
           <div class="touch__pad"><button type="button" data-key="left" aria-label="Roll left">◀</button><button type="button" data-key="right" aria-label="Roll right">▶</button></div>
@@ -113,7 +112,7 @@
             <a class="btn" href="#" id="game-sayhi" target="_blank" rel="noopener" data-magnetic data-cursor="open">Say hi on WhatsApp</a>
           </div>
         </div>
-        <button class="game__leave" id="game-leave" type="button" hidden>esc · leave</button>
+        <button class="game__leave" id="game-leave" type="button" hidden aria-label="Leave the game (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </section>
 

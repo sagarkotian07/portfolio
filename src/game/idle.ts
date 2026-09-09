@@ -33,7 +33,7 @@ export function preloaderDrop(canvas: HTMLCanvasElement, onBounce: (n: number) =
     raf = requestAnimationFrame(loop); const dt = Math.min(0.033, (now - last) / 1000 || 0.016); last = now; t += dt;
     if (!done) { vy += 2600 * dt; y += vy * dt; if (y + r > groundY) { y = groundY - r; vy = -Math.abs(vy) * 0.55; bounces++; onBounce(bounces); if (bounces >= 3 && Math.abs(vy) < 260) { done = true; vy = 0; } } }
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#5FBF4B'; ctx.beginPath(); ctx.roundRect(w * 0.2, groundY, w * 0.6, 12, 6); ctx.fill();
+    ctx.fillStyle = '#3FCB2E'; ctx.beginPath(); ctx.roundRect(w * 0.2, groundY, w * 0.6, 12, 6); ctx.fill(); ctx.fillStyle = '#0F4F24'; ctx.beginPath(); ctx.roundRect(w * 0.22, groundY + 10, w * 0.56, 8, [0, 0, 6, 6]); ctx.fill();
     const sq = y + r >= groundY - 1 && vy >= -1 ? 0.8 : 1;
     drawBall(ctx, w / 2, y, r, 'normal', 1 / sq, sq, 0, 0, t);
   };
