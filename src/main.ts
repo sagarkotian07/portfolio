@@ -4,13 +4,11 @@ import { initReveals } from './modules/reveal';
 import { initHeroIntro } from './modules/hero-intro';
 import { initTimeline } from './modules/timeline';
 import { initProjects } from './modules/projects';
-import { initLightbox } from './modules/lightbox';
 import { initCounters } from './modules/counters';
 import { richHero, hasWebGL, q } from './modules/prefs';
 
 renderAll();
 initScroll();
-initLightbox();
 initProjects();
 initCopyEmail();
 initCounters();

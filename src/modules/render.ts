@@ -18,16 +18,6 @@ export function picture(key: ImageKey, o: { alt: string; sizes: string; classNam
 const playIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17l14-8.5z" fill="currentColor"/></svg>`;
 const extIcon = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
 
-const drhpDiagram = `<svg class="diagram" viewBox="0 0 320 200" role="img" aria-label="Two AI models, Claude and Codex, checking figures against three IPO documents in a loop.">
-  <path class="diagram__loop" pathLength="1" d="M160 40 C 250 40, 290 80, 270 120 C 255 155, 200 170, 160 168 C 120 170, 65 155, 50 120 C 30 80, 70 40, 160 40 Z"/>
-  <rect class="diagram__doc" x="126" y="82" width="68" height="46" rx="4" transform="rotate(-4 160 105)"/>
-  <text x="160" y="110" text-anchor="middle" font-size="12">3 DRHPs</text>
-  <rect class="diagram__node" x="18" y="24" width="84" height="34" rx="17"/>
-  <text x="60" y="46" text-anchor="middle" font-size="13">Claude</text>
-  <rect class="diagram__node" x="218" y="24" width="84" height="34" rx="17"/>
-  <text x="260" y="46" text-anchor="middle" font-size="13">Codex</text>
-  <text class="diagram__hand" x="160" y="188" text-anchor="middle">6,800 figures, every one traced</text>
-</svg>`;
 
 export function renderAll() {
   // hero text
@@ -69,24 +59,14 @@ export function renderAll() {
       let media = '';
       let actions = '';
       if (p.kind === 'video') {
-        if (p.src) {
-          media = `<div class="card__media card__media--video" data-cursor="play">${picture(p.poster, { alt: '', sizes: '(max-width: 767px) 92vw, 380px' })}
-            <video class="card__preview" muted playsinline loop preload="none" data-src="${p.src}" aria-hidden="true" tabindex="-1"></video>
-            <button class="play" type="button" data-video="${p.src}" data-title="${esc(p.title)}" data-cursor="play" aria-label="Play demo: ${esc(p.title)}">${playIcon}</button></div>`;
-          actions = `<div class="card__actions"><a href="${p.src}" target="_blank" rel="noopener">Open the video ${extIcon}</a></div>`;
-        } else {
-          media = `<div class="card__media poster--pending">${picture(p.poster, { alt: '', sizes: '(max-width: 767px) 92vw, 380px' })}
-            <span class="poster__note" aria-hidden="true">demo video<br>coming soon</span></div>`;
-          actions = `<div class="card__actions"><a href="${p.fallbackUrl}" target="_blank" rel="noopener">Watch the recording ${extIcon}</a></div>`;
-        }
-      } else if (p.kind === 'link') {
+        media = `<a class="card__media card__media--video" href="${p.url}" target="_blank" rel="noopener" data-cursor="play" aria-label="Watch the demo: ${esc(p.title)} (opens on Screen Studio)">
+          ${picture(p.poster, { alt: '', sizes: '(max-width: 767px) 92vw, 380px' })}
+          <video class="card__preview" muted playsinline loop preload="none" data-src="${p.preview}" aria-hidden="true" tabindex="-1"></video>
+          <span class="play" aria-hidden="true">${playIcon}</span></a>`;
+        actions = `<div class="card__actions"><a href="${p.url}" target="_blank" rel="noopener">Watch the demo ${extIcon}</a></div>`;
+      } else {
         media = `<a class="card__media" href="${p.url}" target="_blank" rel="noopener" aria-label="Open ${esc(p.title)}">${picture(p.image, { alt: `Screenshot of ${p.title}`, sizes: '(max-width: 767px) 92vw, 380px' })}</a>`;
         actions = `<div class="card__actions"><a href="${p.url}" target="_blank" rel="noopener">Open the site ${extIcon}</a>${p.repo ? `<a href="${p.repo}" target="_blank" rel="noopener">Code ${extIcon}</a>` : ''}</div>`;
-      } else if (p.kind === 'diagram') {
-        media = `<div class="card__media">${drhpDiagram}</div>`;
-      } else {
-        const word = p.id === 'revspot-voice' ? 'Hinglish, live' : 'in prod';
-        media = `<div class="card__media card__media--word tone-${p.tone}" aria-hidden="true">${word}</div>`;
       }
       return `<article class="card" data-tilt>
         <span class="card__tag tone-${p.tone}" aria-hidden="true">${esc(p.tag)}</span>

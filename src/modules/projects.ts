@@ -1,13 +1,8 @@
-// Card tilt on fine pointers and play buttons wired to the lightbox.
+// Card tilt and muted demo previews on fine pointers.
 import { gsap } from './scroll';
 import { qa, richHero } from './prefs';
-import { openVideo } from './lightbox';
 
 export function initProjects() {
-  qa<HTMLButtonElement>('.play').forEach((btn) => {
-    btn.addEventListener('click', () => openVideo(btn.dataset.video!, btn.dataset.title ?? 'Demo', btn));
-  });
-
   if (!richHero) return;
 
   // muted preview while the pointer rests on a demo card

@@ -91,19 +91,17 @@ export type Project = {
   tag: string;
   tone: Tone;
 } & (
-  | { kind: 'video'; src: string | null; poster: 'posterInvoice' | 'posterDashboard'; fallbackUrl: string }
+  | { kind: 'video'; preview: string; poster: 'posterInvoice' | 'posterDashboard'; url: string }
   | { kind: 'link'; url: string; repo?: string; image: 'bengaluruRun' }
-  | { kind: 'diagram' }
-  | { kind: 'text' }
 );
 
 export const projects: Project[] = [
   {
     id: 'invoice-po',
     kind: 'video',
-    src: '/video/invoice-po.mp4',
+    preview: '/video/invoice-po-preview.mp4',
     poster: 'posterInvoice',
-    fallbackUrl: 'https://screen.studio/share/62w9eq8a',
+    url: 'https://screen.studio/share/62w9eq8a',
     title: 'Invoice to PO reconciliation',
     blurb: 'Drop a mixed pile of invoice and PO PDFs into n8n. Claude reads each one. Plain code does the matching: seller GSTIN, many-to-many, line items, GST checks. It remembers past runs.',
     stack: ['n8n', 'Claude', 'JavaScript'],
@@ -113,9 +111,9 @@ export const projects: Project[] = [
   {
     id: 'dashboard',
     kind: 'video',
-    src: '/video/dashboard.mp4',
+    preview: '/video/dashboard-preview.mp4',
     poster: 'posterDashboard',
-    fallbackUrl: 'https://screen.studio/share/c7oyPJeH',
+    url: 'https://screen.studio/share/c7oyPJeH',
     title: 'Superjoin internal dashboard',
     blurb: 'Stripe billing, PostHog usage, Intercom support and Slack in one screen, so one person can see revenue, usage and support load without opening four tabs.',
     stack: ['React', 'Stripe', 'PostHog', 'Intercom'],
@@ -132,33 +130,6 @@ export const projects: Project[] = [
     blurb: 'A community map of Bengaluru running routes. Upvote routes, find clubs and events, a corporate km leaderboard. Real OpenStreetMap route geometry, not hand-drawn lines.',
     stack: ['React', 'Leaflet', 'Supabase', 'Strava'],
     tag: 'live',
-    tone: 'green',
-  },
-  {
-    id: 'drhp-evals',
-    kind: 'diagram',
-    title: 'DRHP evals',
-    blurb: '6,800 circled figures across 3 IPO prospectuses. I built the scaffolding, set the matching rules, and ran Claude and Codex in loops against each other until every figure traced back to its source.',
-    stack: ['Python', 'Claude', 'Codex'],
-    tag: 'evals',
-    tone: 'pink',
-  },
-  {
-    id: 'revspot-voice',
-    kind: 'text',
-    title: 'Voice agent for Revspot',
-    blurb: 'A voice agent that qualifies luxury real-estate buyers in Hinglish. A 32 KB system prompt, five scripted call flows, a scored test plan.',
-    stack: ['Vapi', 'Claude Haiku', 'Deepgram'],
-    tag: 'voice',
-    tone: 'orange',
-  },
-  {
-    id: 'lifecycle',
-    kind: 'text',
-    title: 'Lifecycle automations, live at Superjoin',
-    blurb: 'Quota-limit emails triggered from PostHog with Redis dedupe and plan-based routing. A churn survey that fires off Stripe webhooks.',
-    stack: ['n8n', 'PostHog', 'Redis', 'Stripe'],
-    tag: 'in prod',
     tone: 'green',
   },
 ];
