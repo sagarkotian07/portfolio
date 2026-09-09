@@ -17,7 +17,7 @@ export function renderAll() {
 
   q('#levels').innerHTML = stops.map((s) => `<li class="level">
     <span class="level__flag">Level ${s.level}</span>
-    <h3 class="level__org">${esc(s.org)}</h3>
+    <h3 class="level__org"><a class="level__link" href="${s.url}" target="_blank" rel="noopener" aria-label="${esc(s.org)}, opens their website in a new tab"><img class="level__logo" src="${s.logo}" alt="" width="36" height="36" loading="lazy" decoding="async">${esc(s.org)}<span class="level__arrow" aria-hidden="true">↗</span></a></h3>
     <p class="level__role">${esc(s.role)}</p>
     <p class="level__dates">${esc(s.dates)}</p>
     <p class="level__line">${esc(s.line)}</p>

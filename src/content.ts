@@ -8,11 +8,11 @@ export const hero = {
   photoAlt: 'Sagar Kotian in a dark blazer, smiling, in front of a wall of green ivy.',
 };
 
-export interface Stop { level: string; org: string; role: string; dates: string; line: string }
+export interface Stop { level: string; org: string; url: string; logo: string; role: string; dates: string; line: string }
 export const stops: Stop[] = [
-  { level: '01', org: 'Superjoin', role: 'Founder’s office', dates: 'Jan 2026 to now', line: 'Sales and customer success for an AI Excel agent. If something is on fire, it is usually mine.' },
-  { level: '02', org: 'Zenskar', role: 'Founder’s office intern', dates: 'Sep 2025 to Jan 2026', line: 'RevOps. Mostly building bots so I would not have to do the boring bits myself.' },
-  { level: '03', org: 'CodeRound AI', role: 'Chief of staff', dates: 'Aug 2024 to Jul 2025', line: 'Outbound and client ops, while still in college. Attendance did not survive.' },
+  { level: '01', org: 'Superjoin', url: 'https://www.superjoin.ai/', logo: '/img/logos/superjoin.png', role: 'Founder’s office', dates: 'Jan 2026 to now', line: 'Sales and customer success for an AI Excel agent. If something is on fire, it is usually mine.' },
+  { level: '02', org: 'Zenskar', url: 'https://www.zenskar.com/', logo: '/img/logos/zenskar.png', role: 'Founder’s office intern', dates: 'Sep 2025 to Jan 2026', line: 'RevOps. Mostly building bots so I would not have to do the boring bits myself.' },
+  { level: '03', org: 'CodeRound AI', url: 'https://www.coderound.ai/', logo: '/img/logos/coderound.png', role: 'Chief of staff', dates: 'Aug 2024 to Jul 2025', line: 'Outbound and client ops, while still in college. Attendance did not survive.' },
 ];
 
 export type Project = { id: string; title: string; line: string; label: string; url: string; cta: string } &

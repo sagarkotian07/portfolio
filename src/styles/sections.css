@@ -55,7 +55,7 @@ html.is-playing .game__leave { top: max(16px, env(safe-area-inset-top)); }
 .levelmap__hills { fill: var(--grass-2); }
 .levelmap__path { fill: none; stroke: var(--paper); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; vector-effect: non-scaling-stroke; }
 html[data-motion="full"] .levelmap__path { stroke-dashoffset: 1; }
-.levelmap__ball { position: absolute; left: 3.5%; top: 0; margin-top: calc(clamp(120px, 20vw, 260px) * 0.75 - 46px); width: 44px; height: 44px; border-radius: 50%; background: var(--ball); box-shadow: inset -6px -6px 0 rgba(0,0,0,0.18), 0 10px 0 -4px rgba(0,0,0,0.15); animation: bob 1.4s ease-in-out infinite; }
+.levelmap__ball { position: absolute; left: 0; top: 0; width: 44px; height: 44px; border-radius: 50%; background: var(--ball); box-shadow: inset -6px -6px 0 rgba(0,0,0,0.18), 0 10px 0 -4px rgba(0,0,0,0.15); animation: bob 1.4s ease-in-out infinite; }
 .levelmap__ball::before, .levelmap__ball::after { content: ''; position: absolute; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: #fff; box-shadow: inset 3px 3px 0 var(--ink); }
 .levelmap__ball::before { left: 9px; } .levelmap__ball::after { right: 9px; }
 @keyframes bob { 0%, 100% { transform: translateY(0) scale(1, 1); } 50% { transform: translateY(-16px) scale(0.96, 1.06); } }
@@ -64,7 +64,11 @@ html[data-motion="full"] .levelmap__path { stroke-dashoffset: 1; }
 .level.is-in { opacity: 1; transform: none; }
 .level__flag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 700; color: var(--ball-2); font-size: var(--step-0); }
 .level__flag::before { content: ''; width: 12px; height: 14px; background: var(--ball); clip-path: polygon(0 0, 100% 25%, 0 50%); }
-.level__org { font-family: var(--font-display); font-weight: 700; font-size: var(--step-2); line-height: 1.05; margin-top: 8px; }
+.level__org { font-family: var(--font-display); font-weight: 700; font-size: var(--step-2); line-height: 1.05; margin-top: 10px; }
+.level__link { display: inline-flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; border-radius: 12px; }
+.level__link:hover .level__arrow, .level__link:focus-visible .level__arrow { transform: translate(3px, -3px); color: var(--ball); }
+.level__logo { width: 36px; height: 36px; border-radius: 10px; background: #fff; box-shadow: inset 0 0 0 1px rgba(20,18,15,0.12); padding: 4px; object-fit: contain; flex: none; }
+.level__arrow { font-size: 0.6em; color: var(--ink-3); transition: transform 0.25s var(--ease), color 0.25s var(--ease); margin-left: -2px; }
 .level__role { font-weight: 600; color: var(--ink-2); margin-top: 4px; }
 .level__dates { font-size: var(--step--1); color: var(--ink-3); font-weight: 600; margin-top: 2px; }
 .level__line { margin-top: 14px; color: var(--ink); }
