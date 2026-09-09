@@ -18,7 +18,8 @@ export function initLevelMap() {
     // one scrubbed trigger drives both the ball and the line, so the line always runs just ahead of the ball
     const state = { p: 0 };
     const apply = () => { place(state.p); path.style.strokeDashoffset = String(Math.max(0, 1 - state.p - 0.06)); };
-    const st = ScrollTrigger.create({ trigger: map, start: 'top 85%', end: 'bottom 15%', onUpdate: (self) => { gsap.to(state, { p: self.progress, duration: 0.5, ease: 'power2.out', overwrite: true, onUpdate: apply }); } });
+    // the run starts as the hills enter from the bottom and finishes while they are still in the upper part of the screen
+    const st = ScrollTrigger.create({ trigger: svg, start: 'top 92%', end: 'bottom 40%', onUpdate: (self) => { gsap.to(state, { p: self.progress, duration: 0.35, ease: 'power2.out', overwrite: true, onUpdate: apply }); } });
     levels.forEach((lv, i) => ScrollTrigger.create({ trigger: lv, start: 'top 88%', once: true, onEnter: () => setTimeout(() => lv.classList.add('is-in'), i * 120) }));
     const onResize = () => { state.p = st.progress; apply(); }; window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
