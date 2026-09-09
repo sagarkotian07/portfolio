@@ -1,0 +1,167 @@
+/* ---------- nav ---------- */
+.nav {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 22px;
+}
+.nav__logo {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  background: var(--note-yellow); transform: rotate(-6deg); box-shadow: var(--shadow-note);
+  font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--ink);
+  transition: transform 0.3s var(--ease-out);
+}
+.nav__logo:hover { transform: rotate(4deg) scale(1.06); color: var(--ink); }
+.nav__links { display: flex; gap: clamp(14px, 2.4vw, 30px); font-weight: 600; font-size: var(--step--1); }
+.nav__links a { color: var(--ink-2); position: relative; }
+.nav__links a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--leaf);
+  transform: scaleX(0); transform-origin: left; transition: transform 0.3s var(--ease-out);
+}
+.nav__links a:hover { color: var(--ink); }
+.nav__links a:hover::after { transform: scaleX(1); }
+@media (max-width: 640px) { .nav__links a:nth-child(n+4) { display: none; } }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  min-height: 100svh;
+  padding-top: clamp(96px, 12vh, 130px);
+  padding-bottom: 150px; /* the floor the notes pile on */
+  display: flex; flex-direction: column;
+}
+.hero__inner {
+  position: relative; z-index: 2; pointer-events: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 400px);
+  grid-template-areas: "name photo" "text photo";
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
+.hero__inner a, .hero__inner button, .hero__photo-wrap, .hero__stack { pointer-events: auto; }
+.hero__text { grid-area: text; max-width: 560px; padding-top: clamp(14px, 2.4vw, 28px); }
+html[data-motion="full"] .hero__name, html[data-motion="full"] .hero__text, html[data-motion="full"] .hero__photo-wrap { visibility: hidden; }
+html[data-motion="full"] .hero.is-ready .hero__name, html[data-motion="full"] .hero.is-ready .hero__text, html[data-motion="full"] .hero.is-ready .hero__photo-wrap { visibility: visible; }
+.hero__name {
+  grid-area: name;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: var(--step-name); line-height: 0.9; letter-spacing: -0.04em;
+  font-variation-settings: 'SOFT' 90, 'opsz' 144;
+  color: var(--ink);
+}
+.hero__name .word { display: block; }
+.hero__name .ch-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.hero__name .ch { display: inline-block; will-change: transform; }
+.hero__name .word:last-child { color: var(--leaf); }
+
+.hero__meta { font-size: var(--step--1); font-weight: 600; color: var(--ink-2); margin-bottom: 18px; letter-spacing: 0.01em; }
+.hero__tagline {
+  font-family: var(--font-display); font-weight: 500; font-size: var(--step-2); line-height: 1.15;
+  letter-spacing: -0.015em; font-variation-settings: 'SOFT' 60, 'opsz' 48;
+  color: var(--ink);
+}
+.hero__tagline em { font-style: italic; color: var(--leaf); font-variation-settings: 'SOFT' 100, 'opsz' 48, 'WONK' 1; }
+.hero__cta { margin-top: 28px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ink); color: var(--paper); font-weight: 600; font-size: var(--step--1);
+  padding: 13px 20px; border-radius: 999px;
+  transition: transform 0.3s var(--ease-out), background 0.2s;
+}
+.btn:hover { background: var(--leaf); color: var(--paper); transform: translateY(-2px); }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink-3); }
+.btn--ghost:hover { background: var(--paper-2); color: var(--ink); }
+.hero__hint {
+  margin-top: 22px; font-family: var(--font-hand); font-size: 1.25rem; color: var(--ink-3); transform: rotate(-2deg); display: inline-block;
+}
+html[data-hero="static"] .hero__hint--physics { display: none; }
+html[data-hero="physics"] .hero__hint--static { display: none; }
+
+.hero__photo-wrap { grid-area: photo; position: relative; justify-self: end; width: 100%; margin-top: 6px; }
+.hero__photo img {
+  width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%;
+  border-radius: 18px; box-shadow: var(--shadow-card);
+  transform: rotate(1.5deg);
+  transition: transform 0.7s var(--ease-out), box-shadow 0.7s var(--ease-out);
+}
+@media (hover: hover) {
+  html[data-motion="full"] .hero__photo-wrap:hover img { transform: rotate(-0.5deg) translateY(-6px) scale(1.015); box-shadow: 0 2px 4px rgba(20,18,15,0.08), 0 30px 50px -24px rgba(20,18,15,0.45); }
+}
+.hero__photo-wrap::after {
+  /* a bit of tape */
+  content: ''; position: absolute; top: -14px; left: 50%; width: 90px; height: 26px;
+  background: rgba(255, 216, 77, 0.75); transform: translateX(-50%) rotate(-3deg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+/* 3D sticky stack, pinned to the photo's bottom-left corner */
+.hero__stack {
+  position: absolute; left: -80px; bottom: -44px; width: 220px; height: 220px; z-index: 3;
+}
+.hero__stack canvas { width: 100%; height: 100%; display: block; }
+.css-stack { position: absolute; inset: 40px; transform-style: preserve-3d; perspective: 600px; animation: sway 6s ease-in-out infinite; }
+.css-stack i {
+  position: absolute; inset: 0; border-radius: 3px; box-shadow: var(--shadow-note);
+  transform: translateZ(calc(var(--i) * 5px)) rotate(calc(var(--i) * 3deg - 6deg));
+}
+@keyframes sway { 0%, 100% { transform: rotateX(8deg) rotateY(-10deg); } 50% { transform: rotateX(-6deg) rotateY(10deg); } }
+
+/* ---------- sticky notes ---------- */
+.notes { z-index: 1; pointer-events: none; }
+html[data-hero="physics"] .notes { position: absolute; inset: 0; }
+html[data-hero="static"] .notes { position: relative; height: 250px; margin-top: 24px; }
+
+.note {
+  position: absolute; pointer-events: auto;
+  width: 160px; min-height: 92px; padding: 12px 14px 14px;
+  font-family: var(--font-hand); font-weight: 600; font-size: 1.35rem; line-height: 1.05; color: var(--ink);
+  background: var(--note-yellow);
+  box-shadow: var(--shadow-note);
+  will-change: transform; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  transform-origin: 50% 50%;
+}
+.note::before {
+  /* folded corner */
+  content: ''; position: absolute; right: 0; bottom: 0; width: 18px; height: 18px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.12) 50%);
+}
+.note--yellow { background: var(--note-yellow); }
+.note--pink { background: var(--note-pink); }
+.note--orange { background: var(--note-orange); }
+.note--blue { background: var(--note-blue); }
+.note--green { background: var(--note-green); }
+html[data-hero="physics"] .note { left: 0; top: 0; }
+html[data-hero="physics"] .note.is-drag { z-index: 10; box-shadow: 0 2px 4px rgba(20,18,15,0.15), 0 24px 40px -16px rgba(20,18,15,0.5); }
+html[data-hero="static"] .note {
+  left: min(calc(var(--x) * 100%), calc(100% - 176px));
+  top: calc(var(--y) * 100%);
+  transform: rotate(var(--r));
+  width: 150px; min-height: 84px; font-size: 1.25rem;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .hero__inner { grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); }
+  .hero__stack { left: -60px; bottom: -36px; width: 180px; height: 180px; }
+}
+@media (max-width: 767px) {
+  .hero { min-height: 0; padding-top: 96px; padding-bottom: 8px; }
+  .hero__inner {
+    grid-template-columns: 1fr;
+    grid-template-areas: "name" "text" "photo";
+    row-gap: 22px;
+  }
+  .hero__name { font-size: clamp(3.4rem, 17vw, 5.6rem); }
+  .hero__photo-wrap { justify-self: start; width: min(72vw, 340px); margin-top: 10px; }
+  .hero__stack { left: auto; right: -40px; bottom: -30px; width: 150px; height: 150px; }
+  .hero__text { padding-top: 0; }
+  html[data-hero="static"] .notes { height: 236px; }
+}
+@media (max-width: 640px) {
+  html[data-hero="static"] .note {
+    left: min(calc(var(--mx) * 100%), calc(100% - 154px));
+    top: calc(var(--my) * 100%);
+    transform: rotate(var(--mr));
+  }
+  html[data-hero="static"] .note:nth-child(n+7) { display: none; }
+}

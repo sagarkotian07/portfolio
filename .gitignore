@@ -1,0 +1,9 @@
+node_modules
+dist
+.vercel
+.DS_Store
+lighthouse-*.html
+qa/
+*.log
+# originals stay local; public/img holds the generated outputs
+assets/src/

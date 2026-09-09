@@ -1,0 +1,89 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; overflow-x: clip; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+img, picture, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: var(--leaf); text-decoration: none; }
+a:hover { color: var(--leaf-2); }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+:focus-visible { outline: 3px solid var(--leaf); outline-offset: 4px; border-radius: 4px; }
+.skip {
+  position: absolute; left: 16px; top: -60px; z-index: 100;
+  background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 8px;
+  font-weight: 600; transition: top 0.2s;
+}
+.skip:focus { top: 16px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* paper grain */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+main { position: relative; z-index: 1; }
+
+.wrap { width: min(100% - 2 * var(--gutter), var(--w-max)); margin-inline: auto; }
+.section { padding-block: var(--section-y); }
+.eyebrow {
+  font-family: var(--font-hand); font-size: var(--step-1); color: var(--leaf);
+  display: inline-block; transform: rotate(-2deg); margin-bottom: 8px;
+}
+.h2 {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--step-3);
+  line-height: 1.02; letter-spacing: -0.02em;
+  font-variation-settings: 'SOFT' 80, 'opsz' 96;
+}
+.lede { font-size: var(--step-1); color: var(--ink-2); max-width: 44ch; margin-top: 18px; }
+
+/* custom cursor is only for fine pointers and people who did not ask for less motion */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html[data-motion="full"] body { cursor: none; }
+  html[data-motion="full"] a, html[data-motion="full"] button, html[data-motion="full"] .note { cursor: none; }
+}
+.cursor {
+  position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none;
+  width: 0; height: 0; opacity: 0; transition: opacity 0.25s;
+}
+.cursor.is-on { opacity: 1; }
+.cursor__dot, .cursor__ring {
+  position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%);
+}
+.cursor__dot { width: 8px; height: 8px; background: var(--ink); transition: width 0.2s, height 0.2s, background 0.2s; }
+.cursor__ring {
+  width: 34px; height: 34px; border: 1.5px solid var(--ink);
+  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out), border-color 0.2s, background 0.2s, opacity 0.2s;
+  display: grid; place-items: center;
+  font-family: var(--font-hand); font-size: 16px; color: var(--ink); mix-blend-mode: multiply;
+}
+.cursor__label { opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+.cursor[data-state="link"] .cursor__ring { width: 52px; height: 52px; border-color: var(--leaf); background: rgba(46, 125, 79, 0.10); }
+.cursor[data-state="link"] .cursor__dot { background: var(--leaf); }
+.cursor[data-state="drag"] .cursor__ring,
+.cursor[data-state="play"] .cursor__ring,
+.cursor[data-state="fan"] .cursor__ring,
+.cursor[data-state="copy"] .cursor__ring {
+  width: 64px; height: 64px; background: var(--note-yellow); border-color: transparent;
+}
+.cursor[data-state="drag"] .cursor__dot, .cursor[data-state="play"] .cursor__dot,
+.cursor[data-state="fan"] .cursor__dot, .cursor[data-state="copy"] .cursor__dot { width: 0; height: 0; }
+.cursor[data-state="drag"] .cursor__label, .cursor[data-state="play"] .cursor__label,
+.cursor[data-state="fan"] .cursor__label, .cursor[data-state="copy"] .cursor__label { opacity: 1; }
+.cursor[data-state="grabbing"] .cursor__ring { width: 28px; height: 28px; background: var(--note-yellow); border-color: transparent; }
+.cursor[data-state="grabbing"] .cursor__dot { width: 0; height: 0; }

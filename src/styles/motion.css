@@ -1,0 +1,19 @@
+/* Text masks used by reveal.ts */
+.line { display: block; overflow: hidden; }
+.line-inner { display: block; will-change: transform; }
+.w { display: inline; }
+
+/* Reduced motion: everything sits in its final state, no physics, no canvases, no cursor. */
+html[data-motion="reduced"] .line-inner { transform: none !important; }
+html[data-motion="reduced"] .cursor { display: none; }
+html[data-motion="reduced"] .timeline__path { stroke-dashoffset: 0 !important; }
+html[data-motion="reduced"] .stop { opacity: 1 !important; transform: none !important; }
+html[data-motion="reduced"] .stop__tag { transform: rotate(-3deg) scale(1) !important; opacity: 1 !important; }
+html[data-motion="reduced"] .css-stack { animation: none !important; }
+html[data-motion="reduced"] .hero__photo { filter: none !important; }
+html[data-motion="reduced"] .hero__name .ch, html[data-motion="reduced"] .hero__tagline .line-inner { transform: none !important; }
+html[data-motion="reduced"] .card { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

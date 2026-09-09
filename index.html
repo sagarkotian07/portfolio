@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en" data-motion="full" data-hero="physics">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sagar Kotian</title>
+  <meta name="description" content="First non-eng hire. I bring in the demand, keep the customers, and grade the AI's homework. Founder's Office, GTM and Customer Success at Superjoin, Bengaluru." />
+  <meta name="theme-color" content="#F7F3EC" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://sagar-kotian.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sagar Kotian" />
+  <meta property="og:description" content="First non-eng hire. I bring in the demand, keep the customers, and grade the AI's homework." />
+  <meta property="og:url" content="https://sagar-kotian.vercel.app/" />
+  <meta property="og:image" content="https://sagar-kotian.vercel.app/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" as="image" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" imagesizes="(max-width: 767px) 72vw, 400px" />
+  <script>
+    (function () {
+      var d = document.documentElement;
+      var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var fine = matchMedia('(pointer: fine)').matches && matchMedia('(hover: hover)').matches;
+      var small = matchMedia('(max-width: 767px)').matches;
+      d.dataset.motion = rm ? 'reduced' : 'full';
+      d.dataset.hero = (!rm && fine && !small) ? 'physics' : 'static';
+    })();
+  </script>
+  <link rel="stylesheet" href="/src/styles/tokens.css" />
+  <link rel="stylesheet" href="/src/styles/fonts.css" />
+  <link rel="stylesheet" href="/src/styles/base.css" />
+  <link rel="stylesheet" href="/src/styles/motion.css" />
+  <link rel="stylesheet" href="/src/styles/hero.css" />
+  <link rel="stylesheet" href="/src/styles/sections.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="cursor" aria-hidden="true"><div class="cursor__ring"><span class="cursor__label"></span></div><div class="cursor__dot"></div></div>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-name">
+      <header class="nav wrap">
+        <a class="nav__logo" href="#top" aria-label="Back to top">SK</a>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="#startups">Startups</a>
+          <a href="#built">Built</a>
+          <a href="#about">About</a>
+          <a href="#contact">Say hi</a>
+          <a href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
+        </nav>
+      </header>
+
+      <div class="hero__inner wrap">
+        <h1 class="hero__name" id="hero-name"><span class="word">Sagar</span><span class="word">Kotian</span></h1>
+
+        <div class="hero__text">
+          <p class="hero__meta" id="hero-meta"></p>
+          <p class="hero__tagline" id="hero-tagline"></p>
+          <div class="hero__cta">
+            <a class="btn" href="#built">See what I built <span aria-hidden="true">↓</span></a>
+            <a class="btn btn--ghost" href="#contact">Say hi</a>
+          </div>
+          <p class="hero__hint hero__hint--physics" aria-hidden="true">the notes are real. drag them.</p>
+          <p class="hero__hint hero__hint--static" aria-hidden="true">tap a note.</p>
+        </div>
+
+        <figure class="hero__photo-wrap">
+          <picture class="hero__photo">
+            <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" sizes="(max-width: 767px) 72vw, 400px" />
+            <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-800.webp 800w, /img/hero-1280.webp 1280w" sizes="(max-width: 767px) 72vw, 400px" />
+            <img src="/img/hero.jpg" width="1279" height="1600" alt="Sagar Kotian in a dark blazer, smiling, standing in front of a wall of green ivy." fetchpriority="high" decoding="async" />
+          </picture>
+          <div class="hero__stack" id="hero-3d" data-cursor="fan" aria-hidden="true"></div>
+        </figure>
+      </div>
+
+      <ul class="notes" id="notes" aria-label="Quick facts"></ul>
+    </section>
+
+    <section class="section startups" id="startups" aria-labelledby="startups-h">
+      <div class="wrap">
+        <p class="eyebrow">before I graduated</p>
+        <h2 class="h2" id="startups-h" data-reveal>Three startups, one degree.</h2>
+        <p class="lede" data-reveal>Chief of staff, then founder’s office twice. All of it between lectures I was technically supposed to be attending.</p>
+      </div>
+      <div class="timeline wrap" id="timeline">
+        <svg class="timeline__svg" aria-hidden="true" preserveAspectRatio="none"><path class="timeline__path" pathLength="1" d="M0 0" /></svg>
+        <ol class="stops" id="stops"></ol>
+      </div>
+    </section>
+
+    <section class="section built" id="built" aria-labelledby="built-h">
+      <div class="wrap">
+        <p class="eyebrow">things I built</p>
+        <h2 class="h2" id="built-h" data-reveal>Not an engineer. Builds anyway.</h2>
+        <p class="lede" data-reveal>Most of these exist because I got tired of waiting for someone else to build them.</p>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
+
+    <section class="section numbers" id="numbers" aria-label="Numbers">
+      <div class="wrap"><div class="numbers__band"><ul class="counters" id="counters"></ul></div></div>
+    </section>
+
+    <section class="section about" id="about" aria-labelledby="about-h">
+      <div class="wrap about__grid">
+        <div class="about__text">
+          <p class="eyebrow">how I work</p>
+          <h2 class="h2" id="about-h" data-reveal>Whatever is on fire this week.</h2>
+          <ul class="about__lines" id="about-lines"></ul>
+        </div>
+        <div class="about__photos">
+          <figure class="about__wall" data-fade>
+            <picture>
+              <source type="image/avif" srcset="/img/wall-720.avif 720w, /img/wall-1200.avif 1200w, /img/wall-1686.avif 1686w" sizes="(max-width: 767px) 92vw, 540px" />
+              <source type="image/webp" srcset="/img/wall-720.webp 720w, /img/wall-1200.webp 1200w, /img/wall-1686.webp 1686w" sizes="(max-width: 767px) 92vw, 540px" />
+              <img src="/img/wall.jpg" width="1686" height="868" alt="Sagar at his desk, glasses on, with a whiteboard of sticky notes behind him." loading="lazy" decoding="async" />
+            </picture>
+            <figcaption>the wall this site is named after</figcaption>
+          </figure>
+          <figure class="about__casual" data-fade>
+            <picture>
+              <source type="image/avif" srcset="/img/casual-480.avif 480w, /img/casual-960.avif 960w" sizes="200px" />
+              <source type="image/webp" srcset="/img/casual-480.webp 480w, /img/casual-960.webp 960w" sizes="200px" />
+              <img src="/img/casual.jpg" width="963" height="1280" alt="Sagar in a black polo, smiling at a cafe table." loading="lazy" decoding="async" />
+            </picture>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact" aria-labelledby="contact-h">
+      <div class="wrap">
+        <p class="eyebrow">that’s the whole wall</p>
+        <h2 class="contact__h" id="contact-h" data-reveal>Say <em>hi.</em></h2>
+        <ul class="contact__links" id="contact-links"></ul>
+        <p class="contact__line" id="contact-line"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <p id="footer-line"></p>
+    <p>© 2026 Sagar Kotian</p>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Demo video">
+    <div class="lightbox__box">
+      <button class="lightbox__close" type="button" aria-label="Close video">×</button>
+      <div class="lightbox__frame" id="lightbox-frame"></div>
+    </div>
+  </dialog>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
