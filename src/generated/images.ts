@@ -64,6 +64,36 @@ export const images = {
     "jpg": "/img/bengaluruRun.jpg",
     "pending": false
   },
+  "mangalore": {
+    "width": 960,
+    "height": 1280,
+    "avif": [
+      480,
+      960
+    ],
+    "webp": [
+      480,
+      960
+    ],
+    "jpg": "/img/mangalore.jpg",
+    "pending": false
+  },
+  "beach": {
+    "width": 1500,
+    "height": 2000,
+    "avif": [
+      480,
+      960,
+      1500
+    ],
+    "webp": [
+      480,
+      960,
+      1500
+    ],
+    "jpg": "/img/beach.jpg",
+    "pending": false
+  },
   "posterInvoice": {
     "width": 1728,
     "height": 1080,

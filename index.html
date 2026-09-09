@@ -143,27 +143,18 @@
     <div class="hill hill--flip" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,10 480,130 720,70 C960,10 1200,130 1440,70 L1440,120 L0,120 Z" fill="#3E8F33"/><path d="M0,86 C240,30 480,140 720,86 C960,30 1200,140 1440,86 L1440,120 L0,120 Z" fill="#5FBF4B"/></svg></div>
 
     <section class="about" id="about" aria-labelledby="about-h">
-      <div class="wrap about__grid">
-        <div class="about__text">
-          <p class="section__label">About</p>
-          <h2 class="h2" id="about-h" data-reveal>A bit<br>about me.</h2>
-          <ul class="about__lines" id="about-lines"></ul>
+      <div class="about__pin" id="about-pin">
+        <div class="wrap about__head">
+          <div>
+            <p class="section__label">About</p>
+            <h2 class="h2" id="about-h" data-reveal>A bit about me,<br>in chapters.</h2>
+          </div>
+          <p class="about__hint" aria-hidden="true">scroll to roll through</p>
         </div>
-        <div class="about__photos">
-          <figure class="about__wall" data-fade>
-            <picture>
-              <source type="image/avif" srcset="/img/wall-720.avif 720w, /img/wall-1200.avif 1200w" sizes="(max-width: 899px) 92vw, 520px" />
-              <source type="image/webp" srcset="/img/wall-720.webp 720w, /img/wall-1200.webp 1200w" sizes="(max-width: 899px) 92vw, 520px" />
-              <img src="/img/wall.jpg" width="1686" height="868" alt="Sagar at his desk, glasses on, with a whiteboard of sticky notes behind him." loading="lazy" decoding="async" />
-            </picture>
-          </figure>
-          <figure class="about__casual" data-fade>
-            <picture>
-              <source type="image/avif" srcset="/img/casual-480.avif 480w, /img/casual-960.avif 960w" sizes="200px" />
-              <source type="image/webp" srcset="/img/casual-480.webp 480w, /img/casual-960.webp 960w" sizes="200px" />
-              <img src="/img/casual.jpg" width="963" height="1280" alt="Sagar in a black polo, smiling at a cafe table." loading="lazy" decoding="async" />
-            </picture>
-          </figure>
+        <div class="about__stage">
+          <ol class="about__track" id="about-track"></ol>
+          <div class="about__hills" id="about-hills" aria-hidden="true"></div>
+          <i class="about__ball" id="about-ball" aria-hidden="true"></i>
         </div>
       </div>
     </section>

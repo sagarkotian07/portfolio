@@ -5,6 +5,7 @@ import { initHero } from './modules/hero-intro';
 import { initReveals } from './modules/reveal';
 import { initProjects } from './modules/projects';
 import { initLevelMap } from './modules/levelmap';
+import { initAbout } from './modules/about';
 import { mountGame } from './game';
 import { richHero } from './modules/prefs';
 
@@ -23,7 +24,7 @@ initCopyEmail();
 document.fonts.ready.then(() => runPreloader().then(() => heroIntro?.()));
 
 const later = () => {
-  initReveals(); initProjects(); initLevelMap();
+  initReveals(); initProjects(); initLevelMap(); initAbout();
   if (richHero) { import('./modules/cursor').then((m) => m.initCursor()); import('./modules/magnetic').then((m) => m.initMagnetic()); }
 };
 window.addEventListener('load', () => ('requestIdleCallback' in window ? requestIdleCallback(later, { timeout: 1500 }) : setTimeout(later, 300)), { once: true });

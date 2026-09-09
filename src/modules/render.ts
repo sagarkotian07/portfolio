@@ -39,7 +39,17 @@ export function renderAll() {
     </article>`;
   }).join('');
 
-  q('#about-lines').innerHTML = about.lines.map((l) => `<li>${esc(l)}</li>`).join('');
+  q('#about-track').innerHTML = about.chapters.map((c) => {
+    const media = !c.media ? '' : c.media.kind === 'image'
+      ? `<figure class="chapter__media"><div class="chapter__frame">${picture(c.media.key, { alt: c.media.alt, sizes: '(max-width: 899px) 70vw, 300px' })}</div><figcaption class="chapter__caption">${esc(c.media.caption)}</figcaption></figure>`
+      : `<figure class="chapter__media"><div class="chapter__frame chapter__frame--video"><video class="chapter__video" src="${c.media.src}" muted playsinline loop preload="metadata" aria-label="${esc(c.title)}"></video><span class="chapter__play" aria-hidden="true">${playIcon}</span></div><figcaption class="chapter__caption">${esc(c.media.caption)}</figcaption></figure>`;
+    return `<li class="chapter chapter--${c.n}${c.media ? ' has-media' : ''}">
+      <span class="chapter__flag">Chapter ${c.n} · ${esc(c.place)}</span>
+      <h3 class="chapter__title">${esc(c.title)}</h3>
+      <p class="chapter__text">${esc(c.text)}</p>
+      ${media}
+    </li>`;
+  }).join('') + `<li class="chapter chapter--end" aria-hidden="true"><span class="about__flower"></span></li>`;
 
   q('#sayhi-links').innerHTML = `
     <li><a class="sayhi__row sayhi__row--wa" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)} ↗</small></a></li>

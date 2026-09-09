@@ -11,6 +11,8 @@ const jobs = {
   casual:       { src: 'assets/src/casual.jpeg',        widths: [480, 960] },
   wall:         { src: 'assets/src/wall.png',           widths: [720, 1200, 1686] },
   bengaluruRun: { src: 'assets/src/bengaluru-run.png',  widths: [640, 1080, 1440] },
+  mangalore:    { src: 'assets/src/mangalore.jpeg',     widths: [480, 960] },
+  beach:        { src: 'assets/src/beach.png',          widths: [480, 960, 1500] },
   posterInvoice:   { src: 'assets/src/poster-invoice.png',   widths: [640, 1280], frame: 'assets/src/frame-invoice.jpg',   blur: 28 },
   posterDashboard: { src: 'assets/src/poster-dashboard.png', widths: [640, 1280], frame: 'assets/src/frame-dashboard.jpg', blur: 28 },
 };
@@ -43,8 +45,8 @@ for (const [key, job] of Object.entries(jobs)) {
   console.log(`${key.padEnd(16)} ${meta.width}x${meta.height}  widths ${job.widths.join('/')}${blur ? '  (blurred placeholder)' : ''}`);
 }
 
-// Open Graph card: cream paper, portrait on the right, name on the left.
-{
+// Open Graph card (old design; public/og.jpg is now rendered from og.html, so this only runs with OG=1).
+if (process.env.OG) {
   const W = 1200, H = 630;
   const portrait = await sharp('assets/src/hero.jpeg').rotate().resize({ width: 430, height: 538, fit: 'cover', position: 'top' }).toBuffer();
   const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">

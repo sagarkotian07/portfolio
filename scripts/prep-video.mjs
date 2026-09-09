@@ -8,11 +8,14 @@ import { mkdir, stat } from 'node:fs/promises';
 const jobs = [
   { src: 'assets/src/invoice-po.mp4', out: 'public/video/invoice-po-preview.mp4', frame: 'assets/src/frame-invoice.jpg', at: 3, seconds: 30 },
   { src: 'assets/src/dashboard.mp4',  out: 'public/video/dashboard-preview.mp4',  frame: 'assets/src/frame-dashboard.jpg', at: 3, seconds: 30 },
+  { src: 'assets/src/weekends.mp4',   out: 'public/video/weekends-preview.mp4',   frame: 'assets/src/frame-weekends.jpg',  at: 1, seconds: 40, optional: true },
 ];
 await mkdir('public/video', { recursive: true });
 const run = (args) => execFileSync(ffmpeg, args, { stdio: ['ignore', 'pipe', 'pipe'] }).toString();
 
+import { existsSync } from 'node:fs';
 for (const j of jobs) {
+  if (j.optional && !existsSync(j.src)) { console.log(`${j.src}: not there yet, skipped`); continue; }
   let info = '';
   try { execFileSync(ffmpeg, ['-i', j.src], { stdio: 'pipe' }); } catch (e) { info = e.stderr.toString(); }
   const dur = /Duration: (\d+):(\d+):([\d.]+)/.exec(info);
