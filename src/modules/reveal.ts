@@ -2,10 +2,10 @@
 import { gsap } from './scroll';
 import { qa } from './prefs';
 
-/** Wrap each visual line in .line > .line-inner. Screen readers get the original string via aria-label. */
+/** Wrap each visual line in .line > .line-inner. Screen readers get the original string from a hidden span. */
 export function splitLines(el: HTMLElement): HTMLElement[] {
   const text = (el.textContent ?? '').replace(/\s+/g, ' ').trim();
-  el.setAttribute('aria-label', text);
+  el.dataset.text = text;
   const words = text.split(' ');
   el.innerHTML = words.map((w) => `<span class="w">${w}</span>`).join(' ');
   const spans = qa<HTMLSpanElement>('.w', el);
@@ -16,15 +16,15 @@ export function splitLines(el: HTMLElement): HTMLElement[] {
     if (Math.abs(top - lastTop) > 2) { lines.push([]); lastTop = top; }
     lines[lines.length - 1].push(s.textContent ?? '');
   }
-  el.innerHTML = lines
+  el.innerHTML = `<span class="sr-only">${text}</span>` + lines
     .map((ws) => `<span class="line" aria-hidden="true"><span class="line-inner">${ws.join(' ')}</span></span>`)
     .join('');
   return qa('.line-inner', el);
 }
 
 function restore(el: HTMLElement) {
-  const text = el.getAttribute('aria-label');
-  if (text != null) { el.textContent = text; el.removeAttribute('aria-label'); }
+  const text = el.dataset.text;
+  if (text != null) { el.textContent = text; delete el.dataset.text; }
 }
 
 export function initReveals() {

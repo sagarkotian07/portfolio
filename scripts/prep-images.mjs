@@ -7,7 +7,7 @@ const exists = async (p) => access(p).then(() => true, () => false);
 
 // key -> source, widths, optional blur (for "video coming soon" posters that must not be readable)
 const jobs = {
-  hero:         { src: 'assets/src/hero.jpeg',          widths: [480, 800, 1280] },
+  hero:         { src: 'assets/src/hero.jpeg',          widths: [480, 640, 800, 1280] },
   casual:       { src: 'assets/src/casual.jpeg',        widths: [480, 960] },
   wall:         { src: 'assets/src/wall.png',           widths: [720, 1200, 1686] },
   bengaluruRun: { src: 'assets/src/bengaluru-run.png',  widths: [640, 1080, 1440] },

@@ -5,11 +5,13 @@ export const images = {
     "height": 1600,
     "avif": [
       480,
+      640,
       800,
       1280
     ],
     "webp": [
       480,
+      640,
       800,
       1280
     ],

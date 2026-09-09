@@ -22,8 +22,11 @@ export function initHeroIntro(onNotes: () => void) {
   const heroEl = q('.hero');
   if (reducedMotion) { heroEl.classList.add('is-ready'); onNotes(); return; }
 
-  // keep the accessible name on the h1 itself
-  name.setAttribute('aria-label', words.map((w) => w.textContent).join(' '));
+  // screen readers get one clean string; the animated letters are decorative
+  const sr = document.createElement('span');
+  sr.className = 'sr-only';
+  sr.textContent = words.map((w) => w.textContent).join(' ');
+  name.prepend(sr);
 
   const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
@@ -32,7 +35,7 @@ export function initHeroIntro(onNotes: () => void) {
     tl.from(chars, { yPercent: 115, duration: 1.05, stagger: 0.032 }, 0.05)
       .from(tagline, { yPercent: 110, duration: 0.85, stagger: 0.1 }, 0.5)
       .from(meta, { opacity: 0, y: 8, duration: 0.6 }, 0.55)
-      .from(photo, { opacity: 0, y: 24, rotation: 4, duration: 1.1 }, 0.45)
+      .from(photo, { y: 28, rotation: 3, duration: 1.1 }, 0.3)
       .from(cta, { opacity: 0, y: 12, duration: 0.6 }, 0.95)
       .from(hint, { opacity: 0, duration: 0.6 }, 1.6)
       .add(onNotes, 0.8);
@@ -41,7 +44,7 @@ export function initHeroIntro(onNotes: () => void) {
     tl.from(name, { opacity: 0, y: 22, duration: 0.9 }, 0.05)
       .from(tagline, { yPercent: 110, duration: 0.8, stagger: 0.1 }, 0.35)
       .from(meta, { opacity: 0, y: 8, duration: 0.5 }, 0.4)
-      .from(photo, { opacity: 0, y: 20, duration: 0.9 }, 0.5)
+      .from(photo, { y: 22, duration: 0.9 }, 0.4)
       .from(cta, { opacity: 0, y: 12, duration: 0.6 }, 0.8)
       .from(notes, { y: -320, rotation: 'random(-40, 40)', opacity: 0, ease: 'bounce.out', duration: 1.15, stagger: 0.07 }, 0.6)
       .from(hint, { opacity: 0, duration: 0.6 }, 1.8)

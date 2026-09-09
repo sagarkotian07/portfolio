@@ -18,7 +18,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" as="image" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" imagesizes="(max-width: 767px) 72vw, 400px" />
+  <link rel="preload" as="image" fetchpriority="high" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" imagesizes="(max-width: 767px) min(72vw, 340px), 400px" />
   <script>
     (function () {
       var d = document.documentElement;
@@ -43,7 +43,7 @@
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-name">
       <header class="nav wrap">
-        <a class="nav__logo" href="#top" aria-label="Back to top">SK</a>
+        <a class="nav__logo" href="#top" aria-label="SK, back to top">SK</a>
         <nav class="nav__links" aria-label="Sections">
           <a href="#startups">Startups</a>
           <a href="#built">Built</a>
@@ -69,8 +69,8 @@
 
         <figure class="hero__photo-wrap">
           <picture class="hero__photo">
-            <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" sizes="(max-width: 767px) 72vw, 400px" />
-            <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-800.webp 800w, /img/hero-1280.webp 1280w" sizes="(max-width: 767px) 72vw, 400px" />
+            <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w, /img/hero-1280.avif 1280w" sizes="(max-width: 767px) min(72vw, 340px), 400px" />
+            <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-640.webp 640w, /img/hero-800.webp 800w, /img/hero-1280.webp 1280w" sizes="(max-width: 767px) min(72vw, 340px), 400px" />
             <img src="/img/hero.jpg" width="1279" height="1600" alt="Sagar Kotian in a dark blazer, smiling, standing in front of a wall of green ivy." fetchpriority="high" decoding="async" />
           </picture>
           <div class="hero__stack" id="hero-3d" data-cursor="fan" aria-hidden="true"></div>
