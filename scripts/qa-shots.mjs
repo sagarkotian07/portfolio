@@ -65,7 +65,18 @@ await run('desktop', { viewport: { width: 1440, height: 900 }, deviceScaleFactor
     await page.waitForTimeout(1500);
     await page.screenshot({ path: `${out}/desktop-thrown.png` });
   }
-  console.log('interact', JSON.stringify({ stack: !!stack, note: !!note }));
+  // demo card: hover preview, then the lightbox with a self-hosted video
+  await page.locator('#built').scrollIntoViewIfNeeded(); await page.waitForTimeout(700);
+  const media = page.locator('.card__media--video').first();
+  await media.hover(); await page.waitForTimeout(1400);
+  const previewing = await media.evaluate((el) => ({ cls: el.classList.contains('is-previewing'), playing: !el.querySelector('video').paused }));
+  await page.screenshot({ path: `${out}/desktop-card-hover.png`, clip: { x: 100, y: 120, width: 1240, height: 640 } });
+  await page.locator('.play').first().click(); await page.waitForTimeout(1500);
+  const lb = await page.evaluate(() => { const v = document.querySelector('#lightbox-frame video'); return { open: document.getElementById('lightbox').open, video: !!v, playing: v ? !v.paused : false, time: v?.currentTime ?? 0 }; });
+  await page.screenshot({ path: `${out}/desktop-lightbox.png` });
+  await page.keyboard.press('Escape'); await page.waitForTimeout(500);
+  const closed = await page.evaluate(() => ({ open: document.getElementById('lightbox').open, videoGone: !document.querySelector('#lightbox-frame video') }));
+  console.log('interact', JSON.stringify({ stack: !!stack, note: !!note, previewing, lightbox: lb, closed }));
   await ctx.close();
 }
 await run('laptop', { viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 }, { fullPage: false, scrollThrough: false });

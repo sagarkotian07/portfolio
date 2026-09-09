@@ -76,7 +76,7 @@ export const images = {
       1280
     ],
     "jpg": "/img/posterInvoice.jpg",
-    "pending": true
+    "pending": false
   },
   "posterDashboard": {
     "width": 1816,
@@ -90,7 +90,7 @@ export const images = {
       1280
     ],
     "jpg": "/img/posterDashboard.jpg",
-    "pending": true
+    "pending": false
   }
 } as const;
 export type ImageKey = keyof typeof images;

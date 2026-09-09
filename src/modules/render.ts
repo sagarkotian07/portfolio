@@ -69,9 +69,11 @@ export function renderAll() {
       let media = '';
       let actions = '';
       if (p.kind === 'video') {
-        if (p.youtubeId) {
-          media = `<div class="card__media">${picture(p.poster, { alt: '', sizes: '(max-width: 767px) 92vw, 380px' })}
-            <button class="play" type="button" data-video="${p.youtubeId}" data-title="${esc(p.title)}" data-cursor="play" aria-label="Play demo: ${esc(p.title)}">${playIcon}</button></div>`;
+        if (p.src) {
+          media = `<div class="card__media card__media--video" data-cursor="play">${picture(p.poster, { alt: '', sizes: '(max-width: 767px) 92vw, 380px' })}
+            <video class="card__preview" muted playsinline loop preload="none" data-src="${p.src}" aria-hidden="true" tabindex="-1"></video>
+            <button class="play" type="button" data-video="${p.src}" data-title="${esc(p.title)}" data-cursor="play" aria-label="Play demo: ${esc(p.title)}">${playIcon}</button></div>`;
+          actions = `<div class="card__actions"><a href="${p.src}" target="_blank" rel="noopener">Open the video ${extIcon}</a></div>`;
         } else {
           media = `<div class="card__media poster--pending">${picture(p.poster, { alt: '', sizes: '(max-width: 767px) 92vw, 380px' })}
             <span class="poster__note" aria-hidden="true">demo video<br>coming soon</span></div>`;

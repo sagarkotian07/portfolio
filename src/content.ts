@@ -44,16 +44,17 @@ export interface Stop {
 
 export const stops: Stop[] = [
   {
-    org: 'CodeRound AI',
-    role: 'Chief of Staff',
-    dates: 'Aug 2024 to Jul 2025',
-    tone: 'orange',
+    org: 'Superjoin',
+    role: 'Founder’s Office, GTM & Customer Success',
+    dates: 'Jan 2026 to now',
+    about: 'AI Excel agent for finance teams, backed by Better Capital. Intern to full-time in Aug 2026.',
+    tone: 'yellow',
     bullets: [
-      'Cold emailed, called and messaged 4,000+ VC partners, YC founders and CTOs. 12+ demos and the company’s first paying customer came out of it.',
-      'Ran client ops for 30+ VC-funded startups including Sarvam AI and Nurix AI.',
-      'Sat in on candidate interviews for roles paying up to 80 LPA.',
+      'Built outbound from zero. 10 to 20 qualified demos a month, and AI Copilot’s first 3 paying customers from CA firms and merchant banks.',
+      'Co-own customer success for a $15K MRR product with one engineer. I’m on every customer issue and I decide what gets fixed first.',
+      'Own the Intercom Fin support agent: wrote the knowledge base it answers from, watch its live replies, close the gaps.',
     ],
-    closer: 'Did all three while still in college, where I was noticeably worse at attendance than at cold email.',
+    closer: 'Sell it, support it, and fact-check the robot when it does math.',
   },
   {
     org: 'Zenskar',
@@ -69,17 +70,16 @@ export const stops: Stop[] = [
     closer: 'Final year of engineering through all of this. The bots had better attendance than I did.',
   },
   {
-    org: 'Superjoin',
-    role: 'Founder’s Office, GTM & Customer Success',
-    dates: 'Jan 2026 to now',
-    about: 'AI Excel agent for finance teams, backed by Better Capital. Intern to full-time in Aug 2026.',
-    tone: 'yellow',
+    org: 'CodeRound AI',
+    role: 'Chief of Staff',
+    dates: 'Aug 2024 to Jul 2025',
+    tone: 'orange',
     bullets: [
-      'Built outbound from zero. 10 to 20 qualified demos a month, and AI Copilot’s first 3 paying customers from CA firms and merchant banks.',
-      'Co-own customer success for a $15K MRR product with one engineer. I’m on every customer issue and I decide what gets fixed first.',
-      'Own the Intercom Fin support agent: wrote the knowledge base it answers from, watch its live replies, close the gaps.',
+      'Cold emailed, called and messaged 4,000+ VC partners, YC founders and CTOs. 12+ demos and the company’s first paying customer came out of it.',
+      'Ran client ops for 30+ VC-funded startups including Sarvam AI and Nurix AI.',
+      'Sat in on candidate interviews for roles paying up to 80 LPA.',
     ],
-    closer: 'Sell it, support it, and fact-check the robot when it does math.',
+    closer: 'Did all three while still in college, where I was noticeably worse at attendance than at cold email.',
   },
 ];
 
@@ -91,7 +91,7 @@ export type Project = {
   tag: string;
   tone: Tone;
 } & (
-  | { kind: 'video'; youtubeId: string | null; poster: 'posterInvoice' | 'posterDashboard'; fallbackUrl: string }
+  | { kind: 'video'; src: string | null; poster: 'posterInvoice' | 'posterDashboard'; fallbackUrl: string }
   | { kind: 'link'; url: string; repo?: string; image: 'bengaluruRun' }
   | { kind: 'diagram' }
   | { kind: 'text' }
@@ -101,7 +101,7 @@ export const projects: Project[] = [
   {
     id: 'invoice-po',
     kind: 'video',
-    youtubeId: null, // TODO: unlisted YouTube ID
+    src: '/video/invoice-po.mp4',
     poster: 'posterInvoice',
     fallbackUrl: 'https://screen.studio/share/62w9eq8a',
     title: 'Invoice to PO reconciliation',
@@ -113,7 +113,7 @@ export const projects: Project[] = [
   {
     id: 'dashboard',
     kind: 'video',
-    youtubeId: null, // TODO: unlisted YouTube ID
+    src: '/video/dashboard.mp4',
     poster: 'posterDashboard',
     fallbackUrl: 'https://screen.studio/share/c7oyPJeH',
     title: 'Superjoin internal dashboard',

@@ -11,8 +11,8 @@ const jobs = {
   casual:       { src: 'assets/src/casual.jpeg',        widths: [480, 960] },
   wall:         { src: 'assets/src/wall.png',           widths: [720, 1200, 1686] },
   bengaluruRun: { src: 'assets/src/bengaluru-run.png',  widths: [640, 1080, 1440] },
-  posterInvoice:   { src: 'assets/src/poster-invoice.png',   widths: [640, 1280], yt: 'assets/src/yt-invoice.jpg',   blur: 28 },
-  posterDashboard: { src: 'assets/src/poster-dashboard.png', widths: [640, 1280], yt: 'assets/src/yt-dashboard.jpg', blur: 28 },
+  posterInvoice:   { src: 'assets/src/poster-invoice.png',   widths: [640, 1280], frame: 'assets/src/frame-invoice.jpg',   blur: 28 },
+  posterDashboard: { src: 'assets/src/poster-dashboard.png', widths: [640, 1280], frame: 'assets/src/frame-dashboard.jpg', blur: 28 },
 };
 
 await mkdir('public/img', { recursive: true });
@@ -20,10 +20,10 @@ await mkdir('src/generated', { recursive: true });
 const out = {};
 
 for (const [key, job] of Object.entries(jobs)) {
-  // If a real YouTube poster has been downloaded, use it sharp; otherwise blur the placeholder.
+  // If prep-video.mjs has extracted a frame, use it sharp; otherwise blur the Screen Studio thumbnail.
   let src = job.src, blur = job.blur ?? 0, pending = false;
-  if (job.yt) {
-    if (await exists(job.yt)) { src = job.yt; blur = 0; }
+  if (job.frame) {
+    if (await exists(job.frame)) { src = job.frame; blur = 0; }
     else pending = true;
   }
   let base = sharp(src).rotate();
