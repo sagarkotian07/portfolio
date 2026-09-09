@@ -10,7 +10,9 @@ export interface InputState { left: boolean; right: boolean; jumpPressed: boolea
 export type Dir = 'up' | 'down' | 'left' | 'right';
 export interface Spike { cx: number; cy: number; dir: Dir }
 export interface Egg { x: number; y: number; taken: boolean; t: number }
-export interface Spring { cx: number; cy: number; t: number; power?: number }
+export interface Spring { cx: number; cy: number; t: number }
+/** A hidden passage: a ball whose centre enters `from` (tile units) reappears at `to` (tile units) with its speed kept. */
+export interface Warp { from: { x0: number; x1: number; y0: number; y1: number }; to: { x: number; y: number } }
 export interface Button { cx: number; cy: number; pressed: boolean; gate: number }
 export interface Gate { cx: number; top: number; bottom: number; open: number }
 export interface Platform { x: number; y: number; w: number; h: number; axis: 'x' | 'y'; min: number; max: number; dir: number; speed: number; vx: number; vy: number }
@@ -23,7 +25,7 @@ export interface Decor { kind: DecorKind; cx: number; cy: number; dir?: Dir; see
 export interface Level {
   w: number; h: number; solid: Uint8Array;
   spikes: Spike[]; eggs: Egg[]; springs: Spring[]; buttons: Button[]; gates: Gate[]; platforms: Platform[]; fans: Fan[];
-  checkpoints: Checkpoint[]; pads: Pad[]; decor: Decor[]; exit: { cx: number; cy: number }; start: { cx: number; cy: number }; eggTotal: number;
+  checkpoints: Checkpoint[]; pads: Pad[]; decor: Decor[]; warps: Warp[]; exit: { cx: number; cy: number }; start: { cx: number; cy: number }; eggTotal: number;
 }
 export type Act = 'right' | 'left' | 'stop' | 'jump' | 'wait';
 export interface DebugInfo { state: string; x: number; y: number; vx: number; vy: number; grounded: boolean; form: Form; deaths: number; eggs: number; eggsLeft: number; wp: number; hazard: { kind: string; x: number; dist: number } | null; platforms: { x: number; y: number; vx: number; vy: number }[] }

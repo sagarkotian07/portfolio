@@ -139,6 +139,10 @@ export class Game {
     if (this.y - r > L.h * T + T || this.y > this.checkpoint.y + 9 * T) { this.die(); return; }
     for (const egg of L.eggs) if (!egg.taken && Math.hypot(egg.x - this.x, egg.y - this.y) < r + 12) { egg.taken = true; this.eggs++; this.burst(egg.x, egg.y, C.eggShade, 10); this.hooks.onHud(this.eggs, L.eggTotal, this.time); }
     for (const pad of L.pads) if (Math.hypot((pad.cx + 0.5) * T - this.x, (pad.cy + 0.5) * T - this.y) < r + 14 && this.form !== pad.form) { this.form = pad.form; this.burst(this.x, this.y, pad.form === 'rock' ? C.rock : pad.form === 'light' ? C.light : C.ball, 16); this.sx = 1.35; this.sy = 0.7; }
+    for (const w of L.warps) if (this.x > w.from.x0 * T && this.x < w.from.x1 * T && this.y > w.from.y0 * T && this.y < w.from.y1 * T) {
+      this.burst(this.x, this.y, C.grass, 8); this.x = w.to.x * T; this.y = w.to.y * T; this.burst(this.x, this.y, C.grass, 8);
+      this.cx = this.x - this.vw * 0.4; this.cy = this.y - this.vh * 0.55; this.clampCam(); break;
+    }
     for (const c of L.checkpoints) if (!c.hit && Math.abs((c.cx + 0.5) * T - this.x) < T * 0.8 && (c.cy + 0.5) * T - this.y > -T && (c.cy + 0.5) * T - this.y < 2.5 * T) { c.hit = true; this.checkpoint = { x: (c.cx + 0.5) * T, y: (c.cy + 0.5) * T }; this.burst(this.x, this.y - r, C.ring, 10); }
     const ex = (L.exit.cx + 0.5) * T, ey = (L.exit.cy - 0.5) * T;
     if (Math.abs(ex - this.x) < r + 14 && Math.abs(ey - this.y) < 34 + r) { this.state = 'won'; this.burst(ex, ey, C.flower, 40); this.hooks.onWin(this.eggs, L.eggTotal, this.time); }
@@ -233,7 +237,7 @@ export class Game {
       for (const p of L.platforms) if (this.overlaps(p, hb) && this.prevBottom <= p.y + Math.abs(p.vy) * 0.04 + 3) { this.y = p.y - hb; res = 'floor'; this.ridingOn = p; }
       for (const g of L.gates) { const gh = (g.bottom - g.top + 1) * T; const box = { x: g.cx * T + 8, y: g.top * T - gh * g.open, w: T - 16, h: gh }; if (g.open < 1 && this.overlaps(box, hb) && this.prevBottom <= box.y + 2) { this.y = box.y - hb; res = 'floor'; } }
       // springs and buttons live in their tiles; touching from above triggers them
-      for (const s of L.springs) if (this.overlapsTile(s.cx, s.cy, hb) && this.vy >= 0) { const jump = Math.sqrt(2 * 2200 * F.grav * (s.power ?? PARAMS.springTiles) * T); this.vy = -jump; this.jumping = false; s.t = 0; this.y = s.cy * T + T - hb - 6; this.sx = 0.75; this.sy = 1.3; this.grounded = false; return null; }
+      for (const s of L.springs) if (this.overlapsTile(s.cx, s.cy, hb) && this.vy >= 0) { const jump = Math.sqrt(2 * 2200 * F.grav * PARAMS.springTiles * T); this.vy = -jump; this.jumping = false; s.t = 0; this.y = s.cy * T + T - hb - 6; this.sx = 0.75; this.sy = 1.3; this.grounded = false; return null; }
       for (const b of L.buttons) if (!b.pressed && this.overlapsTile(b.cx, b.cy, hb)) { b.pressed = true; const g = L.gates[b.gate]; if (g && g.open === 0) g.open = 0.001; this.burst((b.cx + 0.5) * T, b.cy * T + T - 10, C.grass, 8); }
     } else {
       const cy = Math.floor((this.y - hb) / T);

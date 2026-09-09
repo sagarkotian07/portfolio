@@ -1,6 +1,6 @@
 // One tall sky-forest level: two giant vine trunks at the edges, grass branches, floating islands, hanging planks.
 // The map is painted from a station list so the geometry stays in one place; the ball starts at the bottom and climbs.
-import { T, type Level, type Waypoint, type Dir, type Platform, type DebugInfo } from './types';
+import { T, type Level, type Waypoint, type Dir, type Platform, type DebugInfo, type Warp } from './types';
 
 export const W = 44, H = 64;
 export const PARAMS = { platformSpeed: 85, fanForce: 2600, fanReach: 12, gateOpenTime: 0.35, springTiles: 10.5 };
@@ -15,7 +15,7 @@ const ledge = (row: number, c0: number, c1: number) => rect(c0, c1, row, row, '#
 rect(0, W - 1, 61, 63, '#'); rect(14, 17, 61, 62, ' '); for (let c = 14; c <= 17; c++) put(c, 62, '^');
 // the two trunks: two tiles thick with a third column that comes and goes, so the sides wave instead of running straight
 rect(0, 1, 6, 60, 'T'); rect(42, 43, 0, 60, 'T');
-const WAIST_A = [[9, 11], [17, 24], [29, 31], [35, 38], [42, 43], [55, 59]], WAIST_B = [[2, 6], [13, 14], [18, 19], [24, 28], [33, 36], [42, 47], [53, 55]];
+const WAIST_A = [[9, 11], [17, 24], [29, 31], [35, 38], [42, 43], [48, 51], [55, 58]], WAIST_B = [[2, 6], [13, 14], [18, 19], [24, 28], [33, 36], [42, 47], [53, 55]];
 for (let r = 6; r <= 60; r++) if (!WAIST_A.some(([a, b]) => r >= a && r <= b)) put(2, r, 'T');
 for (let r = 0; r <= 60; r++) if (!WAIST_B.some(([a, b]) => r >= a && r <= b)) put(41, r, 'T');
 // stations, bottom to top (planks are three tiles wide so the ball has room to stop)
@@ -53,11 +53,14 @@ rect(27, 28, 42, 45, 'T'); rect(26, 27, 46, 49, 'T');   // under IS, an S bend
 rect(28, 29, 24, 27, 'T'); rect(27, 28, 28, 30, 'T');   // under L10
 rect(12, 13, 16, 17, 'T'); rect(11, 12, 18, 19, 'T');   // under L13
 rect(19, 20, 8, 9, 'T');                                // under L16
-// the hidden path: the notch by the start is the way in, a strong vine spring on its floor fires the ball up a secret shaft inside the trunk and out beside the first flag
-for (let r = 44; r <= 54; r++) put(2, r, 'h');
+// the hidden passage: the notch by the start leads into the left trunk; roll all the way in and the ball comes out of the right trunk into the tunnel above the first right-hand branch (and back the other way)
+rect(0, 1, 56, 58, 'h'); rect(41, 41, 55, 56, 'h');
+const WARPS: Warp[] = [
+  { from: { x0: -1, x1: 1.0, y0: 55, y1: 59.5 }, to: { x: 41.3, y: 56.65 } },
+  { from: { x0: 41.65, x1: 43, y0: 54.5, y1: 57.5 }, to: { x: 1.9, y: 58.65 } },
+];
 // start, springs, goal
-put(4, 60, 'P'); put(19, 52, 'S'); put(3, 32, 'S'); put(2, 59, 'S'); put(6, 4, 'E');
-const SPRING_POWER: Record<string, number> = { '2,59': 16.6 };
+put(4, 60, 'P'); put(19, 52, 'S'); put(3, 32, 'S'); put(6, 4, 'E');
 // checkpoints: signposts on the branches, arrow in the route direction
 const CPS: [number, number, Dir][] = [[28, 58, 'right'], [37, 56, 'left'], [21, 52, 'left'], [6, 44, 'right'], [25, 40, 'right'], [21, 34, 'left'], [8, 32, 'left'], [16, 24, 'right'], [37, 20, 'left'], [13, 14, 'right'], [36, 10, 'left']];
 for (const [c, r] of CPS) put(c, r, 'C');
@@ -80,7 +83,7 @@ export const MAP = grid.map((r) => r.join(''));
 
 export function parseLevel(): Level {
   const h = H, w = W;
-  const L: Level = { w, h, solid: new Uint8Array(w * h), spikes: [], eggs: [], springs: [], buttons: [], gates: [], platforms: [], fans: [], checkpoints: [], pads: [], decor: [], exit: { cx: 6, cy: 4 }, start: { cx: 4, cy: 60 }, eggTotal: 0 };
+  const L: Level = { w, h, solid: new Uint8Array(w * h), spikes: [], eggs: [], springs: [], buttons: [], gates: [], platforms: [], fans: [], checkpoints: [], pads: [], decor: [], warps: WARPS, exit: { cx: 6, cy: 4 }, start: { cx: 4, cy: 60 }, eggTotal: 0 };
   const at = (x: number, y: number) => grid[y]?.[x] ?? ' ';
   const dirOf: Record<string, Dir> = { '^': 'up', v: 'down', '}': 'right', '{': 'left', u: 'up', d: 'down', l: 'left', r: 'right' };
   let seed = 1;
@@ -93,7 +96,7 @@ export function parseLevel(): Level {
       case '^': case 'v': case '}': case '{': L.spikes.push({ cx: x, cy: y, dir: dirOf[ch] }); break;
       case 'o': L.eggs.push({ x: (x + 0.5) * T, y: (y + 0.5) * T, taken: false, t: (seed % 600) / 100 }); break;
       case 'h': L.solid[i] = 6; break;
-      case 'S': L.springs.push({ cx: x, cy: y, t: 1, power: SPRING_POWER[x + ',' + y] }); break;
+      case 'S': L.springs.push({ cx: x, cy: y, t: 1 }); break;
       case 'C': { const cp = CPS.find(([c, r]) => c === x && r === y); L.checkpoints.push({ cx: x, cy: y, hit: false, dir: cp?.[2] ?? 'up' }); break; }
       case 'E': L.exit = { cx: x, cy: y }; break;
       case 'P': L.start = { cx: x, cy: y }; break;
@@ -174,13 +177,11 @@ export function buildWaypoints(route: Step[]): Waypoint[] {
   return out;
 }
 export const WAYPOINTS = buildWaypoints(ROUTE);
-/** The hidden path from the start: hop into the notch by the trunk, ride the vine up the shaft, roll out beside the first flag. */
+/** The hidden passage from the start: hop into the notch, roll left into the trunk, come out of the right trunk into the tunnel over L2. */
 export const HIDDEN_WAYPOINTS: Waypoint[] = [
   { act: 'left', step: true, home: 61 },
-  { col: 3.6, dir: 'left', row: 60, act: 'jump', hold: 0.5 },
-  { act: 'wait', until: (d) => d.vy < -1000 },
-  { act: 'wait', until: (d) => d.y < 45 * T },
-  { act: 'right' },
-  { act: 'wait', until: onRow(45) },
+  { col: 3.6, dir: 'left', row: 60, act: 'jump', hold: 0.45 },
+  { act: 'wait', until: (d) => d.x > 30 * T },
+  { act: 'wait', until: (d) => d.x < 39.5 * T && onRow(57)(d) },
   { act: 'stop' }, { act: 'wait', until: still },
 ];
