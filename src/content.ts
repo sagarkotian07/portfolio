@@ -29,12 +29,8 @@ export const projects: Project[] = [
 export interface Chapter { n: number; place: string; title: string; text: string; media?: { kind: 'image'; key: 'mangalore' | 'beach'; alt: string; caption: string } | { kind: 'video'; src: string; caption: string } }
 export const about = {
   chapters: [
-    { n: 1, place: 'Mumbai', title: 'Grew up in Mumbai.', text: 'Local trains, monsoon evenings and a city that never waits. It taught me to keep moving.' },
-    { n: 2, place: 'Eight years', title: 'Moved cities. Stayed eight years.', text: 'New school, new friends, and enough time for a new place to become home.' },
-    { n: 3, place: 'Mangalore', title: 'Moved to Mangalore for engineering.', text: 'Four years by the coast, most of them spent outside the classroom.', media: { kind: 'image', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.' } },
-    { n: 4, place: 'The degree', title: 'B.Tech in computer science, 2022 to 2026.', text: 'Not an engineer by trade. I build things anyway.', media: { kind: 'image', key: 'beach', alt: 'Sagar on a beach at dusk, pink sky and waves behind him.', caption: 'Class of 2026.' } },
-    { n: 5, place: 'Weekends', title: 'What I do on my weekends.', text: 'Filter coffee first. Then this.', media: { kind: 'video', src: '/video/weekends-preview.mp4', caption: 'Weekends, on loop.' } },
-    { n: 6, place: 'Now', title: 'Bengaluru.', text: 'Founder’s office at Superjoin. Filter coffee over everything.' },
+    { n: 1, place: 'Engineering', title: 'Did my engineering in computer science.', text: 'B.Tech, 2022 to 2026. Not an engineer by trade. I build things anyway.', media: { kind: 'image', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.' } },
+    { n: 2, place: 'Weekends', title: 'What I do on weekends.', text: 'Filter coffee first. Then this.', media: { kind: 'video', src: '/video/weekends-preview.mp4', caption: 'Weekends, on loop.' } },
   ] as Chapter[],
 };
 
