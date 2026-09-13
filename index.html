@@ -168,26 +168,23 @@
 
     <section class="guestbook" id="guestbook" aria-labelledby="guestbook-h">
       <div class="wrap">
-        <div class="guestbook__head">
-          <div>
-            <p class="section__label">Guestbook</p>
-            <h2 class="h2" id="guestbook-h" data-reveal>Sign the<br>guestbook.</h2>
-            <p class="guestbook__lead" id="guestbook-lead"></p>
-          </div>
-          <svg class="guestbook__sign" viewBox="0 0 120 150" aria-hidden="true"><rect x="54" y="60" width="12" height="90" rx="3" fill="#7A4E24"/><rect x="8" y="14" width="104" height="54" rx="8" fill="#7A4E24"/><rect x="12" y="18" width="96" height="46" rx="6" fill="#C48A4A"/><path d="M34 41h34v-9l18 11-18 11v-9H34z" fill="#F7C531"/><path d="M60 14c2-10 10-12 14-10-2 6-6 9-14 10z" fill="#3FBF2E"/></svg>
+        <p class="section__label">Guestbook</p>
+        <h2 class="h2" id="guestbook-h" data-reveal>Leave a note.</h2>
+        <p class="guestbook__lead" id="guestbook-lead"></p>
+        <div class="notepad">
+          <div class="notepad__rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <form class="notepad__form" id="note-form" autocomplete="off" novalidate>
+            <textarea class="notepad__text" id="note-text" name="text" rows="2" maxlength="280" required aria-label="Your note"></textarea>
+            <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <div class="notepad__row">
+              <span class="notepad__count" id="note-count-chars" aria-hidden="true">280</span>
+              <p class="notepad__status" id="note-status" role="status" aria-live="polite"></p>
+              <button class="btn btn--ball" id="note-submit" type="submit" data-magnetic></button>
+            </div>
+          </form>
+          <ol class="entries" id="notes"></ol>
+          <p class="notepad__total" id="note-count"></p>
         </div>
-        <form class="note-form" id="note-form" autocomplete="off" novalidate>
-          <input class="note-form__name" id="note-name" name="name" type="text" maxlength="40" required aria-label="Your name" />
-          <div class="note-form__text-wrap">
-            <textarea class="note-form__text" id="note-text" name="text" rows="2" maxlength="280" required aria-label="Your note"></textarea>
-            <span class="note-form__count" id="note-count-chars" aria-hidden="true">280</span>
-          </div>
-          <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <button class="btn btn--ball" id="note-submit" type="submit" data-magnetic></button>
-          <p class="note-form__status" id="note-status" role="status" aria-live="polite"></p>
-        </form>
-        <p class="guestbook__count" id="note-count"></p>
-        <ul class="notes" id="notes"></ul>
       </div>
     </section>
 

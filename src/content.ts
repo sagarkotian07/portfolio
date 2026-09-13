@@ -41,12 +41,11 @@ export const about = {
   ] as Photo[],
 };
 export const guestbook = {
-  lead: 'Leave a note, say hi, share a thought. No sign in, 280 characters.',
-  namePlaceholder: 'Your name',
+  lead: 'Say hi, share a thought, recommend a coffee. No name needed, 280 characters.',
   textPlaceholder: 'Write something',
   button: 'Pin it',
   empty: 'Nothing here yet. Be the first.',
-  seed: [{ id: 'seed-1', name: 'Sagar', text: 'First note is mine. Say hi, tell me what you are building, or just leave a coffee recommendation.', at: Date.UTC(2026, 8, 13) }],
+  seed: [{ id: 'seed-1', n: 1, text: 'First note is mine. Say hi, tell me what you are building, or just leave a coffee recommendation.', at: Date.UTC(2026, 8, 13, 9, 30) }],
 };
 
 export const links = {

@@ -53,7 +53,6 @@ export function renderAll() {
     </figure>`;
   }).join('');
   q('#guestbook-lead').textContent = guestbook.lead;
-  q<HTMLInputElement>('#note-name').placeholder = guestbook.namePlaceholder;
   q<HTMLTextAreaElement>('#note-text').placeholder = guestbook.textPlaceholder;
   q('#note-submit').textContent = guestbook.button;
 

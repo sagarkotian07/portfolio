@@ -1,8 +1,8 @@
-// Guestbook API for Vercel: GET lists notes, POST adds one, DELETE removes one with the admin key.
+// Guestbook API for Vercel: GET lists notes (anonymous, numbered), POST adds one, DELETE removes one with the admin key.
 // Store: Upstash Redis (UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN from the Vercel marketplace integration).
 import { Redis } from '@upstash/redis';
 
-interface Note { id: string; name: string; text: string; at: number }
+interface Note { id: string; n: number; text: string; at: number }
 type Req = { method?: string; headers: Record<string, string | string[] | undefined>; body?: unknown; query?: Record<string, string | string[] | undefined> };
 type Res = { status: (n: number) => Res; json: (b: unknown) => void; setHeader: (k: string, v: string) => void };
 
@@ -21,12 +21,13 @@ export default async function handler(req: Req, res: Res) {
   if (req.method === 'POST') {
     const body = (typeof req.body === 'string' ? JSON.parse(req.body) : req.body ?? {}) as Record<string, unknown>;
     if (body.website) return res.status(200).json({ ok: true }); // honeypot
-    const name = clean(body.name, 40) || 'Someone', text = clean(body.text, 280);
+    const text = clean(body.text, 280);
     if (text.length < 2) return res.status(400).json({ error: 'Write a little more than that.' });
     const ip = String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() || 'unknown';
     const rl = await redis.set(`guestbook:rl:${ip}`, '1', { nx: true, ex: 60 });
     if (rl !== 'OK') return res.status(429).json({ error: 'One note a minute, please.' });
-    const note: Note = { id: Math.random().toString(36).slice(2, 10) + Date.now().toString(36), name, text, at: Date.now() };
+    const n = await redis.incr('guestbook:seq');
+    const note: Note = { id: Math.random().toString(36).slice(2, 10) + Date.now().toString(36), n, text, at: Date.now() };
     await redis.lpush(KEY, JSON.stringify(note));
     await redis.ltrim(KEY, 0, 999);
     return res.status(200).json({ note });
