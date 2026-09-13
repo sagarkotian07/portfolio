@@ -1,4 +1,4 @@
-import { hero, stops, projects, about, guestbook, links } from '../content';
+import { hero, stops, projects, about, links } from '../content';
 import { images, type ImageKey } from '../generated/images';
 import { q } from './prefs';
 
@@ -50,8 +50,6 @@ export function renderAll() {
       <button class="print__open" type="button" aria-label="Open photo: ${esc(ph.caption)}">${picture(ph.key, { alt: ph.alt, sizes: ph.wide ? '(max-width: 899px) 90vw, 480px' : '(max-width: 899px) 45vw, 240px' })}</button>
       <figcaption class="print__cap">${esc(ph.caption)}</figcaption>
     </figure>`).join('');
-  q('#guestbook-lead').textContent = guestbook.lead;
-  q<HTMLTextAreaElement>('#note-text').placeholder = guestbook.textPlaceholder;
 
   q('#sayhi-links').innerHTML = `
     <li><a class="sayhi__row" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)}</small></a></li>

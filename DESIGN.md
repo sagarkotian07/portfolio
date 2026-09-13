@@ -2,7 +2,7 @@
 
 ## Concept
 
-The page is a single quiet sheet of pale leaf green. The game canvas is the one bright window cut into it, near the top, and the page ends on the dark forest floor where the closing "Say hi" lives. Sky above, ground below, and the red ball is the only thing that moves between them: it idles on the hero's baseline, drops into the sky window, rolls along the Work map as you scroll, and is the cursor on desktop. Everything around the canvas is disciplined typography on one ground, so the game and the person carry the play instead of hills, polaroids and wood grain.
+The page is a single quiet sheet of pale leaf green. Near the end, the game canvas is the one bright window cut into it, and the page lands on the dark forest floor right after, where the closing "Say hi" lives. The red ball is the thread that runs down the sheet: it idles on the hero's baseline, rolls along the Work map as you scroll, is the cursor on desktop, and waits in the sky window at the bottom, one press of space away. Everything around the canvas is disciplined typography on one ground, so the game and the person carry the play instead of hills, polaroids and wood grain.
 
 The palette is taken from the game's own art and toned for reading: the level's deep tree green becomes the ink, its grass becomes a pale tint for the ground, its ball is the accent, its eggs are the highlight. The saturated sky appears only inside the canvas, so the window reads as a window.
 
@@ -13,7 +13,7 @@ The palette is taken from the game's own art and toned for reading: the level's 
 | leaf | #EEF2E8 | the page ground, everywhere |
 | leaf-2 | #DFE7D6 | quiet surfaces: map hills, pills, key caps, badges |
 | line | #C3CEBB | rules and borders |
-| paper | #FFFFFF | inputs and the guestbook page |
+| paper | #FFFFFF | the lightbox plate |
 | forest | #102A1B | ink, headings, rules |
 | moss | #4E6353 | secondary text: meta, dates, captions |
 | ball | #E8402F | the accent, always as an object: dots, the ball, the send key, the play key |
@@ -25,8 +25,8 @@ The palette is taken from the game's own art and toned for reading: the level's 
 
 ## Type
 
-- Display: Young Serif (single weight, chunky, low contrast). The name, the section headings, "Bounce.", "Guestbook", "Say hi.".
-- Text: Schibsted Grotesk variable 400 to 900 with true italics. Everything else. Italic for captions and the small human asides (photo captions, the guestbook lead, "Coffee in Bengaluru: yes.").
+- Display: Young Serif (single weight, chunky, low contrast). The name, the section headings, "Bounce.", "Say hi.".
+- Text: Schibsted Grotesk variable 400 to 900 with true italics. Everything else. Italic for captions and the small human asides (photo captions, "Coffee in Bengaluru: yes.").
 - Both self-hosted as latin woff2 subsets under public/fonts, preloaded, with metric-matched Arial fallbacks so nothing shifts.
 
 Scale (1.25 modular from 17px):
@@ -42,25 +42,29 @@ Line length: body 60ch max. Story lines 26ch. Left aligned throughout.
 
 ## Layout
 
-One container, max 1200px, gutter clamp(20px, 5vw, 64px). From 1000px up, every content section is a two-column grid: a 150px margin column on the left holding the section's running head (sticky while the section scrolls), and the content column on the right. Below 1000px the running head sits above the content as a small line. Sections are separated by a 2px forest rule that starts at the margin, not by colour blocks.
+Order: Hero, Work, Built, About, Play, Say hi. One container, max 1200px, gutter clamp(20px, 5vw, 64px). From 1000px up, every content section is a two-column grid: a 150px margin column on the left holding the section's running head (sticky while the section scrolls), and the content column on the right. Below 1000px the running head sits above the content as a small line. Sections are separated by a 2px forest rule that starts at the margin, not by colour blocks.
 
-- Header: fixed, thin. A small ball face and "Sagar" on the left, five links on the right. Transparent until you scroll, then a translucent leaf backdrop.
-- Hero: the meta line, then the name as a one-line masthead across the full container, then a row with the tagline and "press space to play" on the left and the portrait (4:5, rounded) on the right. The ball idles along the hero's bottom rule. On phones the portrait is square, full width, under the name.
-- Play: the canvas fills the viewport height and the full width. The start and win overlays are a leaf-coloured plate in the bottom-left corner, in the page's type, so the overlay belongs to the page and the level stays visible behind. The HUD is two small leaf pills (eggs top-left, time top-right). The leave key is a small pill under the time. Phone touch controls are three keypad caps: left and right arrows bottom-left, a round key with the red ball bottom-right.
-- Work: heading, then the hill map in leaf-2 with the ball rolling the forest-ink path as you scroll, then four columns under a 2px rule each: logo and org name (a link, underlined on hover), role, dates, one line.
+- Header: fixed, thin. A small ball face and "Sagar" on the left, four links on the right. Transparent until you scroll, then a translucent leaf backdrop.
+- Hero: the meta line, then the name as a one-line masthead across the full container, then a row with the tagline and "press space to play" grouped on the left, centred against the portrait (300px, 4:5, rounded) on the right. The ball idles along the hero's bottom rule. On phones the name takes two lines and the portrait is square, full width, under the name.
+- Work: the heading "Work so far.", then the hill map in leaf-2 with the ball rolling the forest-ink path as you scroll, then four columns under a 2px rule each: logo and org name (a link, underlined on hover), role, dates, one line.
 - Built: heading, three columns: media box (rounded, thin border, badge as a leaf pill, play key as a red ball on the demos), bold title, line, an underlined Watch or Open link.
-- About: heading and the three story lines with the hand-drawn marks on the left, five prints on the right as a 3-column grid (the wide one spans two), italic captions under each. Lightbox is a white plate on a deep backdrop.
-- Guestbook: a white page with a forest border. On desktop it is two columns: the title, lead and the write box on the left; the numbered notes on the right in their own scrolling column (data-lenis-prevent). On phones they stack.
+- About: heading and the three story lines with the hand-drawn marks on the left, five prints on the right as a 3-column grid (the wide one spans two), italic captions under each. Lightbox is a white plate on a deep backdrop, the close key sits on the photo's corner.
+- Play: its own chapter after About, with the rule and the "Play" running head like the others, and the window as a full-width figure under them: the canvas at the container's width, rounded, with a 2px forest frame, sized to fit under the rule in one viewport so the hero's hint and the nav's Play link land on the whole window. The start and win overlays are a leaf-coloured plate in the window's corner, in the page's type, so the level stays visible behind. The HUD is two small leaf pills (eggs top-left, time top-right) that appear only while playing; the leave key is a small round key beside the time. Phone touch controls are three keypad caps: left and right arrows bottom-left, a round key with the red ball bottom-right. The way out is the forest floor: the deep Say hi block starts right after the chapter's bottom margin, so you play, then you say hi.
 - Say hi: the deep block. "Say hi." in leaf, then three big rows separated by hairlines (WhatsApp with the number, the email with copy, LinkedIn), then "Coffee in Bengaluru: yes." in italic. The footer lines sit inside the same block under a hairline.
 
 ## Motion
 
 - One page-load sequence: the ball drops on the preloader onto a forest line (three dots light gold on each bounce), the sheet wipes up, the name rises, the portrait settles, meta, tagline and hint fade in. Nothing else animates on entry.
+- "press space to play" (or the space key while the hero is on screen) scrolls the page down to the Play chapter in one second and starts the game when it arrives.
 - Scroll answers: the map ball rolls with the scroll and the path draws just ahead of it; the story marks draw themselves once when the story is in view.
 - Pointer answers: link underlines, the demo preview plays while the pointer rests on it, the play key grows, keys press down. No lift-on-hover cards.
 - Reduced motion: no preloader, no idle ball, no cursor, no smooth scroll, marks drawn, map ball parked at the start, everything visible.
 - The desktop cursor is the red ball with eyes; its label is a forest pill.
 
+## Share card
+
+og.html renders the same hero (masthead, tagline, portrait, the ball on the rule) at 1200x630; public/og.jpg is its screenshot.
+
 ## Rules kept
 
-No em dashes in visible text. Every word in content.ts and index.html as written. Say hi only at the end. No resume, no music, no stats. Game files untouched.
+No em dashes in visible text. Every word in content.ts and index.html as written, with Sagar's later changes: the Work heading is "Work so far." and the guestbook is gone (section, module, API, copy, styles and the Redis dependency). Say hi only at the end. No resume, no music, no stats. Game files untouched.

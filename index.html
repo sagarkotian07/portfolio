@@ -50,7 +50,7 @@
       <span>Sagar</span>
     </a>
     <nav class="nav__links" aria-label="Sections">
-      <a href="#play">Play</a><a href="#work">Work</a><a href="#built">Built</a><a href="#about">About</a><a href="#guestbook">Guestbook</a>
+      <a href="#play">Play</a><a href="#work">Work</a><a href="#built">Built</a><a href="#about">About</a>
     </nav>
   </header>
 
@@ -78,48 +78,11 @@
       </div>
     </section>
 
-    <section class="game" id="play" aria-labelledby="game-title">
-      <div class="game__stage" id="game-stage" style="background:#5EC5F5">
-        <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer in a sky forest. Arrow keys to roll, space to jump."></canvas>
-        <div class="game__hud" id="hud" aria-live="off">
-          <span class="hud__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><path d="M14 6c4 3 6 9 5.5 14-1 5-4 7-7 7 5-2 6-8 5-13-1-4-2-6-3.5-8z" fill="#DE9A3C"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><b id="hud-eggs">0/0</b></span>
-          <span class="hud__time"><b id="hud-time">0:00</b><svg class="hud__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#102A1B" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="#102A1B" stroke-width="2.2" stroke-linecap="round"/></svg></span>
-        </div>
-        <div class="game__touch" id="game-touch" aria-hidden="true">
-          <div class="touch__pad">
-            <button type="button" data-key="left" aria-label="Roll left"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 3L5 10l9 7z" fill="currentColor"/></svg></button>
-            <button type="button" data-key="right" aria-label="Roll right"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3l9 7-9 7z" fill="currentColor"/></svg></button>
-          </div>
-          <button type="button" class="touch__jump" data-key="jump" aria-label="Jump"><i></i></button>
-        </div>
-        <div class="game__overlay" id="game-start">
-          <div class="plate">
-            <p class="chapter__head">Play</p>
-            <h2 class="game__title" id="game-title"></h2>
-            <p class="game__intro" id="game-intro"></p>
-            <button class="key key--ball key--big" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
-            <p class="game__controls" id="game-controls"></p>
-          </div>
-        </div>
-        <div class="game__overlay" id="game-end" hidden>
-          <div class="plate">
-            <p class="chapter__head" id="game-end-label"></p>
-            <h2 class="game__title game__title--sm" id="game-end-title"></h2>
-            <p class="game__intro" id="game-end-line"></p>
-            <div class="game__actions">
-              <button class="key key--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
-            </div>
-          </div>
-        </div>
-        <button class="game__leave" id="game-leave" type="button" hidden aria-label="Leave the game (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
-      </div>
-    </section>
-
     <section class="chapter work" id="work" aria-labelledby="work-h">
       <div class="wrap chapter__grid">
         <p class="chapter__head">Work</p>
         <div class="chapter__body">
-          <h2 class="h2" id="work-h">Four startups,<br>one degree.</h2>
+          <h2 class="h2" id="work-h">Work so far.</h2>
           <div class="levelmap" id="levelmap">
             <svg class="levelmap__svg" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
               <path class="levelmap__hills" d="M0,260 L0,200 C120,120 220,120 340,200 C440,270 560,270 660,190 C760,110 860,110 960,190 C1060,255 1140,255 1200,215 L1200,260 Z"/>
@@ -165,27 +128,42 @@
       </dialog>
     </section>
 
-    <section class="chapter guestbook" id="guestbook" aria-labelledby="guestbook-h">
+    <section class="chapter game" id="play" aria-labelledby="game-title">
       <div class="wrap chapter__grid">
-        <p class="chapter__head">Guestbook</p>
-        <div class="chapter__body">
-          <div class="book">
-            <div class="book__write">
-              <h2 class="book__title" id="guestbook-h">Guestbook</h2>
-              <p class="book__lead" id="guestbook-lead"></p>
-              <form class="chat" id="note-form" autocomplete="off" novalidate>
-                <textarea class="chat__input" id="note-text" name="text" rows="1" maxlength="280" required aria-label="Your note"></textarea>
-                <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
-                <button class="chat__send" id="note-submit" type="submit" aria-label="Post your note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-              </form>
-              <p class="book__foot">
-                <span class="book__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><span id="note-count"></span></span>
-                <span class="book__status" id="note-status" role="status" aria-live="polite"></span>
-                <span class="book__chars" id="note-count-chars" aria-hidden="true">0/280</span>
-              </p>
-            </div>
-            <ol class="entries" id="notes" data-lenis-prevent tabindex="0" aria-label="Notes"></ol>
+        <p class="chapter__head">Play</p>
+        <div class="game__stage" id="game-stage" style="background:#5EC5F5">
+          <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer in a sky forest. Arrow keys to roll, space to jump."></canvas>
+          <div class="game__hud" id="hud" aria-live="off">
+            <span class="hud__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><path d="M14 6c4 3 6 9 5.5 14-1 5-4 7-7 7 5-2 6-8 5-13-1-4-2-6-3.5-8z" fill="#DE9A3C"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><b id="hud-eggs">0/0</b></span>
+            <span class="hud__time"><b id="hud-time">0:00</b><svg class="hud__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#102A1B" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="#102A1B" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </div>
+          <div class="game__touch" id="game-touch" aria-hidden="true">
+            <div class="touch__pad">
+              <button type="button" data-key="left" aria-label="Roll left"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 3L5 10l9 7z" fill="currentColor"/></svg></button>
+              <button type="button" data-key="right" aria-label="Roll right"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3l9 7-9 7z" fill="currentColor"/></svg></button>
+            </div>
+            <button type="button" class="touch__jump" data-key="jump" aria-label="Jump"><i></i></button>
+          </div>
+          <div class="game__overlay" id="game-start">
+            <div class="plate">
+              <p class="chapter__head">Play</p>
+              <h2 class="game__title" id="game-title"></h2>
+              <p class="game__intro" id="game-intro"></p>
+              <button class="key key--ball key--big" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
+              <p class="game__controls" id="game-controls"></p>
+            </div>
+          </div>
+          <div class="game__overlay" id="game-end" hidden>
+            <div class="plate">
+              <p class="chapter__head" id="game-end-label"></p>
+              <h2 class="game__title game__title--sm" id="game-end-title"></h2>
+              <p class="game__intro" id="game-end-line"></p>
+              <div class="game__actions">
+                <button class="key key--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
+              </div>
+            </div>
+          </div>
+          <button class="game__leave" id="game-leave" type="button" hidden aria-label="Leave the game (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
         </div>
       </div>
     </section>

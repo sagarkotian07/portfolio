@@ -1,21 +1,23 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="/src/styles/tokens.css"><link rel="stylesheet" href="/src/styles/fonts.css">
 <style>
-html,body{margin:0;width:1200px;height:630px;overflow:hidden;font-family:var(--font-body);color:#14120F}
-.card{position:relative;width:1200px;height:630px;padding:70px 72px;box-sizing:border-box;background:linear-gradient(180deg,#BFE3FF 0%,#E4F2FF 55%,#F7F3EC 100%)}
-.meta{font-weight:700;font-size:20px;color:#5C574E}
-.name{margin-top:18px;font-family:var(--font-display);font-size:132px;line-height:.92;letter-spacing:-.02em;font-weight:700}
-.name b{display:block;font-weight:700;color:#E8402F}
-.tag{margin-top:30px;font-family:var(--font-display);font-weight:500;font-size:34px;line-height:1.2;max-width:520px}
-.hoop{position:absolute;right:90px;top:95px;width:380px;height:380px;border-radius:50%;overflow:hidden;border:14px solid #F5B400;box-shadow:inset 0 0 0 6px #fff,inset 0 -10px 0 #C98F00;background:#EFE9DF}
-.hoop img{width:100%;height:100%;object-fit:cover;object-position:50% 10%}
-.ball{position:absolute;left:640px;bottom:60px;width:70px;height:70px;border-radius:50%;background:#E8402F;box-shadow:inset -10px -10px 0 rgba(0,0,0,.18)}
-.ball i{position:absolute;top:20px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:inset 5px 5px 0 #14120F}
-.ball i:first-child{left:14px}.ball i:last-child{right:14px}
-.hill{position:absolute;left:0;right:0;bottom:0;height:44px;background:#5FBF4B;border-top:6px solid #3E8F33}
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;font-family:var(--font-text);color:var(--forest);background:var(--leaf)}
+.card{position:relative;width:1200px;height:630px;padding:64px 72px;box-sizing:border-box}
+.meta{font-weight:500;font-size:22px;color:var(--moss)}
+.name{margin-top:14px;font-family:var(--font-display);font-weight:400;font-size:150px;line-height:.9;letter-spacing:-.015em;white-space:nowrap}
+.tag{margin-top:44px;font-weight:500;font-size:38px;line-height:1.22;letter-spacing:-.015em;max-width:560px}
+.hint{position:absolute;left:72px;bottom:72px;display:flex;align-items:center;gap:12px;font-weight:600;font-size:22px;color:var(--moss)}
+.hint i{width:14px;height:14px;border-radius:50%;background:var(--ball);box-shadow:inset -3px -3px 0 rgba(0,0,0,.18)}
+.portrait{position:absolute;right:72px;top:300px;width:236px;height:296px;border-radius:14px;overflow:hidden;background:var(--leaf-2)}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+.rule{position:absolute;left:72px;right:72px;bottom:40px;height:2px;background:var(--forest)}
+.ball{position:absolute;left:640px;bottom:42px;width:56px;height:56px;border-radius:50%;background:var(--ball);box-shadow:inset -8px -8px 0 rgba(0,0,0,.18)}
+.ball i{position:absolute;top:16px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:inset 4px 4px 0 var(--forest)}
+.ball i:first-child{left:11px}.ball i:last-child{right:11px}
 </style></head><body><div class="card">
 <p class="meta">Founder’s office · Superjoin · Bengaluru</p>
-<h1 class="name">Sagar<b>Kotian</b></h1>
+<h1 class="name">Sagar Kotian</h1>
 <p class="tag">I like the part of a startup where nothing has an owner yet.</p>
-<div class="hoop"><img src="/img/hero.jpg"></div>
-<div class="hill"></div><div class="ball"><i></i><i></i></div>
+<p class="hint"><i></i>press space to play</p>
+<div class="portrait"><img src="/img/hero.jpg"></div>
+<div class="rule"></div><div class="ball"><i></i><i></i></div>
 </div></body></html>

@@ -39,14 +39,6 @@ export const about = {
     { id: 'lighthouse', key: 'lighthouse', alt: 'Sagar in a white shirt beside a striped lighthouse, arm raised as if resting it on the top.', caption: 'Almost there.' },
   ] as Photo[],
 };
-export const guestbook = {
-  lead: 'leave a note, say hi, share a thought :)',
-  textPlaceholder: 'write something…',
-  button: 'Post',
-  count: (n: number) => `${n} note${n === 1 ? '' : 's'}`,
-  empty: 'Nothing here yet. Be the first.',
-  seed: [{ id: 'seed-1', n: 1, text: 'First note is mine. Say hi, tell me what you are building, or just leave a coffee recommendation.', at: Date.UTC(2026, 8, 13, 9, 30) }],
-};
 
 export const links = {
   whatsapp: 'https://wa.me/919321747802?text=Hi%20Sagar',
