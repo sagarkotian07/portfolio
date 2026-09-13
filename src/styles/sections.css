@@ -93,6 +93,7 @@ html[data-motion="full"] .levelmap__path { stroke-dashoffset: 1; }
 .card__title { font-weight: 700; font-size: var(--step-1); line-height: 1.2; margin-top: 8px; }
 .card__line { color: var(--moss); }
 .card__link { width: fit-content; font-weight: 600; }
+.card__links { display: flex; flex-wrap: wrap; gap: 6px 20px; }
 @media (max-width: 899px) { .cards { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 599px) { .cards { grid-template-columns: 1fr; gap: 28px; } }
 

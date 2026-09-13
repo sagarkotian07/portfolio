@@ -11,13 +11,13 @@ const jobs = {
   casual:       { src: 'assets/src/casual.jpeg',        widths: [480, 960] },
   wall:         { src: 'assets/src/wall.png',           widths: [720, 1200, 1686] },
   bengaluruRun: { src: 'assets/src/bengaluru-run.png',  widths: [640, 1080, 1440] },
+  desilingo:    { src: 'assets/src/desilingo-card.png', widths: [640, 1080, 1440] },
   mangalore:    { src: 'assets/src/mangalore.jpeg',     widths: [480, 960] },
   beach:        { src: 'assets/src/beach.png',          widths: [480, 960, 1500] },
   waterfall:    { src: 'assets/src/waterfall.png',      widths: [640, 1280] },
   cafe:         { src: 'assets/src/cafe.png',           widths: [480, 960] },
   lighthouse:   { src: 'assets/src/lighthouse.png',     widths: [480, 960] },
   posterInvoice:   { src: 'assets/src/poster-invoice.png',   widths: [640, 1280], frame: 'assets/src/frame-invoice.jpg',   blur: 28 },
-  posterDashboard: { src: 'assets/src/poster-dashboard.png', widths: [640, 1280], frame: 'assets/src/frame-dashboard.jpg', blur: 28 },
 };
 
 await mkdir('public/img', { recursive: true });

@@ -64,6 +64,22 @@ export const images = {
     "jpg": "/img/bengaluruRun.jpg",
     "pending": false
   },
+  "desilingo": {
+    "width": 1900,
+    "height": 1188,
+    "avif": [
+      640,
+      1080,
+      1440
+    ],
+    "webp": [
+      640,
+      1080,
+      1440
+    ],
+    "jpg": "/img/desilingo.jpg",
+    "pending": false
+  },
   "mangalore": {
     "width": 960,
     "height": 1280,
@@ -148,20 +164,6 @@ export const images = {
       1280
     ],
     "jpg": "/img/posterInvoice.jpg",
-    "pending": false
-  },
-  "posterDashboard": {
-    "width": 1816,
-    "height": 1080,
-    "avif": [
-      640,
-      1280
-    ],
-    "webp": [
-      640,
-      1280
-    ],
-    "jpg": "/img/posterDashboard.jpg",
     "pending": false
   }
 } as const;

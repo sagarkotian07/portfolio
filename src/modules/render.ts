@@ -34,7 +34,7 @@ export function renderAll() {
     return `<article class="card">${media}
       <h3 class="card__title">${esc(p.title)}</h3>
       <p class="card__line">${esc(p.line)}</p>
-      <a class="card__link link" href="${p.url}" target="_blank" rel="noopener">${esc(p.cta)}</a>
+      <p class="card__links"><a class="card__link link" href="${p.url}" target="_blank" rel="noopener" aria-label="${esc(p.cta)} ${esc(p.title)}">${esc(p.cta)}</a>${p.repo ? `<a class="card__link link" href="${p.repo}" target="_blank" rel="noopener" aria-label="${esc(p.title)} on GitHub">GitHub</a>` : ''}</p>
     </article>`;
   }).join('');
 
@@ -54,7 +54,8 @@ export function renderAll() {
   q('#sayhi-links').innerHTML = `
     <li><a class="sayhi__row" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)}</small></a></li>
     <li><button class="sayhi__row" type="button" id="copy-email" data-cursor="copy"><span>${esc(links.email)}</span><small>copy</small></button></li>
-    <li><a class="sayhi__row" href="${links.linkedin}" target="_blank" rel="noopener" data-cursor="open"><span>LinkedIn</span></a></li>`;
+    <li><a class="sayhi__row" href="${links.linkedin}" target="_blank" rel="noopener" data-cursor="open"><span>LinkedIn</span></a></li>
+    <li><a class="sayhi__row" href="${links.github}" target="_blank" rel="noopener" data-cursor="open"><span>GitHub</span></a></li>`;
 }
 
 export function initCopyEmail() {

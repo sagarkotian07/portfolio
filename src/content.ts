@@ -16,14 +16,14 @@ export const stops: Stop[] = [
   { org: 'CogniMuse', url: 'https://www.cognimuse.com/', logo: '/img/logos/cognimuse.png', role: 'Digital marketing intern', dates: 'Sep 2023 to Mar 2024', line: 'My first startup, and their first intern. This is where I first heard of YC, in the second year of college.' },
 ];
 
-export type Project = { id: string; title: string; line: string; label: string; url: string; cta: string } &
-  ({ kind: 'video'; preview: string; poster: 'posterInvoice' | 'posterDashboard' } | { kind: 'site'; image: 'bengaluruRun' });
+export type Project = { id: string; title: string; line: string; label: string; url: string; cta: string; repo?: string } &
+  ({ kind: 'video'; preview: string; poster: 'posterInvoice' } | { kind: 'site'; image: 'bengaluruRun' | 'desilingo' });
 export const projects: Project[] = [
   { id: 'invoice-po', kind: 'video', preview: '/video/invoice-po-preview.mp4', poster: 'posterInvoice', url: 'https://screen.studio/share/62w9eq8a', cta: 'Watch', label: 'demo',
     title: 'Invoice to PO reconciliation', line: 'Drop in invoices and purchase orders. It matches them so nobody has to.' },
-  { id: 'dashboard', kind: 'video', preview: '/video/dashboard-preview.mp4', poster: 'posterDashboard', url: 'https://screen.studio/share/c7oyPJeH', cta: 'Watch', label: 'demo',
-    title: 'Superjoin internal dashboard', line: 'Billing, usage and support in one screen, so I stop opening four tabs.' },
-  { id: 'bengaluru-run', kind: 'site', image: 'bengaluruRun', url: 'https://bengaluru-run.vercel.app', cta: 'Open', label: 'live',
+  { id: 'desilingo', kind: 'site', image: 'desilingo', url: 'https://desilingo-omega.vercel.app/kn', repo: 'https://github.com/sagarkotian07/desilingo', cta: 'Open', label: 'live',
+    title: 'Desilingo', line: 'Learn Indian languages by ear. Say a phrase and it tells you which word slipped.' },
+  { id: 'bengaluru-run', kind: 'site', image: 'bengaluruRun', url: 'https://bengaluru-run.vercel.app', repo: 'https://github.com/sagarkotian07/Bengaluru.run', cta: 'Open', label: 'live',
     title: 'Bengaluru.run', line: 'A map of running routes in Bengaluru. I run, so this was inevitable.' },
 ];
 
@@ -45,6 +45,7 @@ export const links = {
   whatsappLabel: '+91 93217 47802',
   email: 'kotiansagar07@gmail.com',
   linkedin: 'https://linkedin.com/in/sagar-kotian-',
+  github: 'https://github.com/sagarkotian07',
 };
 
 export const game = {

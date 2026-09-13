@@ -1,0 +1,7 @@
+# Keep private originals and local QA output off Vercel. assets/src holds unblurred source images and videos.
+assets/src
+qa
+dist
+.DS_Store
+*.log
+lighthouse-*.html
