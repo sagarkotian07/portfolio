@@ -7,3 +7,4 @@ qa/
 *.log
 # originals stay local; public/img holds the generated outputs
 assets/src/
+.env*
