@@ -27,17 +27,16 @@ export const projects: Project[] = [
     title: 'Bengaluru.run', line: 'A map of running routes in Bengaluru. I run, so this was inevitable.' },
 ];
 
-export type PhotoTag = 'college' | 'treks' | 'weekends';
-export interface Photo { id: string; kind: 'image' | 'video'; key?: 'mangalore' | 'beach' | 'waterfall' | 'cafe'; src?: string; alt: string; caption: string; tag: PhotoTag }
+export interface Photo { id: string; key: 'mangalore' | 'waterfall' | 'beach' | 'cafe' | 'lighthouse'; alt: string; caption: string; wide?: boolean }
 export const about = {
-  lines: ['Bengaluru, via Mangalore and Mumbai.', 'Founder’s office at Superjoin. Sales, support and whatever is on fire.', 'Filter coffee over everything. Weekends are for the hills.'],
-  hint: 'drag them around, tap one to see it big',
-  tags: ['all', 'college', 'treks', 'weekends'] as const,
+  // [o:..] marker loop, [u:..] wavy underline, [h:..] highlighter
+  lines: ['[o:Somehow] ended up in engineering.', 'Spent all of college working at startups, [u:just for fun].', 'I just wanted to figure things out, so I ended up [h:a generalist].'],
   photos: [
-    { id: 'classroom', kind: 'image', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.', tag: 'college' },
-    { id: 'waterfall', kind: 'image', key: 'waterfall', alt: 'Sagar and three friends grinning in front of a waterfall in the forest.', caption: 'Found the waterfall. Lost the trail twice.', tag: 'treks' },
-    { id: 'beach', kind: 'image', key: 'beach', alt: 'Sagar on a beach at dusk, pink sky and waves behind him.', caption: 'Pink sky on the Mangalore coast.', tag: 'weekends' },
-    { id: 'cafe', kind: 'image', key: 'cafe', alt: 'Sagar at a cafe counter, looking straight into the camera.', caption: 'What I do on weekends.', tag: 'weekends' },
+    { id: 'classroom', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.' },
+    { id: 'waterfall', key: 'waterfall', alt: 'Sagar and three friends grinning in front of a waterfall in the forest.', caption: 'Found the waterfall. Lost the trail twice.', wide: true },
+    { id: 'beach', key: 'beach', alt: 'Sagar on a beach at dusk, pink sky and waves behind him.', caption: 'Pink sky on the Mangalore coast.' },
+    { id: 'cafe', key: 'cafe', alt: 'Sagar at a cafe counter, looking into the camera.', caption: 'What I do on weekends.' },
+    { id: 'lighthouse', key: 'lighthouse', alt: 'Sagar in a white shirt beside a striped lighthouse, arm raised as if resting it on the top.', caption: 'Almost there.' },
   ] as Photo[],
 };
 export const guestbook = {

@@ -109,8 +109,8 @@ export const images = {
     "pending": false
   },
   "cafe": {
-    "width": 726,
-    "height": 968,
+    "width": 1358,
+    "height": 1600,
     "avif": [
       480,
       960
@@ -120,6 +120,20 @@ export const images = {
       960
     ],
     "jpg": "/img/cafe.jpg",
+    "pending": false
+  },
+  "lighthouse": {
+    "width": 960,
+    "height": 1280,
+    "avif": [
+      480,
+      960
+    ],
+    "webp": [
+      480,
+      960
+    ],
+    "jpg": "/img/lighthouse.jpg",
     "pending": false
   },
   "posterInvoice": {

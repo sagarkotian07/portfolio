@@ -39,19 +39,20 @@ export function renderAll() {
     </article>`;
   }).join('');
 
-  q('#about-lines').innerHTML = about.lines.map((l) => `<li>${esc(l)}</li>`).join('');
-  q('#about-hint').textContent = about.hint;
-  q('#about-tags').innerHTML = about.tags.map((t, i) => `<button class="tag${i === 0 ? ' is-on' : ''}" type="button" data-tag="${t}" aria-pressed="${i === 0}">${esc(t)}</button>`).join('');
-  q('#wall').innerHTML = about.photos.map((ph, i) => {
-    const media = ph.kind === 'image'
-      ? picture(ph.key!, { alt: ph.alt, sizes: '(max-width: 899px) 44vw, 230px' })
-      : `<video class="polaroid__video" src="${ph.src}" muted playsinline loop preload="metadata" aria-label="${esc(ph.alt)}"></video><span class="polaroid__play" aria-hidden="true">${playIcon}</span>`;
-    return `<figure class="polaroid" data-id="${ph.id}" data-tag="${ph.tag}" data-i="${i}">
+  // story lines: [o:..] marker loop, [u:..] wavy underline, [h:..] highlighter
+  const markSvg: Record<string, string> = {
+    o: '<svg class="mark__svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M10 24 C 6 10, 38 3, 62 5 C 88 7, 99 15, 95 26 C 91 36, 56 39, 30 36 C 11 34, 2 27, 9 16 C 12 11, 18 8, 24 7"/></svg>',
+    u: '<svg class="mark__svg" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M1 6 Q 7 1 13 6 T 25 6 T 37 6 T 49 6 T 61 6 T 73 6 T 85 6 T 99 5"/></svg>',
+    h: '',
+  };
+  const markName: Record<string, string> = { o: 'loop', u: 'wave', h: 'swipe' };
+  q('#about-lines').innerHTML = about.lines.map((l) => `<li>${esc(l).replace(/\[([ouh]):([^\]]+)\]/g, (_m, k: string, t: string) => `<span class="mark mark--${markName[k]}">${t}${markSvg[k]}</span>`)}</li>`).join('');
+  const TILTS = [-2.5, 1.5, 2, -1.5, 2.5];
+  q('#wall').innerHTML = about.photos.map((ph, i) => `<figure class="polaroid${ph.wide ? ' polaroid--wide' : ''}" data-i="${i}" style="--r:${TILTS[i % TILTS.length]}deg">
       <span class="polaroid__pin" aria-hidden="true"></span>
-      <button class="polaroid__open" type="button" aria-label="Open photo: ${esc(ph.caption)}">${media}</button>
+      <button class="polaroid__open" type="button" aria-label="Open photo: ${esc(ph.caption)}">${picture(ph.key, { alt: ph.alt, sizes: ph.wide ? '(max-width: 899px) 90vw, 440px' : '(max-width: 899px) 45vw, 220px' })}</button>
       <figcaption class="polaroid__cap">${esc(ph.caption)}</figcaption>
-    </figure>`;
-  }).join('');
+    </figure>`).join('');
   q('#guestbook-lead').textContent = guestbook.lead;
   q<HTMLTextAreaElement>('#note-text').placeholder = guestbook.textPlaceholder;
 

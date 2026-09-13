@@ -92,47 +92,52 @@ html[data-motion="full"] .levelmap__path { stroke-dashoffset: 1; }
 .card__link { padding: 0 6px; font-family: var(--font-display); font-weight: 600; color: var(--ball-2); }
 .card__link:hover { color: var(--ball-2); }
 
-/* ---------- about: a polaroid wall ---------- */
+/* ---------- about: his story and five fixed prints ---------- */
 .about { background: var(--grass); color: var(--ink); padding-block: calc(var(--section-y) * 0.7) var(--section-y); overflow: hidden; }
 .about .section__label { color: var(--ink); }
-.about__grid { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
-.about__lines { display: grid; gap: 14px; margin-top: 26px; }
-.about__lines li { display: flex; gap: 12px; align-items: baseline; font-family: var(--font-display); font-weight: 500; font-size: var(--step-1); line-height: 1.25; }
-.about__lines li::before { content: ''; flex: 0 0 14px; width: 14px; height: 14px; border-radius: 50%; border: 4px solid var(--ring); box-sizing: border-box; transform: translateY(-2px); }
-.about__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
-.tag { font-family: var(--font-display); font-weight: 700; font-size: var(--step--1); padding: 7px 14px; border-radius: 999px; background: rgba(255,255,255,0.6); color: var(--ink); transition: background 0.2s, color 0.2s, transform 0.2s; }
-.tag:hover { transform: translateY(-1px); }
-.tag.is-on { background: var(--ink); color: #fff; }
-.about__hint { margin-top: 16px; font-family: var(--font-display); font-weight: 600; font-size: var(--step--1); color: rgba(20,18,15,0.62); }
-.wall { position: relative; height: clamp(540px, 46vw, 720px); }
-.polaroid { position: absolute; left: var(--x); top: var(--y); width: clamp(180px, 15.5vw, 236px); margin: 0; background: #fff; padding: 10px 10px 12px; border-radius: 10px; box-shadow: 0 16px 30px -14px rgba(0,0,0,0.4), 0 2px 0 rgba(0,0,0,0.08); transform: rotate(var(--r)); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), opacity 0.3s var(--ease); touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
-.polaroid:hover { transform: rotate(0deg) scale(1.04); box-shadow: 0 26px 40px -16px rgba(0,0,0,0.45), 0 2px 0 rgba(0,0,0,0.08); z-index: 30; }
-.polaroid.is-dragging { transition: none; cursor: grabbing; transform: rotate(0deg) scale(1.06); }
-.polaroid.is-hidden { opacity: 0.18; pointer-events: none; transform: rotate(var(--r)) scale(0.92); }
+.about__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.about__lines { display: grid; gap: 18px; margin: 28px 0 0; padding: 0; list-style: none; }
+.about__lines li { font-family: var(--font-display); font-weight: 500; font-size: var(--step-1); line-height: 1.35; max-width: 24ch; }
+/* hand-drawn marks on the story */
+.mark { position: relative; white-space: nowrap; }
+.mark__svg { position: absolute; max-width: none; pointer-events: none; overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.mark__svg path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.9s var(--ease); vector-effect: non-scaling-stroke; }
+.mark--loop .mark__svg { left: -12%; top: -30%; width: 124%; height: 160%; stroke: var(--ring); stroke-width: 3.5; }
+.mark--wave .mark__svg { left: -2%; bottom: -0.4em; width: 104%; height: 0.42em; stroke: var(--ball); stroke-width: 3; }
+.mark--swipe { background: linear-gradient(transparent 50%, rgba(255,216,77,0.95) 50%, rgba(255,216,77,0.95) 92%, transparent 92%) no-repeat 0 0 / 0% 100%; transition: background-size 0.8s var(--ease); padding: 0 1px 0 3px; margin: 0 -1px 0 -3px; border-radius: 3px; }
+.about__lines.is-drawn .mark__svg path { stroke-dashoffset: 0; }
+.about__lines.is-drawn .mark--swipe { background-size: 100% 100%; }
+.about__lines li:nth-child(2) .mark__svg path { transition-delay: 0.35s; }
+.about__lines li:nth-child(3) .mark--swipe { transition-delay: 0.7s; }
+html[data-motion="reduced"] .mark__svg path { stroke-dashoffset: 0; transition: none; }
+html[data-motion="reduced"] .mark--swipe { background-size: 100% 100%; transition: none; }
+/* the prints: fixed in place, black and white until looked at */
+.wall { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 30px 22px; align-items: start; padding-top: 16px; }
+.polaroid { position: relative; grid-column: span 2; margin: 0; background: #fff; padding: 10px 10px 12px; border-radius: 10px; box-shadow: 0 16px 30px -14px rgba(0,0,0,0.4), 0 2px 0 rgba(0,0,0,0.08); transform: rotate(var(--r, 0deg)); }
+.polaroid--wide { grid-column: span 4; }
 .polaroid__pin { position: absolute; top: -13px; left: 50%; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; background: var(--ball); box-shadow: inset -4px -4px 0 rgba(0,0,0,0.18), 0 3px 0 rgba(0,0,0,0.18); z-index: 2; }
 .polaroid__pin::before, .polaroid__pin::after { content: ''; position: absolute; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: inset 2px 2px 0 var(--ink); }
 .polaroid__pin::before { left: 5px; } .polaroid__pin::after { right: 5px; }
-.polaroid__open { display: block; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 4px; background: #cfd8d0; cursor: zoom-in; position: relative; }
-.polaroid__open img, .polaroid__open picture, .polaroid__video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-.polaroid__play { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; pointer-events: none; }
-.polaroid__play svg { width: 40px; height: 40px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45)); }
-.polaroid.is-missing .polaroid__open { background: #1e3a2a; }
+.polaroid__open { display: block; width: 100%; padding: 0; border-radius: 4px; overflow: hidden; background: #e6ebe7; cursor: zoom-in; }
+.polaroid__open img { display: block; width: 100%; height: auto; filter: grayscale(1); transition: filter 0.45s var(--ease); }
+@media (hover: hover) { .polaroid:hover .polaroid__open img { filter: grayscale(0); } }
+.polaroid.is-color .polaroid__open img, .polaroid__open:focus-visible img { filter: grayscale(0); }
 .polaroid__cap { font-family: var(--font-display); font-weight: 600; font-size: var(--step--1); text-align: center; margin-top: 10px; color: var(--ink); line-height: 1.25; }
+html[data-motion="reduced"] .polaroid__open img { transition: none; }
 /* lightbox */
 .lightbox { border: 0; padding: 0; background: transparent; max-width: min(94vw, 960px); width: auto; }
 .lightbox::backdrop { background: rgba(20,18,15,0.72); }
-.lightbox__card { position: relative; background: #fff; padding: 14px 14px 14px; border-radius: 16px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6); }
-.lightbox__media img, .lightbox__media video { display: block; max-width: 100%; max-height: 72vh; border-radius: 8px; margin: 0 auto; }
+.lightbox__card { position: relative; background: #fff; padding: 14px; border-radius: 16px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6); }
+.lightbox__media img { display: block; max-width: 100%; max-height: 72vh; border-radius: 8px; margin: 0 auto; }
 .lightbox__bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
 .lightbox__cap { font-family: var(--font-display); font-weight: 600; text-align: center; flex: 1; }
 .lightbox__nav { width: 40px; height: 40px; border-radius: 50%; background: var(--ball); color: #fff; font-size: 26px; line-height: 1; display: grid; place-items: center; box-shadow: inset -4px -4px 0 rgba(0,0,0,0.18); flex: none; }
 .lightbox__close { position: absolute; top: -14px; right: -14px; width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 22px; display: grid; place-items: center; }
 @media (max-width: 899px) {
   .about__grid { grid-template-columns: 1fr; }
-  .wall { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 16px; padding: 18px 6px 10px; }
-  .polaroid { position: static; width: auto; cursor: default; touch-action: auto; }
-  .polaroid:hover { transform: rotate(var(--r)); }
-  .about__hint { display: none; }
+  .wall { grid-template-columns: 1fr 1fr; gap: 26px 16px; padding-top: 12px; }
+  .polaroid { grid-column: span 1; transform: rotate(calc(var(--r, 0deg) * 0.6)); }
+  .polaroid--wide { grid-column: 1 / -1; order: -1; }
 }
 
 /* ---------- guestbook: the chapter page from the game ---------- */

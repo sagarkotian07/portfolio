@@ -15,6 +15,7 @@ const jobs = {
   beach:        { src: 'assets/src/beach.png',          widths: [480, 960, 1500] },
   waterfall:    { src: 'assets/src/waterfall.png',      widths: [640, 1280] },
   cafe:         { src: 'assets/src/cafe.png',           widths: [480, 960] },
+  lighthouse:   { src: 'assets/src/lighthouse.png',     widths: [480, 960] },
   posterInvoice:   { src: 'assets/src/poster-invoice.png',   widths: [640, 1280], frame: 'assets/src/frame-invoice.jpg',   blur: 28 },
   posterDashboard: { src: 'assets/src/poster-dashboard.png', widths: [640, 1280], frame: 'assets/src/frame-dashboard.jpg', blur: 28 },
 };
