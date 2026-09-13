@@ -25,7 +25,7 @@ export function mountGame(opts: { onPlay(): void; onStop(): void }) {
   }, () => matchMedia('(max-width: 899px)').matches);
   hud.eggs.textContent = `0/${g.level.eggTotal}`;
 
-  function activate() { if (active) return; active = true; opts.onPlay(); document.documentElement.classList.add('is-playing'); canvas.focus({ preventScroll: true }); }
+  function activate() { if (active) return; active = true; document.documentElement.classList.add('is-playing'); opts.onPlay(); canvas.focus({ preventScroll: true }); }
   function deactivate() { if (!active) return; active = false; opts.onStop(); document.documentElement.classList.remove('is-playing'); }
   function play() { start.hidden = true; end.hidden = true; leave.hidden = false; activate(); g.start(); }
   function quit() { deactivate(); g.leave(); start.hidden = false; end.hidden = true; leave.hidden = true; }
