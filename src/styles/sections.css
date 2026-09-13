@@ -5,6 +5,9 @@
   position: relative; grid-column: 1 / -1; width: 100%;
   height: calc(100svh - var(--game-top)); min-height: 520px; max-height: 900px; overflow: hidden; border-radius: var(--r-l); background: #5EC5F5;
 }
+/* while playing the stage must fit the screen: no floor on its height, and on short screens (phones held sideways) the whole viewport */
+html.is-playing .game__stage { min-height: 0; }
+@media (max-height: 599px) { html.is-playing .game__stage { height: 100svh; max-height: none; } }
 .game__stage::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--forest); pointer-events: none; z-index: 5; }
 .game__canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; outline: none; }
 html.is-playing .game__canvas:focus-visible { outline: none; }
@@ -27,8 +30,13 @@ html.is-playing .game__leave { top: max(14px, env(safe-area-inset-top)); }
 .game__leave svg { width: 16px; height: 16px; }
 .game__leave:hover { background: var(--egg); }
 .game__leave:active { transform: translateY(2px); }
-.game__touch { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 16px calc(16px + env(safe-area-inset-bottom)); display: none; justify-content: space-between; align-items: flex-end; z-index: 2; pointer-events: none; }
-@media (pointer: coarse) { html.is-playing .game__touch { display: flex; } }
+.game__touch {
+  position: absolute; left: 0; right: 0; bottom: 0; display: none; justify-content: space-between; align-items: flex-end; z-index: 2; pointer-events: none;
+  padding: 0 max(16px, env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+/* touch screens: the class is set by prefs.ts from the same queries or the first touch, so the keys never depend on one query alone */
+html.is-playing.has-touch .game__touch { display: flex; }
+@media (pointer: coarse), (hover: none), (any-pointer: coarse) { html.is-playing .game__touch { display: flex; } }
 .touch__pad { display: flex; gap: 10px; pointer-events: auto; }
 .touch__pad button, .touch__jump {
   width: 66px; height: 58px; border-radius: 16px; background: var(--leaf); color: var(--forest); display: grid; place-items: center;

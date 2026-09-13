@@ -6,6 +6,8 @@ export const hero = {
   meta: 'Founder’s office · Superjoin · Bengaluru',
   line: 'I like the part of a startup where nothing has an owner yet.',
   photoAlt: 'Sagar Kotian in a dark blazer, smiling, in front of a wall of green ivy.',
+  hint: 'press space to play',
+  hintTouch: 'tap to play',
 };
 
 export interface Stop { org: string; url: string; logo: string; role: string; dates: string; line: string }

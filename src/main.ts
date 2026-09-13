@@ -12,7 +12,15 @@ import { richHero } from './modules/prefs';
 renderAll();
 initScroll();
 
-const gameCtl = mountGame({ onPlay() { lenis?.stop(); }, onStop() { lenis?.start(); } });
+// The stage may not fit where the visitor left it (a tap on Start half way down, a short screen): bring it fully into view, then lock the page.
+const stage = document.getElementById('game-stage')!;
+const fitStage = () => {
+  const r = stage.getBoundingClientRect();
+  if (r.top >= 0 && r.bottom <= innerHeight) return;
+  const y = Math.round(scrollY + r.top - Math.max(0, (innerHeight - r.height) / 2));
+  if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+};
+const gameCtl = mountGame({ onPlay() { fitStage(); lenis?.stop(); }, onStop() { lenis?.start(); } });
 const goPlay = () => {
   const target = document.getElementById('play')!;
   if (lenis) lenis.scrollTo(target, { duration: 1 }); else target.scrollIntoView();
