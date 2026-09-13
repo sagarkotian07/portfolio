@@ -117,16 +117,17 @@ html[data-motion="reduced"] .mark--swipe { background-size: 100% 100%; transitio
 .print--wide { grid-column: span 2; }
 .print__open { display: block; width: 100%; padding: 0; border-radius: var(--r-s); overflow: hidden; background: var(--leaf-2); cursor: zoom-in; aspect-ratio: 4 / 5; }
 .print--wide .print__open { aspect-ratio: 5 / 3; }
-.print__open img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 0.5s var(--ease); }
-.print--wide .print__open img { object-position: 50% 60%; }
+.print__open picture { width: 100%; height: 100%; }
+/* the whole photo, letterboxed on the leaf mat; the boxes keep their size */
+.print__open img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; transition: transform 0.5s var(--ease); }
 .print__open:hover img { transform: scale(1.03); }
-.print__cap { font-style: italic; font-size: var(--step--1); color: var(--moss); margin-top: 8px; line-height: 1.3; }
+.print__cap { font-style: italic; font-size: var(--step--1); color: var(--moss); margin-top: 8px; line-height: 1.3; text-align: center; text-transform: lowercase; }
 .lightbox { border: 0; padding: 0; background: transparent; max-width: min(94vw, 960px); width: auto; }
 .lightbox::backdrop { background: rgba(11, 36, 22, 0.8); }
 .lightbox__card { position: relative; background: var(--paper); padding: 12px; border-radius: var(--r-m); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6); }
 .lightbox__media img { display: block; max-width: 100%; max-height: 72vh; border-radius: var(--r-s); margin: 0 auto; }
 .lightbox__bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
-.lightbox__cap { font-style: italic; text-align: center; flex: 1; color: var(--forest); }
+.lightbox__cap { font-style: italic; text-align: center; text-transform: lowercase; flex: 1; color: var(--forest); }
 .lightbox__nav { width: 40px; height: 40px; border-radius: 50%; background: var(--forest); color: var(--leaf); font-size: 26px; line-height: 1; display: grid; place-items: center; flex: none; }
 .lightbox__nav:hover { background: var(--ball); color: #fff; }
 .lightbox__close { position: absolute; top: 22px; right: 22px; width: 36px; height: 36px; border-radius: 50%; background: var(--ball); color: #fff; font-size: 22px; display: grid; place-items: center; box-shadow: 0 3px 0 0 var(--ball-2); }
