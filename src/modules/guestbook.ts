@@ -10,7 +10,16 @@ const when = (t: number) => new Date(t).toLocaleString('en-IN', { day: 'numeric'
 export function initGuestbook() {
   const form = q<HTMLFormElement>('#note-form'), textEl = q<HTMLTextAreaElement>('#note-text'), count = q('#note-count-chars'), status = q('#note-status'), list = q('#notes'), total = q('#note-count'), submit = q<HTMLButtonElement>('#note-submit');
   let local = false;
-  const localNotes = (): Note[] => { try { return JSON.parse(localStorage.getItem(LS) ?? 'null') ?? guestbook.seed; } catch { return guestbook.seed; } };
+  // notes saved by an earlier version had no number; give them one by age and keep only the fields we use
+  const localNotes = (): Note[] => {
+    let raw: Partial<Note>[];
+    try { raw = JSON.parse(localStorage.getItem(LS) ?? 'null') ?? guestbook.seed; } catch { raw = guestbook.seed; }
+    const list = raw.filter((x) => x && typeof x.text === 'string').map((x) => ({ id: String(x.id ?? Math.random()), n: Number(x.n) || 0, text: String(x.text), at: Number(x.at) || Date.now() }));
+    const numbered = list.filter((x) => x.n > 0), unnumbered = list.filter((x) => x.n <= 0).sort((a, b) => a.at - b.at);
+    let next = numbered.reduce((m, x) => Math.max(m, x.n), 0);
+    for (const x of unnumbered) x.n = ++next;
+    return list.sort((a, b) => b.at - a.at);
+  };
   const render = (notes: Note[]) => {
     list.innerHTML = notes.length
       ? notes.map((n) => `<li class="entry"><p class="entry__meta"><b class="entry__n">#${n.n}</b><time datetime="${new Date(n.at).toISOString()}">${when(n.at)}</time></p><p class="entry__text">${esc(n.text)}</p></li>`).join('')
@@ -36,7 +45,7 @@ export function initGuestbook() {
     if (text.length < 2) { status.textContent = 'Write a little more than that.'; textEl.focus(); return; }
     submit.disabled = true; status.textContent = '';
     if (local) {
-      const prev = localNotes(), n = prev.reduce((m, x) => Math.max(m, x.n), 0) + 1;
+      const prev = localNotes(), n = prev.reduce((m, x) => Math.max(m, Number(x.n) || 0), 0) + 1;
       const notes = [{ id: String(Date.now()), n, text, at: Date.now() }, ...prev];
       try { localStorage.setItem(LS, JSON.stringify(notes.slice(0, 200))); } catch { /* ignore */ }
       render(notes); textEl.value = ''; count.textContent = '0/280'; grow(); submit.disabled = false; status.textContent = `Posted as #${n}.`;
