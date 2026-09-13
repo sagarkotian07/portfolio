@@ -25,6 +25,6 @@ document.fonts.ready.then(() => runPreloader().then(() => heroIntro?.()));
 
 const later = () => {
   initReveals(); initProjects(); initLevelMap(); initAbout();
-  if (richHero) { import('./modules/cursor').then((m) => m.initCursor()); import('./modules/magnetic').then((m) => m.initMagnetic()); }
+  if (richHero) import('./modules/magnetic').then((m) => m.initMagnetic());
 };
 window.addEventListener('load', () => ('requestIdleCallback' in window ? requestIdleCallback(later, { timeout: 1500 }) : setTimeout(later, 300)), { once: true });

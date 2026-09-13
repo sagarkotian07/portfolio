@@ -94,6 +94,20 @@ export const images = {
     "jpg": "/img/beach.jpg",
     "pending": false
   },
+  "waterfall": {
+    "width": 2000,
+    "height": 1500,
+    "avif": [
+      640,
+      1280
+    ],
+    "webp": [
+      640,
+      1280
+    ],
+    "jpg": "/img/waterfall.jpg",
+    "pending": false
+  },
   "posterInvoice": {
     "width": 1728,
     "height": 1080,

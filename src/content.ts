@@ -13,6 +13,7 @@ export const stops: Stop[] = [
   { org: 'Superjoin', url: 'https://www.superjoin.ai/', logo: '/img/logos/superjoin.png', role: 'Founder’s office', dates: 'Jan 2026 to now', line: 'Built the outbound engine from scratch and handle customer support end to end.' },
   { org: 'Zenskar', url: 'https://www.zenskar.com/', logo: '/img/logos/zenskar.png', role: 'Founder’s office intern', dates: 'Sep 2025 to Jan 2026', line: 'Built workflows around intent signals, lead prospecting and a range of go-to-market work.' },
   { org: 'CodeRound AI', url: 'https://www.coderound.ai/', logo: '/img/logos/coderound.png', role: 'Chief of staff', dates: 'Aug 2024 to Jul 2025', line: 'Ran outbound and client operations, from the first message to onboarding.' },
+  { org: 'CogniMuse', url: 'https://www.cognimuse.com/', logo: '/img/logos/cognimuse.png', role: 'Digital marketing intern', dates: 'Sep 2023 to Mar 2024', line: 'My first startup, and their first intern. This is where I first heard of YC, in the second year of college.' },
 ];
 
 export type Project = { id: string; title: string; line: string; label: string; url: string; cta: string } &

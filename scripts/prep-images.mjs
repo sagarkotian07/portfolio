@@ -13,6 +13,7 @@ const jobs = {
   bengaluruRun: { src: 'assets/src/bengaluru-run.png',  widths: [640, 1080, 1440] },
   mangalore:    { src: 'assets/src/mangalore.jpeg',     widths: [480, 960] },
   beach:        { src: 'assets/src/beach.png',          widths: [480, 960, 1500] },
+  waterfall:    { src: 'assets/src/waterfall.png',      widths: [640, 1280] },
   posterInvoice:   { src: 'assets/src/poster-invoice.png',   widths: [640, 1280], frame: 'assets/src/frame-invoice.jpg',   blur: 28 },
   posterDashboard: { src: 'assets/src/poster-dashboard.png', widths: [640, 1280], frame: 'assets/src/frame-dashboard.jpg', blur: 28 },
 };
