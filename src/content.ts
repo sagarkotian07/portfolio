@@ -53,7 +53,6 @@ export const links = {
   whatsappLabel: '+91 93217 47802',
   email: 'kotiansagar07@gmail.com',
   linkedin: 'https://linkedin.com/in/sagar-kotian-',
-  resume: '/resume.pdf',
 };
 
 export const game = {

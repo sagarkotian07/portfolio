@@ -13,7 +13,6 @@ const playIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17
 export function renderAll() {
   // hero copy is static in index.html so nothing shifts before JS runs; content.ts keeps the same words for the share card and tests
   void hero;
-  q<HTMLAnchorElement>('#hero-whatsapp').href = links.whatsapp;
 
   q('#levels').innerHTML = stops.map((s) => `<li class="level">
     <h3 class="level__org"><a class="level__link" href="${s.url}" target="_blank" rel="noopener" aria-label="${esc(s.org)}, opens their website in a new tab"><img class="level__logo" src="${s.logo}" alt="" width="36" height="36" loading="lazy" decoding="async">${esc(s.org)}<span class="level__arrow" aria-hidden="true">↗</span></a></h3>

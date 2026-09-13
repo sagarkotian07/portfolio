@@ -1,7 +1,7 @@
 import { Game } from './engine';
 import { bindInput } from './input';
 import { WAYPOINTS } from './level';
-import { game as copy, links } from '../content';
+import { game as copy } from '../content';
 import { q } from '../modules/prefs';
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -15,7 +15,6 @@ export function mountGame(opts: { onPlay(): void; onStop(): void }) {
 
   q('#game-title').textContent = copy.title; q('#game-intro').textContent = copy.intro;
   q('#game-controls').textContent = matchMedia('(pointer: coarse)').matches ? copy.touch : copy.controls;
-  q<HTMLAnchorElement>('#game-sayhi').href = links.whatsapp;
 
   const showEnd = (label: string, title: string, line: string) => { q('#game-end-label').textContent = label; q('#game-end-title').textContent = title; q('#game-end-line').textContent = line; end.hidden = false; leave.hidden = true; deactivate(); };
 

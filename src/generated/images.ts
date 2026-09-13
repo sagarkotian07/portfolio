@@ -109,8 +109,8 @@ export const images = {
     "pending": false
   },
   "cafe": {
-    "width": 1358,
-    "height": 1600,
+    "width": 1006,
+    "height": 1248,
     "avif": [
       480,
       960
