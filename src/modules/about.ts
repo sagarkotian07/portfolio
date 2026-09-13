@@ -1,9 +1,9 @@
 import { q, qa } from './prefs';
 import { about } from '../content';
 
-/** Five fixed prints and a lightbox for the big version. */
+/** Five prints and a lightbox for the big version. */
 export function initAbout() {
-  const wall = q('#wall'), lines = q('#about-lines'), polaroids = qa<HTMLElement>('.polaroid', wall);
+  const wall = q('#wall'), lines = q('#about-lines'), prints = qa<HTMLElement>('.print', wall);
 
   // the marker marks draw themselves once, when the story scrolls in
   new IntersectionObserver((entries, io) => { if (entries.some((e) => e.isIntersecting)) { lines.classList.add('is-drawn'); io.disconnect(); } }, { threshold: 0.6 }).observe(lines);
@@ -18,7 +18,7 @@ export function initAbout() {
     cap.textContent = ph.caption;
   };
   const open = (i: number) => { show(i); if (!dlg.open) dlg.showModal(); };
-  polaroids.forEach((el) => el.querySelector<HTMLButtonElement>('.polaroid__open')!.addEventListener('click', () => open(Number(el.dataset.i))));
+  prints.forEach((el) => el.querySelector<HTMLButtonElement>('.print__open')!.addEventListener('click', () => open(Number(el.dataset.i))));
   q('#lightbox-prev').addEventListener('click', () => show(cur - 1));
   q('#lightbox-next').addEventListener('click', () => show(cur + 1));
   q('#lightbox-close').addEventListener('click', () => dlg.close());

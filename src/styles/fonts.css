@@ -1,19 +1,28 @@
 @font-face {
-  font-family: 'Fredoka';
+  font-family: 'Young Serif';
   font-style: normal;
-  font-weight: 300 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/fredoka.woff2') format('woff2');
+  src: url('/fonts/young-serif.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Manrope';
+  font-family: 'Schibsted Grotesk';
   font-style: normal;
-  font-weight: 400 800;
+  font-weight: 400 900;
   font-display: swap;
-  src: url('/fonts/manrope.woff2') format('woff2');
+  src: url('/fonts/schibsted-grotesk.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/schibsted-grotesk-italic.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@font-face { font-family: 'Fredoka Fallback'; src: local('Arial'), local('ArialMT'); ascent-override: 95.641%; descent-override: 23.1738%; line-gap-override: 0%; size-adjust: 101.8392%; }
-@font-face { font-family: 'Manrope Fallback'; src: local('Arial'), local('ArialMT'); ascent-override: 103.3095%; descent-override: 29.074%; line-gap-override: 0%; size-adjust: 103.1851%; }
+/* metric-matched fallbacks (scripts/fetch-fonts.mjs, via capsize) so nothing shifts while the real faces load */
+@font-face { font-family: 'Young Serif Fallback'; src: local('Arial'), local('ArialMT'); ascent-override: 91.2539%; descent-override: 31.9302%; line-gap-override: 0%; size-adjust: 114.6252%; }
+@font-face { font-family: 'Schibsted Grotesk Fallback'; src: local('Arial'), local('ArialMT'); ascent-override: 93.4593%; descent-override: 24.6733%; line-gap-override: 0%; size-adjust: 104.4907%; }

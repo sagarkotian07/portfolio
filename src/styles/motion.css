@@ -1,10 +1,8 @@
-html[data-motion="reduced"] .line-inner { transform: none !important; }
-html[data-motion="reduced"] .cursor, html[data-motion="reduced"] .preloader { display: none; }
-html[data-motion="reduced"] .cloud { animation: none !important; }
+html[data-motion="reduced"] .cursor, html[data-motion="reduced"] .preloader, html[data-motion="reduced"] .hero__idle { display: none; }
 html[data-motion="reduced"] .levelmap__path { stroke-dashoffset: 0 !important; }
-html[data-motion="reduced"] .level { opacity: 1 !important; transform: none !important; }
 html[data-motion="reduced"] .levelmap__ball { animation: none !important; }
 html[data-motion="reduced"] .hero__word { transform: none !important; }
 html[data-motion="reduced"] .hero__meta, html[data-motion="reduced"] .hero__tag, html[data-motion="reduced"] .hero__hint { opacity: 1 !important; transform: none !important; }
-html[data-motion="reduced"] .hoop { transform: none !important; opacity: 1 !important; }
+html[data-motion="reduced"] .portrait { transform: none !important; opacity: 1 !important; }
+html[data-motion="reduced"] .hero__hint::before { animation: none !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } }

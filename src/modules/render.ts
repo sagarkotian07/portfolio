@@ -15,7 +15,7 @@ export function renderAll() {
   void hero;
 
   q('#levels').innerHTML = stops.map((s) => `<li class="level">
-    <h3 class="level__org"><a class="level__link" href="${s.url}" target="_blank" rel="noopener" aria-label="${esc(s.org)}, opens their website in a new tab"><img class="level__logo" src="${s.logo}" alt="" width="36" height="36" loading="lazy" decoding="async">${esc(s.org)}<span class="level__arrow" aria-hidden="true">↗</span></a></h3>
+    <h3 class="level__org"><a class="level__link" href="${s.url}" target="_blank" rel="noopener" aria-label="${esc(s.org)}, opens their website in a new tab"><img class="level__logo" src="${s.logo}" alt="" width="34" height="34" loading="lazy" decoding="async">${esc(s.org)}</a></h3>
     <p class="level__role">${esc(s.role)}</p>
     <p class="level__dates">${esc(s.dates)}</p>
     <p class="level__line">${esc(s.line)}</p>
@@ -34,7 +34,7 @@ export function renderAll() {
     return `<article class="card">${media}
       <h3 class="card__title">${esc(p.title)}</h3>
       <p class="card__line">${esc(p.line)}</p>
-      <a class="card__link" href="${p.url}" target="_blank" rel="noopener">${esc(p.cta)} ↗</a>
+      <a class="card__link link" href="${p.url}" target="_blank" rel="noopener">${esc(p.cta)}</a>
     </article>`;
   }).join('');
 
@@ -46,19 +46,17 @@ export function renderAll() {
   };
   const markName: Record<string, string> = { o: 'loop', u: 'wave', h: 'swipe' };
   q('#about-lines').innerHTML = about.lines.map((l) => `<li>${esc(l).replace(/\[([ouh]):([^\]]+)\]/g, (_m, k: string, t: string) => `<span class="mark mark--${markName[k]}">${t}${markSvg[k]}</span>`)}</li>`).join('');
-  const TILTS = [-2.5, 1.5, 2, -1.5, 2.5];
-  q('#wall').innerHTML = about.photos.map((ph, i) => `<figure class="polaroid${ph.wide ? ' polaroid--wide' : ''}" data-i="${i}" style="--r:${TILTS[i % TILTS.length]}deg">
-      <span class="polaroid__pin" aria-hidden="true"></span>
-      <button class="polaroid__open" type="button" aria-label="Open photo: ${esc(ph.caption)}">${picture(ph.key, { alt: ph.alt, sizes: ph.wide ? '(max-width: 899px) 90vw, 440px' : '(max-width: 899px) 45vw, 220px' })}</button>
-      <figcaption class="polaroid__cap">${esc(ph.caption)}</figcaption>
+  q('#wall').innerHTML = about.photos.map((ph, i) => `<figure class="print${ph.wide ? ' print--wide' : ''}" data-i="${i}">
+      <button class="print__open" type="button" aria-label="Open photo: ${esc(ph.caption)}">${picture(ph.key, { alt: ph.alt, sizes: ph.wide ? '(max-width: 899px) 90vw, 480px' : '(max-width: 899px) 45vw, 240px' })}</button>
+      <figcaption class="print__cap">${esc(ph.caption)}</figcaption>
     </figure>`).join('');
   q('#guestbook-lead').textContent = guestbook.lead;
   q<HTMLTextAreaElement>('#note-text').placeholder = guestbook.textPlaceholder;
 
   q('#sayhi-links').innerHTML = `
-    <li><a class="sayhi__row sayhi__row--wa" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)} ↗</small></a></li>
+    <li><a class="sayhi__row" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)}</small></a></li>
     <li><button class="sayhi__row" type="button" id="copy-email" data-cursor="copy"><span>${esc(links.email)}</span><small>copy</small></button></li>
-    <li><a class="sayhi__row" href="${links.linkedin}" target="_blank" rel="noopener" data-cursor="open"><span>LinkedIn</span><small>↗</small></a></li>`;
+    <li><a class="sayhi__row" href="${links.linkedin}" target="_blank" rel="noopener" data-cursor="open"><span>LinkedIn</span></a></li>`;
 }
 
 export function initCopyEmail() {

@@ -21,6 +21,9 @@ const goPlay = () => {
 };
 const heroIntro = initHero(goPlay);
 initCopyEmail();
+const nav = document.getElementById('nav')!;
+const onScroll = () => nav.classList.toggle('is-scrolled', scrollY > 24);
+window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
 document.fonts.ready.then(() => runPreloader().then(() => heroIntro?.()));
 

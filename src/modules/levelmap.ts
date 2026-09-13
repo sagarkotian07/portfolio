@@ -4,7 +4,7 @@ import { q, qa } from './prefs';
 /** The ball rolls along the hill path from the first card to the last as the page scrolls through the map. */
 export function initLevelMap() {
   const map = q('#levelmap'), svg = map.querySelector<SVGSVGElement>('.levelmap__svg')!, path = map.querySelector<SVGPathElement>('.levelmap__path')!, ball = map.querySelector<HTMLElement>('.levelmap__ball')!, levels = qa('.level', map);
-  const len = path.getTotalLength(), R = 22;
+  const len = path.getTotalLength(), R = 18;
   const place = (p: number) => {
     const r = svg.getBoundingClientRect(); if (!r.width) return;
     const sx = r.width / 1200, sy = r.height / 260;

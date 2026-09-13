@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sagar Kotian</title>
   <meta name="description" content="Sagar Kotian. Founder’s office at Superjoin, Bengaluru. I like the part of a startup where nothing has an owner yet. There is a ball game in here." />
-  <meta name="theme-color" content="#BFE3FF" />
+  <meta name="theme-color" content="#EEF2E8" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="https://sagar-kotian.vercel.app/" />
   <meta property="og:type" content="website" />
@@ -16,9 +16,9 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="preload" href="/fonts/fredoka.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" as="image" fetchpriority="high" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w" imagesizes="(max-width: 899px) min(64vw, 300px), 380px" />
+  <link rel="preload" href="/fonts/young-serif.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/schibsted-grotesk.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" as="image" fetchpriority="high" type="image/avif" imagesrcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w" imagesizes="(max-width: 719px) calc(100vw - 40px), 320px" />
   <script>
     (function () {
       var d = document.documentElement;
@@ -46,7 +46,7 @@
 
   <header class="nav" id="nav">
     <a class="nav__logo" href="#top" aria-label="Sagar Kotian, back to top">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#E8402F"/><circle cx="14" cy="16" r="4.2" fill="#fff"/><circle cx="26" cy="16" r="4.2" fill="#fff"/><circle cx="15" cy="17" r="2" fill="#14120F"/><circle cx="27" cy="17" r="2" fill="#14120F"/><path d="M14 26 Q20 31 26 26" stroke="#14120F" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#E8402F"/><circle cx="14" cy="16" r="4.2" fill="#fff"/><circle cx="26" cy="16" r="4.2" fill="#fff"/><circle cx="15" cy="17" r="2" fill="#102A1B"/><circle cx="27" cy="17" r="2" fill="#102A1B"/><path d="M14 26 Q20 31 26 26" stroke="#102A1B" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
       <span>Sagar</span>
     </a>
     <nav class="nav__links" aria-label="Sections">
@@ -56,28 +56,26 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-name">
-      <div class="clouds" aria-hidden="true"><i class="cloud cloud--1"></i><i class="cloud cloud--2"></i><i class="cloud cloud--3"></i></div>
-      <div class="wrap hero__grid">
-        <div class="hero__text">
-          <p class="hero__meta" id="hero-meta">Founder’s office · Superjoin · Bengaluru</p>
-          <h1 class="hero__name" id="hero-name">
-            <span class="hero__line"><span class="hero__word" id="hero-first">Sagar</span></span>
-            <span class="hero__line"><span class="hero__word hero__word--last" id="hero-last">Kotian</span></span>
-          </h1>
-          <p class="hero__tag" id="hero-tag">I like the part of a startup where nothing has an owner yet.</p>
-          <button class="hero__hint" id="hero-hint" type="button" data-cursor="play">press space to play</button>
-        </div>
-        <figure class="hero__photo">
-          <div class="hoop">
-            <picture>
-              <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w" sizes="(max-width: 899px) min(64vw, 300px), 380px" />
-              <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-640.webp 640w, /img/hero-800.webp 800w" sizes="(max-width: 899px) min(64vw, 300px), 380px" />
-              <img src="/img/hero.jpg" width="1279" height="1600" alt="Sagar Kotian in a dark blazer, smiling, in front of a wall of green ivy." fetchpriority="high" decoding="async" />
-            </picture>
+      <div class="wrap">
+        <p class="hero__meta" id="hero-meta">Founder’s office · Superjoin · Bengaluru</p>
+        <h1 class="hero__name" id="hero-name"><span class="hero__line"><span class="hero__word" id="hero-first">Sagar</span></span><span class="hero__line"><span class="hero__word" id="hero-last">Kotian</span></span></h1>
+        <div class="hero__row">
+          <div class="hero__text">
+            <p class="hero__tag" id="hero-tag">I like the part of a startup where nothing has an owner yet.</p>
+            <button class="hero__hint" id="hero-hint" type="button" data-cursor="play">press space to play</button>
           </div>
-        </figure>
+          <figure class="hero__photo">
+            <div class="portrait">
+              <picture>
+                <source type="image/avif" srcset="/img/hero-480.avif 480w, /img/hero-640.avif 640w, /img/hero-800.avif 800w" sizes="(max-width: 719px) calc(100vw - 40px), 320px" />
+                <source type="image/webp" srcset="/img/hero-480.webp 480w, /img/hero-640.webp 640w, /img/hero-800.webp 800w" sizes="(max-width: 719px) calc(100vw - 40px), 320px" />
+                <img src="/img/hero.jpg" width="1279" height="1600" alt="Sagar Kotian in a dark blazer, smiling, in front of a wall of green ivy." fetchpriority="high" decoding="async" />
+              </picture>
+            </div>
+          </figure>
+        </div>
+        <div class="hero__ground" aria-hidden="true"><canvas class="hero__idle" id="hero-idle"></canvas></div>
       </div>
-      <canvas class="hero__idle" id="hero-idle" aria-hidden="true"></canvas>
     </section>
 
     <section class="game" id="play" aria-labelledby="game-title">
@@ -85,65 +83,74 @@
         <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer in a sky forest. Arrow keys to roll, space to jump."></canvas>
         <div class="game__hud" id="hud" aria-live="off">
           <span class="hud__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><path d="M14 6c4 3 6 9 5.5 14-1 5-4 7-7 7 5-2 6-8 5-13-1-4-2-6-3.5-8z" fill="#DE9A3C"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><b id="hud-eggs">0/0</b></span>
-          <span class="hud__time"><b id="hud-time">0:00</b><svg class="hud__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#3A2A1A" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="#3A2A1A" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+          <span class="hud__time"><b id="hud-time">0:00</b><svg class="hud__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#102A1B" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="#102A1B" stroke-width="2.2" stroke-linecap="round"/></svg></span>
         </div>
         <div class="game__touch" id="game-touch" aria-hidden="true">
-          <div class="touch__pad"><button type="button" data-key="left" aria-label="Roll left">◀</button><button type="button" data-key="right" aria-label="Roll right">▶</button></div>
+          <div class="touch__pad">
+            <button type="button" data-key="left" aria-label="Roll left"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 3L5 10l9 7z" fill="currentColor"/></svg></button>
+            <button type="button" data-key="right" aria-label="Roll right"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3l9 7-9 7z" fill="currentColor"/></svg></button>
+          </div>
           <button type="button" class="touch__jump" data-key="jump" aria-label="Jump"><i></i></button>
         </div>
         <div class="game__overlay" id="game-start">
-          <p class="section__label">Play</p>
-          <h2 class="game__title" id="game-title"></h2>
-          <p class="game__intro" id="game-intro"></p>
-          <button class="btn btn--ball btn--big" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
-          <p class="game__controls" id="game-controls"></p>
-        </div>
-        <div class="game__overlay" id="game-end" hidden>
-          <p class="section__label" id="game-end-label"></p>
-          <h2 class="game__title game__title--sm" id="game-end-title"></h2>
-          <p class="game__intro" id="game-end-line"></p>
-          <div class="game__actions">
-            <button class="btn btn--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
+          <div class="plate">
+            <p class="chapter__head">Play</p>
+            <h2 class="game__title" id="game-title"></h2>
+            <p class="game__intro" id="game-intro"></p>
+            <button class="key key--ball key--big" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
+            <p class="game__controls" id="game-controls"></p>
           </div>
         </div>
-        <button class="game__leave" id="game-leave" type="button" hidden aria-label="Leave the game (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="game__overlay" id="game-end" hidden>
+          <div class="plate">
+            <p class="chapter__head" id="game-end-label"></p>
+            <h2 class="game__title game__title--sm" id="game-end-title"></h2>
+            <p class="game__intro" id="game-end-line"></p>
+            <div class="game__actions">
+              <button class="key key--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
+            </div>
+          </div>
+        </div>
+        <button class="game__leave" id="game-leave" type="button" hidden aria-label="Leave the game (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
       </div>
     </section>
 
-    <div class="hill" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,10 480,130 720,70 C960,10 1200,130 1440,70 L1440,120 L0,120 Z" fill="#3E8F33"/><path d="M0,86 C240,30 480,140 720,86 C960,30 1200,140 1440,86 L1440,120 L0,120 Z" fill="#5FBF4B"/></svg></div>
-
-    <section class="work" id="work" aria-labelledby="work-h">
-      <div class="wrap">
-        <p class="section__label">Work</p>
-        <h2 class="h2" id="work-h" data-reveal>Four startups,<br>one degree.</h2>
-        <div class="levelmap" id="levelmap">
-          <svg class="levelmap__svg" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
-            <path class="levelmap__hills" d="M0,260 L0,200 C120,120 220,120 340,200 C440,270 560,270 660,190 C760,110 860,110 960,190 C1060,255 1140,255 1200,215 L1200,260 Z"/>
-            <path class="levelmap__path" pathLength="1" d="M60,196 C160,120 240,120 320,196 C420,262 540,262 640,186 C740,110 840,110 940,186 C1030,246 1110,246 1170,214"/>
-          </svg>
-          <ol class="levels" id="levels"></ol>
+    <section class="chapter work" id="work" aria-labelledby="work-h">
+      <div class="wrap chapter__grid">
+        <p class="chapter__head">Work</p>
+        <div class="chapter__body">
+          <h2 class="h2" id="work-h">Four startups,<br>one degree.</h2>
+          <div class="levelmap" id="levelmap">
+            <svg class="levelmap__svg" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
+              <path class="levelmap__hills" d="M0,260 L0,200 C120,120 220,120 340,200 C440,270 560,270 660,190 C760,110 860,110 960,190 C1060,255 1140,255 1200,215 L1200,260 Z"/>
+              <path class="levelmap__path" pathLength="1" d="M60,196 C160,120 240,120 320,196 C420,262 540,262 640,186 C740,110 840,110 940,186 C1030,246 1110,246 1170,214"/>
+            </svg>
+            <ol class="levels" id="levels"></ol>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="built" id="built" aria-labelledby="built-h">
-      <div class="wrap">
-        <p class="section__label">Built</p>
-        <h2 class="h2" id="built-h" data-reveal>Things I<br>made.</h2>
-        <div class="cards" id="cards"></div>
+    <section class="chapter built" id="built" aria-labelledby="built-h">
+      <div class="wrap chapter__grid">
+        <p class="chapter__head">Built</p>
+        <div class="chapter__body">
+          <h2 class="h2" id="built-h">Things I<br>made.</h2>
+          <div class="cards" id="cards"></div>
+        </div>
       </div>
     </section>
 
-    <div class="hill hill--flip" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,10 480,130 720,70 C960,10 1200,130 1440,70 L1440,120 L0,120 Z" fill="#3E8F33"/><path d="M0,86 C240,30 480,140 720,86 C960,30 1200,140 1440,86 L1440,120 L0,120 Z" fill="#5FBF4B"/></svg></div>
-
-    <section class="about" id="about" aria-labelledby="about-h">
-      <div class="wrap about__grid">
-        <div class="about__text">
-          <p class="section__label">About</p>
-          <h2 class="h2" id="about-h" data-reveal>A bit<br>about me.</h2>
-          <ul class="about__lines" id="about-lines"></ul>
+    <section class="chapter about" id="about" aria-labelledby="about-h">
+      <div class="wrap chapter__grid">
+        <p class="chapter__head">About</p>
+        <div class="chapter__body about__grid">
+          <div class="about__text">
+            <h2 class="h2" id="about-h">A bit<br>about me.</h2>
+            <ul class="about__lines" id="about-lines"></ul>
+          </div>
+          <div class="wall" id="wall" aria-label="Photos"></div>
         </div>
-        <div class="wall" id="wall" aria-label="Photos"></div>
       </div>
       <dialog class="lightbox" id="lightbox" aria-label="Photo">
         <div class="lightbox__card">
@@ -158,41 +165,51 @@
       </dialog>
     </section>
 
-    <section class="guestbook" id="guestbook" aria-labelledby="guestbook-h">
-      <div class="wrap">
-        <div class="book">
-          <div class="book__page">
-            <h2 class="book__title" id="guestbook-h">Guestbook</h2>
-            <p class="book__lead" id="guestbook-lead"></p>
+    <section class="chapter guestbook" id="guestbook" aria-labelledby="guestbook-h">
+      <div class="wrap chapter__grid">
+        <p class="chapter__head">Guestbook</p>
+        <div class="chapter__body">
+          <div class="book">
+            <div class="book__write">
+              <h2 class="book__title" id="guestbook-h">Guestbook</h2>
+              <p class="book__lead" id="guestbook-lead"></p>
+              <form class="chat" id="note-form" autocomplete="off" novalidate>
+                <textarea class="chat__input" id="note-text" name="text" rows="1" maxlength="280" required aria-label="Your note"></textarea>
+                <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                <button class="chat__send" id="note-submit" type="submit" aria-label="Post your note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </form>
+              <p class="book__foot">
+                <span class="book__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><span id="note-count"></span></span>
+                <span class="book__status" id="note-status" role="status" aria-live="polite"></span>
+                <span class="book__chars" id="note-count-chars" aria-hidden="true">0/280</span>
+              </p>
+            </div>
             <ol class="entries" id="notes" data-lenis-prevent tabindex="0" aria-label="Notes"></ol>
-            <form class="chat" id="note-form" autocomplete="off" novalidate>
-              <textarea class="chat__input" id="note-text" name="text" rows="1" maxlength="280" required aria-label="Your note"></textarea>
-              <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
-              <button class="chat__send" id="note-submit" type="submit" aria-label="Post your note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            </form>
-            <p class="book__foot">
-              <span class="book__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><span id="note-count"></span></span>
-              <span class="book__status" id="note-status" role="status" aria-live="polite"></span>
-              <span class="book__chars" id="note-count-chars" aria-hidden="true">0/280</span>
-            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="sayhi" id="contact" aria-labelledby="sayhi-h">
-      <div class="wrap">
-        <p class="section__label">Say hi</p>
-        <h2 class="h2 sayhi__h" id="sayhi-h" data-reveal>Say hi.</h2>
-        <ul class="sayhi__links" id="sayhi-links"></ul>
-        <p class="sayhi__line">Coffee in Bengaluru: yes.</p>
+    <section class="chapter sayhi" id="contact" aria-labelledby="sayhi-h">
+      <div class="wrap chapter__grid">
+        <p class="chapter__head">Say hi</p>
+        <div class="chapter__body">
+          <h2 class="h2 sayhi__h" id="sayhi-h">Say hi.</h2>
+          <ul class="sayhi__links" id="sayhi-links"></ul>
+          <p class="sayhi__line">Coffee in Bengaluru: yes.</p>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer wrap">
-    <p>Built by hand. The ball is an homage, not a copy.</p>
-    <p>© 2026 Sagar Kotian</p>
+  <footer class="footer">
+    <div class="wrap chapter__grid">
+      <span aria-hidden="true"></span>
+      <div class="chapter__body footer__row">
+        <p>Built by hand. The ball is an homage, not a copy.</p>
+        <p>© 2026 Sagar Kotian</p>
+      </div>
+    </div>
   </footer>
 
   <script type="module" src="/src/main.ts"></script>

@@ -1,38 +1,42 @@
 :root {
-  --sky: #BFE3FF;
-  --sky-2: #E4F2FF;
-  --paper: #F7F3EC;
-  --paper-2: #EFE9DF;
-  --ink: #14120F;
-  --ink-2: #5C574E;
-  --ink-3: #6E6960;
-  --ball: #E8402F;
-  --ball-2: #B92E22;
-  --ball-btn: #D5301C;
-  --ring: #F5B400;
-  --ring-2: #C98F00;
-  --grass: #5FBF4B;
-  --grass-2: #3E8F33;
-  --cloud: #FFFFFF;
-  --rock: #8A8F99;
-  --line: #E1DBD0;
+  /* the game's art, toned for reading */
+  --leaf: #EEF2E8;      /* the page ground */
+  --leaf-2: #DFE7D6;    /* quiet surfaces: map hills, pills, key caps */
+  --line: #C3CEBB;      /* rules and borders */
+  --paper: #FFFFFF;     /* inputs and the guestbook page */
+  --forest: #102A1B;    /* ink */
+  --moss: #4E6353;      /* secondary text */
+  --ball: #E8402F;      /* the accent, always as an object */
+  --ball-2: #B92E22;    /* link colour on leaf, pressed states */
+  --egg: #F5B400;       /* highlights */
+  --marker: #FFD84D;    /* the highlighter swipe */
+  --deep: #0B2416;      /* the closing block */
+  --sky: #58AFE4;       /* only inside the canvas */
+  --on-deep: #EEF2E8;
+  --on-deep-2: rgba(238, 242, 232, 0.68);
+  --deep-line: rgba(238, 242, 232, 0.22);
 
-  --font-display: 'Fredoka', 'Fredoka Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-body: 'Manrope', 'Manrope Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-display: 'Young Serif', 'Young Serif Fallback', Georgia, 'Times New Roman', serif;
+  --font-text: 'Schibsted Grotesk', 'Schibsted Grotesk Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 
-  --w-max: 1180px;
-  --gutter: clamp(20px, 4vw, 56px);
-  --section-y: clamp(72px, 11vw, 150px);
+  --w-max: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --margin-col: 150px;
+  --col-gap: clamp(24px, 3vw, 48px);
+  --section-y: clamp(64px, 9vw, 120px);
+  --nav-h: 56px;
 
-  --step--1: clamp(0.85rem, 0.8rem + 0.2vw, 0.95rem);
-  --step-0: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  --step-1: clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem);
-  --step-2: clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
-  --step-3: clamp(2.4rem, 1.7rem + 3.2vw, 4.6rem);
-  --step-name: clamp(3.4rem, 11vw, 9.8rem);
+  --step--1: 0.9rem;
+  --step-0: 1.0625rem;
+  --step-1: clamp(1.12rem, 1.05rem + 0.35vw, 1.3rem);
+  --step-2: clamp(1.45rem, 1.2rem + 1vw, 1.9rem);
+  --step-h2: clamp(2.5rem, 1.8rem + 3.2vw, 4.75rem);
+  --step-name: clamp(3.4rem, 12vw, 10.75rem);
+  --step-game: clamp(3rem, 2rem + 5vw, 6.5rem);
 
-  --radius: 18px;
-  --shadow: 0 1px 2px rgba(20, 18, 15, 0.06), 0 18px 40px -22px rgba(20, 18, 15, 0.35);
+  --r-s: 6px;
+  --r-m: 12px;
+  --r-l: 18px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
