@@ -38,6 +38,25 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .btn--ball:hover { background: var(--ball-2); box-shadow: inset 0 0 0 2px var(--ball-2), 0 4px 0 -2px var(--ball-2); }
 .btn--big { padding: 18px 34px; font-size: var(--step-1); }
 
+/* cursor: a small ball on fine pointers */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html[data-motion="full"] body, html[data-motion="full"] a, html[data-motion="full"] button { cursor: none; }
+}
+.cursor { position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+.cursor.is-on { opacity: 1; }
+.cursor__ball {
+  position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--ball); transform: translate(-50%, -50%);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.18); transition: transform 0.25s var(--bounce), width 0.25s var(--bounce), height 0.25s var(--bounce);
+}
+.cursor__ball i { position: absolute; top: 5px; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: inset 1px 1px 0 var(--ink); }
+.cursor__ball i:first-child { left: 4px; } .cursor__ball i:last-child { right: 4px; }
+.cursor.is-down .cursor__ball { transform: translate(-50%, -50%) scale(1.25, 0.75); }
+.cursor[data-state="link"] .cursor__ball { width: 30px; height: 30px; }
+.cursor__label {
+  position: absolute; left: 16px; top: 14px; padding: 5px 10px; border-radius: 999px; background: var(--ink); color: var(--paper);
+  font-family: var(--font-display); font-weight: 600; font-size: 13px; white-space: nowrap; transform: scale(0.6); opacity: 0; transform-origin: left top; transition: transform 0.3s var(--bounce), opacity 0.2s;
+}
+.cursor[data-state="play"] .cursor__label, .cursor[data-state="open"] .cursor__label, .cursor[data-state="copy"] .cursor__label { transform: scale(1); opacity: 1; }
 
 /* hills between sections */
 .hill { line-height: 0; background: var(--paper); }

@@ -27,12 +27,26 @@ export const projects: Project[] = [
     title: 'Bengaluru.run', line: 'A map of running routes in Bengaluru. I run, so this was inevitable.' },
 ];
 
-export interface Chapter { n: number; place: string; title: string; text: string; media?: { kind: 'image'; key: 'mangalore' | 'beach'; alt: string; caption: string } | { kind: 'video'; src: string; caption: string } }
+export type PhotoTag = 'college' | 'treks' | 'weekends';
+export interface Photo { id: string; kind: 'image' | 'video'; key?: 'mangalore' | 'beach' | 'waterfall'; src?: string; alt: string; caption: string; tag: PhotoTag }
 export const about = {
-  chapters: [
-    { n: 1, place: 'Engineering', title: 'Did my engineering in computer science.', text: 'B.Tech, 2022 to 2026. Not an engineer by trade. I build things anyway.', media: { kind: 'image', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.' } },
-    { n: 2, place: 'Weekends', title: 'What I do on weekends.', text: 'Filter coffee first. Then this.', media: { kind: 'video', src: '/video/weekends-preview.mp4', caption: 'Weekends, on loop.' } },
-  ] as Chapter[],
+  lines: ['Bengaluru, via Mangalore and Mumbai.', 'Founder’s office at Superjoin. Sales, support and whatever is on fire.', 'Filter coffee over everything. Weekends are for the hills.'],
+  hint: 'drag them around, tap one to see it big',
+  tags: ['all', 'college', 'treks', 'weekends'] as const,
+  photos: [
+    { id: 'classroom', kind: 'image', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.', tag: 'college' },
+    { id: 'waterfall', kind: 'image', key: 'waterfall', alt: 'Sagar and three friends grinning in front of a waterfall in the forest.', caption: 'Found the waterfall. Lost the trail twice.', tag: 'treks' },
+    { id: 'beach', kind: 'image', key: 'beach', alt: 'Sagar on a beach at dusk, pink sky and waves behind him.', caption: 'Pink sky on the Mangalore coast.', tag: 'weekends' },
+    { id: 'weekends', kind: 'video', src: '/video/weekends-preview.mp4', alt: 'A short clip of a weekend.', caption: 'What I do on weekends.', tag: 'weekends' },
+  ] as Photo[],
+};
+export const guestbook = {
+  lead: 'Leave a note, say hi, share a thought. No sign in, 280 characters.',
+  namePlaceholder: 'Your name',
+  textPlaceholder: 'Write something',
+  button: 'Pin it',
+  empty: 'Nothing here yet. Be the first.',
+  seed: [{ id: 'seed-1', name: 'Sagar', text: 'First note is mine. Say hi, tell me what you are building, or just leave a coffee recommendation.', at: Date.UTC(2026, 8, 13) }],
 };
 
 export const links = {

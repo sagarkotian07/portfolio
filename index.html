@@ -36,6 +36,7 @@
   <link rel="stylesheet" href="/src/styles/sections.css" />
 </head>
 <body>
+  <div class="cursor" aria-hidden="true"><div class="cursor__ball"><i></i><i></i></div><div class="cursor__label"></div></div>
   <a class="skip" href="#main">Skip to content</a>
 
   <div class="preloader" id="preloader" aria-hidden="true">
@@ -49,7 +50,7 @@
       <span>Sagar</span>
     </a>
     <nav class="nav__links" aria-label="Sections">
-      <a href="#play">Play</a><a href="#work">Work</a><a href="#built">Built</a><a href="#about">About</a><a href="#contact">Say hi</a>
+      <a href="#play">Play</a><a href="#work">Work</a><a href="#built">Built</a><a href="#about">About</a><a href="#guestbook">Guestbook</a><a href="#contact">Say hi</a>
     </nav>
     <a class="nav__resume" href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
   </header>
@@ -142,19 +143,51 @@
     <div class="hill hill--flip" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,10 480,130 720,70 C960,10 1200,130 1440,70 L1440,120 L0,120 Z" fill="#3E8F33"/><path d="M0,86 C240,30 480,140 720,86 C960,30 1200,140 1440,86 L1440,120 L0,120 Z" fill="#5FBF4B"/></svg></div>
 
     <section class="about" id="about" aria-labelledby="about-h">
-      <div class="about__pin" id="about-pin">
-        <div class="wrap about__head">
-          <div>
-            <p class="section__label">About</p>
-            <h2 class="h2" id="about-h" data-reveal>A bit about me,<br>in chapters.</h2>
+      <div class="wrap about__grid">
+        <div class="about__text">
+          <p class="section__label">About</p>
+          <h2 class="h2" id="about-h" data-reveal>A bit<br>about me.</h2>
+          <ul class="about__lines" id="about-lines"></ul>
+          <div class="about__tags" id="about-tags" role="group" aria-label="Show photos from"></div>
+          <p class="about__hint" id="about-hint" aria-hidden="true"></p>
+        </div>
+        <div class="wall" id="wall" aria-label="Photos"></div>
+      </div>
+      <dialog class="lightbox" id="lightbox" aria-label="Photo">
+        <div class="lightbox__card">
+          <div class="lightbox__media" id="lightbox-media"></div>
+          <div class="lightbox__bar">
+            <button class="lightbox__nav" id="lightbox-prev" type="button" aria-label="Previous photo">‹</button>
+            <p class="lightbox__cap" id="lightbox-cap"></p>
+            <button class="lightbox__nav" id="lightbox-next" type="button" aria-label="Next photo">›</button>
           </div>
-          <p class="about__hint" aria-hidden="true">scroll to roll through</p>
+          <button class="lightbox__close" id="lightbox-close" type="button" aria-label="Close">×</button>
         </div>
-        <div class="about__stage">
-          <ol class="about__track" id="about-track"></ol>
-          <div class="about__hills" id="about-hills" aria-hidden="true"></div>
-          <i class="about__ball" id="about-ball" aria-hidden="true"></i>
+      </dialog>
+    </section>
+
+    <section class="guestbook" id="guestbook" aria-labelledby="guestbook-h">
+      <div class="wrap">
+        <div class="guestbook__head">
+          <div>
+            <p class="section__label">Guestbook</p>
+            <h2 class="h2" id="guestbook-h" data-reveal>Sign the<br>guestbook.</h2>
+            <p class="guestbook__lead" id="guestbook-lead"></p>
+          </div>
+          <svg class="guestbook__sign" viewBox="0 0 120 150" aria-hidden="true"><rect x="54" y="60" width="12" height="90" rx="3" fill="#7A4E24"/><rect x="8" y="14" width="104" height="54" rx="8" fill="#7A4E24"/><rect x="12" y="18" width="96" height="46" rx="6" fill="#C48A4A"/><path d="M34 41h34v-9l18 11-18 11v-9H34z" fill="#F7C531"/><path d="M60 14c2-10 10-12 14-10-2 6-6 9-14 10z" fill="#3FBF2E"/></svg>
         </div>
+        <form class="note-form" id="note-form" autocomplete="off" novalidate>
+          <input class="note-form__name" id="note-name" name="name" type="text" maxlength="40" required aria-label="Your name" />
+          <div class="note-form__text-wrap">
+            <textarea class="note-form__text" id="note-text" name="text" rows="2" maxlength="280" required aria-label="Your note"></textarea>
+            <span class="note-form__count" id="note-count-chars" aria-hidden="true">280</span>
+          </div>
+          <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="btn btn--ball" id="note-submit" type="submit" data-magnetic></button>
+          <p class="note-form__status" id="note-status" role="status" aria-live="polite"></p>
+        </form>
+        <p class="guestbook__count" id="note-count"></p>
+        <ul class="notes" id="notes"></ul>
       </div>
     </section>
 

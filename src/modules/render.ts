@@ -1,4 +1,4 @@
-import { hero, stops, projects, about, links } from '../content';
+import { hero, stops, projects, about, guestbook, links } from '../content';
 import { images, type ImageKey } from '../generated/images';
 import { q } from './prefs';
 
@@ -39,17 +39,23 @@ export function renderAll() {
     </article>`;
   }).join('');
 
-  q('#about-track').innerHTML = about.chapters.map((c) => {
-    const media = !c.media ? '' : c.media.kind === 'image'
-      ? `<figure class="chapter__media"><div class="chapter__frame">${picture(c.media.key, { alt: c.media.alt, sizes: '(max-width: 899px) 70vw, 300px' })}</div><figcaption class="chapter__caption">${esc(c.media.caption)}</figcaption></figure>`
-      : `<figure class="chapter__media"><div class="chapter__frame chapter__frame--video"><video class="chapter__video" src="${c.media.src}" muted playsinline loop preload="metadata" aria-label="${esc(c.title)}"></video><span class="chapter__play" aria-hidden="true">${playIcon}</span></div><figcaption class="chapter__caption">${esc(c.media.caption)}</figcaption></figure>`;
-    return `<li class="chapter chapter--${c.n}${c.media ? ' has-media' : ''}">
-      <span class="chapter__flag">Chapter ${c.n} · ${esc(c.place)}</span>
-      <h3 class="chapter__title">${esc(c.title)}</h3>
-      <p class="chapter__text">${esc(c.text)}</p>
-      ${media}
-    </li>`;
-  }).join('') + `<li class="chapter chapter--end" aria-hidden="true"><span class="about__flower"></span></li>`;
+  q('#about-lines').innerHTML = about.lines.map((l) => `<li>${esc(l)}</li>`).join('');
+  q('#about-hint').textContent = about.hint;
+  q('#about-tags').innerHTML = about.tags.map((t, i) => `<button class="tag${i === 0 ? ' is-on' : ''}" type="button" data-tag="${t}" aria-pressed="${i === 0}">${esc(t)}</button>`).join('');
+  q('#wall').innerHTML = about.photos.map((ph, i) => {
+    const media = ph.kind === 'image'
+      ? picture(ph.key!, { alt: ph.alt, sizes: '(max-width: 899px) 44vw, 230px' })
+      : `<video class="polaroid__video" src="${ph.src}" muted playsinline loop preload="metadata" aria-label="${esc(ph.alt)}"></video><span class="polaroid__play" aria-hidden="true">${playIcon}</span>`;
+    return `<figure class="polaroid" data-id="${ph.id}" data-tag="${ph.tag}" data-i="${i}">
+      <span class="polaroid__pin" aria-hidden="true"></span>
+      <button class="polaroid__open" type="button" aria-label="Open photo: ${esc(ph.caption)}">${media}</button>
+      <figcaption class="polaroid__cap">${esc(ph.caption)}</figcaption>
+    </figure>`;
+  }).join('');
+  q('#guestbook-lead').textContent = guestbook.lead;
+  q<HTMLInputElement>('#note-name').placeholder = guestbook.namePlaceholder;
+  q<HTMLTextAreaElement>('#note-text').placeholder = guestbook.textPlaceholder;
+  q('#note-submit').textContent = guestbook.button;
 
   q('#sayhi-links').innerHTML = `
     <li><a class="sayhi__row sayhi__row--wa" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)} ↗</small></a></li>
