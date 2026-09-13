@@ -167,20 +167,24 @@
     </section>
 
     <section class="guestbook" id="guestbook" aria-labelledby="guestbook-h">
-      <div class="wrap guestbook__wrap">
-        <h2 class="h2" id="guestbook-h" data-reveal>Guestbook.</h2>
-        <p class="guestbook__lead" id="guestbook-lead"></p>
-        <form class="note-form" id="note-form" autocomplete="off" novalidate>
-          <textarea class="note-form__text" id="note-text" name="text" rows="3" maxlength="280" required aria-label="Your note"></textarea>
-          <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <div class="note-form__row">
-            <span class="note-form__count" id="note-count-chars" aria-hidden="true">0/280</span>
-            <p class="note-form__status" id="note-status" role="status" aria-live="polite"></p>
-            <button class="btn btn--ball note-form__btn" id="note-submit" type="submit"></button>
+      <div class="wrap">
+        <div class="book">
+          <div class="book__page">
+            <h2 class="book__title" id="guestbook-h">Guestbook</h2>
+            <p class="book__lead" id="guestbook-lead"></p>
+            <ol class="entries" id="notes"></ol>
+            <form class="chat" id="note-form" autocomplete="off" novalidate>
+              <textarea class="chat__input" id="note-text" name="text" rows="1" maxlength="280" required aria-label="Your note"></textarea>
+              <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <button class="chat__send" id="note-submit" type="submit" aria-label="Post your note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </form>
+            <p class="book__foot">
+              <span class="book__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><span id="note-count"></span></span>
+              <span class="book__status" id="note-status" role="status" aria-live="polite"></span>
+              <span class="book__chars" id="note-count-chars" aria-hidden="true">0/280</span>
+            </p>
           </div>
-        </form>
-        <ol class="entries" id="notes"></ol>
-        <p class="entries__total" id="note-count"></p>
+        </div>
       </div>
     </section>
 

@@ -135,28 +135,35 @@ html[data-motion="full"] .levelmap__path { stroke-dashoffset: 1; }
   .about__hint { display: none; }
 }
 
-/* ---------- guestbook: as plain as it gets ---------- */
-.guestbook { background: var(--paper); padding-block: var(--section-y); }
-.guestbook__wrap { max-width: 720px; }
-.guestbook__lead { margin-top: 10px; color: var(--ink-2); font-size: var(--step-0); }
-.note-form { margin-top: 28px; }
-.note-form__text { display: block; width: 100%; font: inherit; font-size: var(--step-0); line-height: 1.5; color: var(--ink); background: #fff; border: 2px solid rgba(20,18,15,0.16); border-radius: 14px; padding: 14px 16px; min-height: 96px; resize: none; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
-.note-form__text::placeholder { color: var(--ink-3); }
-.note-form__text:hover { border-color: rgba(20,18,15,0.3); }
-.note-form__text:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 4px rgba(245,180,0,0.25); }
-.note-form__row { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
-.note-form__count { font-size: var(--step--1); color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.note-form__status { flex: 1; font-size: var(--step--1); color: var(--ink-2); }
-.note-form__btn { padding: 10px 20px; font-size: var(--step--1); }
+/* ---------- guestbook: the chapter page from the game ---------- */
+.guestbook { background: #5A290B; background-image: linear-gradient(90deg, #4E2209 0 44%, #6A3211 44% 100%); padding-block: var(--section-y); color: var(--ink); overflow: hidden; }
+.book { max-width: 620px; margin: 0 auto; padding: 8px 28px 28px 4px; }
+.book__page { position: relative; background: #FFF9E3; border: 3px solid var(--ink); border-radius: 16px 22px 26px 12px; padding: clamp(26px, 4vw, 40px) clamp(22px, 4vw, 40px) 22px; transform: rotate(-1.2deg);
+  box-shadow: 5px 5px 0 var(--ink), 10px 10px 0 #FFF9E3, 13px 13px 0 var(--ink), 18px 18px 0 #FFF9E3, 21px 21px 0 var(--ink); }
+.book__title { font-family: var(--font-display); font-weight: 700; font-size: var(--step-3); line-height: 1; text-align: center; color: #EA7A1F; -webkit-text-stroke: 4px #7A3A0B; paint-order: stroke fill; text-shadow: 3px 3px 0 #7A3A0B; letter-spacing: 0.02em; }
+.book__lead { text-align: center; color: var(--ink-2); margin-top: 10px; }
+.entries { list-style: none; margin: 24px 0 0; padding: 0 6px 0 0; max-height: 340px; overflow: auto; scrollbar-width: thin; }
+.entry { padding: 12px 0 13px; border-top: 2px dashed rgba(20,18,15,0.16); }
+.entry:first-child { border-top: 0; }
+.entry__meta { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: var(--step--1); color: #9A4D14; }
+.entry__n { color: var(--ball-2); }
+.entry__text { margin-top: 4px; color: var(--ink); overflow-wrap: anywhere; }
+.entry--empty { color: var(--ink-3); font-family: var(--font-display); font-weight: 600; text-align: center; }
+.chat { display: flex; align-items: flex-end; gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 3px solid var(--ink); }
+.chat__input { flex: 1; display: block; font: inherit; font-size: var(--step-0); line-height: 1.4; color: var(--ink); background: #fff; border: 3px solid var(--ink); border-radius: 26px; padding: 10px 18px; min-height: 48px; resize: none; overflow: hidden; box-shadow: 0 4px 0 rgba(20,18,15,0.18); }
+.chat__input::placeholder { color: var(--ink-3); }
+.chat__input:focus { outline: none; box-shadow: 0 0 0 4px rgba(245,180,0,0.4); }
+.chat__send { width: 50px; height: 50px; flex: none; border-radius: 50%; background: var(--ball); color: #fff; border: 3px solid var(--ink); display: grid; place-items: center; box-shadow: inset -5px -5px 0 rgba(0,0,0,0.18), 0 4px 0 rgba(20,18,15,0.25); transition: transform 0.15s; }
+.chat__send:hover { transform: translateY(-2px); }
+.chat__send:active { transform: translateY(2px); }
+.chat__send svg { width: 22px; height: 22px; }
 .note-form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-.entries { list-style: none; margin: 34px 0 0; padding: 0; }
-.entry { padding: 18px 0; border-top: 1px solid rgba(20,18,15,0.12); }
-.entry:last-child { border-bottom: 1px solid rgba(20,18,15,0.12); }
-.entry__meta { display: flex; align-items: baseline; gap: 8px; font-size: var(--step--1); color: var(--ink-3); }
-.entry__n { font-family: var(--font-display); font-weight: 700; color: var(--ball-2); }
-.entry__text { margin-top: 6px; color: var(--ink); overflow-wrap: anywhere; }
-.entry--empty { color: var(--ink-3); border-bottom: 0; }
-.entries__total { margin-top: 12px; font-size: var(--step--1); color: var(--ink-3); }
+.book__foot { display: flex; align-items: center; gap: 12px; margin-top: 14px; font-family: var(--font-display); font-weight: 600; font-size: var(--step--1); color: var(--ink-2); }
+.book__eggs { display: inline-flex; align-items: center; gap: 8px; }
+.book__eggs svg { width: 20px; height: 24px; }
+.book__status { flex: 1; color: #9A4D14; }
+.book__chars { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+@media (max-width: 899px) { .book { padding: 6px 18px 18px 2px; } .book__page { transform: rotate(-0.6deg); box-shadow: 4px 4px 0 var(--ink), 8px 8px 0 #FFF9E3, 11px 11px 0 var(--ink); } .entries { max-height: 300px; } .book__foot { flex-wrap: wrap; } }
 
 /* ---------- say hi ---------- */
 .sayhi { padding-block: var(--section-y) calc(var(--section-y) * 0.5); }

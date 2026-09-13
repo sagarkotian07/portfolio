@@ -54,7 +54,6 @@ export function renderAll() {
   }).join('');
   q('#guestbook-lead').textContent = guestbook.lead;
   q<HTMLTextAreaElement>('#note-text').placeholder = guestbook.textPlaceholder;
-  q('#note-submit').textContent = guestbook.button;
 
   q('#sayhi-links').innerHTML = `
     <li><a class="sayhi__row sayhi__row--wa" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)} ↗</small></a></li>

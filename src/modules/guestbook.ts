@@ -13,9 +13,9 @@ export function initGuestbook() {
   const localNotes = (): Note[] => { try { return JSON.parse(localStorage.getItem(LS) ?? 'null') ?? guestbook.seed; } catch { return guestbook.seed; } };
   const render = (notes: Note[]) => {
     list.innerHTML = notes.length
-      ? notes.map((n) => `<li class="entry"><p class="entry__meta"><b class="entry__n">#${n.n}</b><span aria-hidden="true">·</span><time datetime="${new Date(n.at).toISOString()}">${when(n.at)}</time></p><p class="entry__text">${esc(n.text)}</p></li>`).join('')
+      ? notes.map((n) => `<li class="entry"><p class="entry__meta"><b class="entry__n">#${n.n}</b><time datetime="${new Date(n.at).toISOString()}">${when(n.at)}</time></p><p class="entry__text">${esc(n.text)}</p></li>`).join('')
       : `<li class="entry entry--empty">${esc(guestbook.empty)}</li>`;
-    total.textContent = local && notes.length ? 'kept in this browser until the site goes live' : '';
+    total.textContent = guestbook.count(notes.length) + (local ? ' · kept in this browser until the site goes live' : '');
   };
   // the static preview has no API; vercel dev (port 3000) and the live site do
   const noApi = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && location.port !== '3000';
@@ -27,7 +27,8 @@ export function initGuestbook() {
       const d = (await r.json()) as { notes: Note[] }; render(d.notes);
     } catch { local = true; render(localNotes()); }
   };
-  const grow = () => { textEl.style.height = 'auto'; textEl.style.height = `${Math.max(96, textEl.scrollHeight)}px`; };
+  const grow = () => { textEl.style.height = 'auto'; textEl.style.height = `${Math.min(140, Math.max(48, textEl.scrollHeight))}px`; };
+  textEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
   textEl.addEventListener('input', () => { count.textContent = `${textEl.value.length}/280`; grow(); });
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
