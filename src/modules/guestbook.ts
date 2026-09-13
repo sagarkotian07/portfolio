@@ -24,7 +24,7 @@ export function initGuestbook() {
     list.innerHTML = notes.length
       ? notes.map((n) => `<li class="entry"><p class="entry__meta"><b class="entry__n">#${n.n}</b><time datetime="${new Date(n.at).toISOString()}">${when(n.at)}</time></p><p class="entry__text">${esc(n.text)}</p></li>`).join('')
       : `<li class="entry entry--empty">${esc(guestbook.empty)}</li>`;
-    total.textContent = guestbook.count(notes.length) + (local ? ' · kept in this browser until the site goes live' : '');
+    total.textContent = guestbook.count(notes.length);
   };
   // the static preview has no API; vercel dev (port 3000) and the live site do
   const noApi = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && location.port !== '3000';
