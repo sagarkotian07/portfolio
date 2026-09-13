@@ -167,24 +167,20 @@
     </section>
 
     <section class="guestbook" id="guestbook" aria-labelledby="guestbook-h">
-      <div class="wrap">
-        <p class="section__label">Guestbook</p>
-        <h2 class="h2" id="guestbook-h" data-reveal>Leave a note.</h2>
+      <div class="wrap guestbook__wrap">
+        <h2 class="h2" id="guestbook-h" data-reveal>Guestbook.</h2>
         <p class="guestbook__lead" id="guestbook-lead"></p>
-        <div class="notepad">
-          <div class="notepad__rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <form class="notepad__form" id="note-form" autocomplete="off" novalidate>
-            <textarea class="notepad__text" id="note-text" name="text" rows="2" maxlength="280" required aria-label="Your note"></textarea>
-            <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
-            <div class="notepad__row">
-              <span class="notepad__count" id="note-count-chars" aria-hidden="true">280</span>
-              <p class="notepad__status" id="note-status" role="status" aria-live="polite"></p>
-              <button class="btn btn--ball" id="note-submit" type="submit" data-magnetic></button>
-            </div>
-          </form>
-          <ol class="entries" id="notes"></ol>
-          <p class="notepad__total" id="note-count"></p>
-        </div>
+        <form class="note-form" id="note-form" autocomplete="off" novalidate>
+          <textarea class="note-form__text" id="note-text" name="text" rows="3" maxlength="280" required aria-label="Your note"></textarea>
+          <input class="note-form__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="note-form__row">
+            <span class="note-form__count" id="note-count-chars" aria-hidden="true">0/280</span>
+            <p class="note-form__status" id="note-status" role="status" aria-live="polite"></p>
+            <button class="btn btn--ball note-form__btn" id="note-submit" type="submit"></button>
+          </div>
+        </form>
+        <ol class="entries" id="notes"></ol>
+        <p class="entries__total" id="note-count"></p>
       </div>
     </section>
 

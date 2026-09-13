@@ -41,9 +41,9 @@ export const about = {
   ] as Photo[],
 };
 export const guestbook = {
-  lead: 'Say hi, share a thought, recommend a coffee. No name needed, 280 characters.',
-  textPlaceholder: 'Write something',
-  button: 'Pin it',
+  lead: 'leave a note, say hi, share a thought :)',
+  textPlaceholder: 'write something…',
+  button: 'Post',
   empty: 'Nothing here yet. Be the first.',
   seed: [{ id: 'seed-1', n: 1, text: 'First note is mine. Say hi, tell me what you are building, or just leave a coffee recommendation.', at: Date.UTC(2026, 8, 13, 9, 30) }],
 };
