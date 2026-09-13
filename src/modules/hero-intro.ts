@@ -1,11 +1,13 @@
 import { gsap } from './scroll';
-import { q, qa, reducedMotion } from './prefs';
+import { q, qa, reducedMotion, whenTouch } from './prefs';
 import { mountIdle } from '../game/idle';
+import { hero as copy } from '../content';
 
 export function initHero(onPlay: () => void) {
   const hero = q('.hero'), words = qa('.hero__word'), meta = q('#hero-meta'), tag = q('#hero-tag'), hint = q('#hero-hint'), portrait = q('.portrait');
   if (!reducedMotion) mountIdle(q<HTMLCanvasElement>('#hero-idle'));
   hint.addEventListener('click', onPlay);
+  whenTouch(() => { hint.textContent = copy.hintTouch; });
   window.addEventListener('keydown', (e) => {
     if (e.code !== 'Space' || e.target !== document.body || document.documentElement.classList.contains('is-playing')) return;
     if (hero.getBoundingClientRect().bottom > window.innerHeight * 0.5) { e.preventDefault(); onPlay(); }

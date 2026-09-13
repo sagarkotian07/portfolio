@@ -31,7 +31,11 @@ html.is-playing .nav { opacity: 0; pointer-events: none; }
 .hero__row { display: grid; grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 300px); column-gap: clamp(28px, 5vw, 80px); align-items: center; margin-top: clamp(28px, 4vw, 48px); }
 .hero__text { display: flex; flex-direction: column; align-items: flex-start; }
 .hero__tag { font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.4rem); font-weight: 500; line-height: 1.22; letter-spacing: -0.015em; max-width: 20ch; }
-.hero__hint { display: inline-flex; align-items: center; gap: 10px; margin-top: clamp(20px, 3vw, 34px); font-weight: 600; font-size: var(--step--1); color: var(--moss); line-height: 1.2; }
+/* a 44px tap target; the negative margins keep the text on the line it always sat on */
+.hero__hint {
+  --hit: 44px; display: inline-flex; align-items: center; gap: 10px; min-height: var(--hit); font-weight: 600; font-size: var(--step--1); color: var(--moss); line-height: 1.2;
+  margin-top: calc(clamp(20px, 3vw, 34px) - (var(--hit) - 1.2em) / 2); margin-bottom: calc((1.2em - var(--hit)) / 2);
+}
 .hero__hint::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--ball); box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.18); animation: hop 1.4s var(--ease) infinite; }
 @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
 .hero__hint:hover { color: var(--forest); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1.5px; }
