@@ -28,7 +28,7 @@ export const projects: Project[] = [
 ];
 
 export type PhotoTag = 'college' | 'treks' | 'weekends';
-export interface Photo { id: string; kind: 'image' | 'video'; key?: 'mangalore' | 'beach' | 'waterfall'; src?: string; alt: string; caption: string; tag: PhotoTag }
+export interface Photo { id: string; kind: 'image' | 'video'; key?: 'mangalore' | 'beach' | 'waterfall' | 'cafe'; src?: string; alt: string; caption: string; tag: PhotoTag }
 export const about = {
   lines: ['Bengaluru, via Mangalore and Mumbai.', 'Founder’s office at Superjoin. Sales, support and whatever is on fire.', 'Filter coffee over everything. Weekends are for the hills.'],
   hint: 'drag them around, tap one to see it big',
@@ -37,7 +37,7 @@ export const about = {
     { id: 'classroom', kind: 'image', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.', tag: 'college' },
     { id: 'waterfall', kind: 'image', key: 'waterfall', alt: 'Sagar and three friends grinning in front of a waterfall in the forest.', caption: 'Found the waterfall. Lost the trail twice.', tag: 'treks' },
     { id: 'beach', kind: 'image', key: 'beach', alt: 'Sagar on a beach at dusk, pink sky and waves behind him.', caption: 'Pink sky on the Mangalore coast.', tag: 'weekends' },
-    { id: 'weekends', kind: 'video', src: '/video/weekends-preview.mp4', alt: 'A short clip of a weekend.', caption: 'What I do on weekends.', tag: 'weekends' },
+    { id: 'cafe', kind: 'image', key: 'cafe', alt: 'Sagar at a cafe counter, looking straight into the camera.', caption: 'What I do on weekends.', tag: 'weekends' },
   ] as Photo[],
 };
 export const guestbook = {

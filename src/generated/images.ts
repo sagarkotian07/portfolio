@@ -108,6 +108,20 @@ export const images = {
     "jpg": "/img/waterfall.jpg",
     "pending": false
   },
+  "cafe": {
+    "width": 726,
+    "height": 968,
+    "avif": [
+      480,
+      960
+    ],
+    "webp": [
+      480,
+      960
+    ],
+    "jpg": "/img/cafe.jpg",
+    "pending": false
+  },
   "posterInvoice": {
     "width": 1728,
     "height": 1080,
