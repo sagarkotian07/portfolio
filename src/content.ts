@@ -30,12 +30,12 @@ export const projects: Project[] = [
 export interface Photo { id: string; key: 'mangalore' | 'waterfall' | 'beach' | 'cafe' | 'lighthouse'; alt: string; caption: string; wide?: boolean }
 export const about = {
   // [o:..] marker loop, [u:..] wavy underline, [h:..] highlighter
-  lines: ['[o:Somehow] ended up in engineering.', 'Spent all of college working at startups, [u:just for fun].', 'I just wanted to figure things out, so I ended up [h:a generalist].'],
+  lines: ['[o:Somehow] ended up in engineering.', 'Spent all college working at startups and doing [u:random things].', 'I just wanted to figure things out, so I became [h:a generalist].'],
   photos: [
-    { id: 'classroom', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'Still, engineering was quite fun.' },
-    { id: 'waterfall', key: 'waterfall', alt: 'Sagar and three friends grinning in front of a waterfall in the forest.', caption: 'Found the waterfall. Lost the trail twice.', wide: true },
-    { id: 'beach', key: 'beach', alt: 'Sagar on a beach at dusk, pink sky and waves behind him.', caption: 'Pink sky on the Mangalore coast.' },
-    { id: 'cafe', key: 'cafe', alt: 'Sagar at a cafe counter, looking into the camera.', caption: 'What I do on weekends.' },
+    { id: 'classroom', key: 'mangalore', alt: 'Sagar in a white shirt and college lanyard, leaning over a desk in a classroom.', caption: 'College was fun.' },
+    { id: 'waterfall', key: 'waterfall', alt: 'Sagar and three friends grinning in front of a waterfall in the forest.', caption: 'friends<3', wide: true },
+    { id: 'beach', key: 'beach', alt: 'Sagar on Udupi beach at dusk, pink sky and waves behind him.', caption: 'Pink Sky and Udupi Beach.' },
+    { id: 'cafe', key: 'cafe', alt: 'Sagar at a cafe counter, looking into the camera.', caption: 'my resting face' },
     { id: 'lighthouse', key: 'lighthouse', alt: 'Sagar in a white shirt beside a striped lighthouse, arm raised as if resting it on the top.', caption: 'Almost there.' },
   ] as Photo[],
 };

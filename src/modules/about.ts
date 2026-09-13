@@ -1,18 +1,12 @@
 import { q, qa } from './prefs';
 import { about } from '../content';
 
-/** Five fixed prints, black and white until someone looks at them, plus a lightbox for the big version. */
+/** Five fixed prints and a lightbox for the big version. */
 export function initAbout() {
   const wall = q('#wall'), lines = q('#about-lines'), polaroids = qa<HTMLElement>('.polaroid', wall);
 
   // the marker marks draw themselves once, when the story scrolls in
   new IntersectionObserver((entries, io) => { if (entries.some((e) => e.isIntersecting)) { lines.classList.add('is-drawn'); io.disconnect(); } }, { threshold: 0.6 }).observe(lines);
-
-  // touch screens have no hover: a print comes into colour while it sits in the middle of the screen
-  if (!matchMedia('(hover: hover)').matches) {
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => e.target.classList.toggle('is-color', e.isIntersecting)), { rootMargin: '-35% 0px -35% 0px' });
-    polaroids.forEach((el) => io.observe(el));
-  }
 
   // lightbox, always in colour, largest version of the photo
   const dlg = q<HTMLDialogElement>('#lightbox'), media = q('#lightbox-media'), cap = q('#lightbox-cap');
