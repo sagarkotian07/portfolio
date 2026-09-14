@@ -65,8 +65,8 @@ export const images = {
     "pending": false
   },
   "desilingo": {
-    "width": 2400,
-    "height": 1500,
+    "width": 2560,
+    "height": 1600,
     "avif": [
       640,
       1080,
