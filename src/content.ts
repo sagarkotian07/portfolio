@@ -23,7 +23,7 @@ export type Project = { id: string; title: string; line: string; label: string; 
 export const projects: Project[] = [
   { id: 'invoice-po', kind: 'video', preview: '/video/invoice-po-preview.mp4', poster: 'posterInvoice', url: 'https://screen.studio/share/62w9eq8a', cta: 'Watch', label: 'demo',
     title: 'Invoice to PO reconciliation', line: 'Drop in invoices and purchase orders. It matches them so nobody has to.' },
-  { id: 'desilingo', kind: 'site', image: 'desilingo', url: 'https://desilingo-omega.vercel.app/kn', repo: 'https://github.com/sagarkotian07/desilingo', cta: 'Open', label: 'live',
+  { id: 'desilingo', kind: 'site', image: 'desilingo', url: 'https://desilingo-omega.vercel.app/', repo: 'https://github.com/sagarkotian07/desilingo', cta: 'Open', label: 'live',
     title: 'Desilingo', line: 'Learn Indian languages by ear. Say a phrase and it tells you which word slipped.' },
   { id: 'bengaluru-run', kind: 'site', image: 'bengaluruRun', url: 'https://bengaluru-run.vercel.app', repo: 'https://github.com/sagarkotian07/Bengaluru.run', cta: 'Open', label: 'live',
     title: 'Bengaluru.run', line: 'A map of running routes in Bengaluru. I run, so this was inevitable.' },
