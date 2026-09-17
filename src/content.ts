@@ -43,8 +43,6 @@ export const about = {
 };
 
 export const links = {
-  whatsapp: 'https://wa.me/919321747802?text=Hi%20Sagar',
-  whatsappLabel: '+91 93217 47802',
   email: 'kotiansagar07@gmail.com',
   linkedin: 'https://linkedin.com/in/sagar-kotian-',
   github: 'https://github.com/sagarkotian07',

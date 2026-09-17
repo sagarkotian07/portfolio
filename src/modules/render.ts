@@ -52,7 +52,6 @@ export function renderAll() {
     </figure>`).join('');
 
   q('#sayhi-links').innerHTML = `
-    <li><a class="sayhi__row" href="${links.whatsapp}" target="_blank" rel="noopener" data-cursor="open"><span>WhatsApp</span><small>${esc(links.whatsappLabel)}</small></a></li>
     <li><button class="sayhi__row" type="button" id="copy-email" data-cursor="copy"><span>${esc(links.email)}</span><small>copy</small></button></li>
     <li><a class="sayhi__row" href="${links.linkedin}" target="_blank" rel="noopener" data-cursor="open"><span>LinkedIn</span></a></li>
     <li><a class="sayhi__row" href="${links.github}" target="_blank" rel="noopener" data-cursor="open"><span>GitHub</span></a></li>`;
