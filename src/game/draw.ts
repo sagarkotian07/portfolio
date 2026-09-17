@@ -1,328 +1,370 @@
-// The sky forest, drawn with canvas paths. Shared with the hero idle canvas and the preloader.
-import { T, type Form, type Level, type Dir, type Decor } from './types';
-import { contours } from './contour';
+// Every sprite of the level as canvas paths, in whichever palette the world is wearing.
+import { D, type Solid, type BgItem, type Bush, type Flower, type Sign, type Plank, type Machine, type Pumpkin, type Pt } from './types';
+import { FIXED as F, type Palette } from './palette';
+import { hash } from './geom';
 
-export const C = {
-  skyTop: '#58AFE4', skyBottom: '#58AFE4', cloud: '#FFFFFF',
-  ball: '#EE3B2C', ball2: '#B4231B', ballLine: '#3A110E', ink: '#14120F',
-  body: '#063D1C', body2: '#042D14', edge: '#012713', rim: '#2F8F3A',
-  grass: '#31D32B', grass2: '#83E94F', grass3: '#24AB21',
-  bush: '#1E7A2A', bush2: '#2FA038',
-  egg: '#FFD494', eggShade: '#E8A75A', eggLight: '#FFF1D2', eggLine: '#8A5A2B',
-  plank: '#B5793F', plank2: '#7A4E24', rope: '#8A6540',
-  sign: '#C48A4A', signHit: '#DDA463', sign2: '#7A4E24', arrow: '#F7C531', arrowHit: '#F7C531',
-  flower: '#F0384D', flower2: '#B8233A', flowerLine: '#7A1526', petalWhite: '#FFFFFF', petalWhite2: '#E1E6EC', whiteLine: '#8E98A6', centre: '#F7C531', stem: '#3FBF2E', stem2: '#2A8F27',
-  spike: '#F4F7FA', spike2: '#AEB9C6',
-  vine: '#4FD03A', vine2: '#1F7A22',
-  bg1: '#76AFBA', bg2: '#5795A4', bgCap: '#8EDC62', bgWater: '#72AFBA', bgWater2: '#4C8D9F', bgGrass: '#66D641', bgBush: '#2F7346',
-  ring: '#F5B400', rock: '#8A8F99', rock2: '#5E626B', light: '#FFF6E5', light2: '#E9D9BE',
-};
+export const FONT = '"Arial Rounded MT Bold", "Nunito", "Varela Round", "Trebuchet MS", "Segoe UI", sans-serif';
 
-const hash = (x: number, y: number) => { let h = (x * 374761393 + y * 668265263) | 0; h = (h ^ (h >> 13)) * 1274126177; return ((h ^ (h >> 16)) >>> 0) / 4294967295; };
-
-export function drawBall(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, form: Form, sx: number, sy: number, eyeDir: number, blink: number, t: number) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(sx, sy);
-  const fill = form === 'rock' ? C.rock : form === 'light' ? C.light : C.ball;
-  const shade = form === 'rock' ? C.rock2 : form === 'light' ? C.light2 : C.ball2;
-  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = fill; ctx.fill();
-  ctx.save(); ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.clip();
-  ctx.beginPath(); ctx.arc(r * 0.3, r * 0.3, r * 0.95, 0, Math.PI * 2); ctx.fillStyle = shade; ctx.globalAlpha = 0.55; ctx.fill(); ctx.restore();
-  ctx.beginPath(); ctx.arc(0, 0, r - 0.8, 0, Math.PI * 2); ctx.strokeStyle = C.ballLine; ctx.lineWidth = Math.max(2, r * 0.13); ctx.stroke();
-  ctx.beginPath(); ctx.arc(-r * 0.34, -r * 0.36, r * 0.28, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.32)'; ctx.fill();
-  ctx.beginPath(); ctx.arc(-r * 0.5, -r * 0.5, r * 0.19, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.fill();
-  if (form === 'light') { ctx.strokeStyle = C.light2; ctx.lineWidth = r * 0.07; for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2 + t * 0.5; ctx.beginPath(); ctx.arc(Math.cos(a) * r * 0.55, Math.sin(a) * r * 0.55, r * 0.18, 0, Math.PI * 2); ctx.stroke(); } }
-  // face: eyes and a smile
-  const ex = r * 0.27, ey = -r * 0.04, er = r * 0.18, look = Math.max(-1, Math.min(1, eyeDir)) * r * 0.07;
-  for (const s of [-1, 1]) {
-    ctx.beginPath(); ctx.ellipse(s * ex, ey, er, er * (1 - blink), 0, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-    if (blink < 0.9) { ctx.beginPath(); ctx.arc(s * ex + look, ey + r * 0.03, er * 0.5, 0, Math.PI * 2); ctx.fillStyle = C.ink; ctx.fill(); }
-  }
-  ctx.strokeStyle = C.ink; ctx.lineWidth = Math.max(1.5, r * 0.08); ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(-r * 0.4, -r * 0.36); ctx.lineTo(-r * 0.16, -r * 0.38); ctx.moveTo(r * 0.16, -r * 0.38); ctx.lineTo(r * 0.4, -r * 0.36); ctx.stroke();
-  ctx.beginPath(); ctx.arc(0, r * 0.28, r * 0.23, Math.PI * 0.15, Math.PI * 0.85); ctx.stroke();
-  ctx.restore();
+// ---- world ---------------------------------------------------------------------------------------------------------
+export function drawSky(ctx: CanvasRenderingContext2D, P: Palette, w: number, h: number) {
+  const g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, P.sky0); g.addColorStop(1, P.sky1);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
 }
-
-export function drawSky(ctx: CanvasRenderingContext2D, camX: number, camY: number, vw: number, vh: number, t: number, worldH = 64 * T) {
-  void worldH; ctx.fillStyle = C.skyTop; ctx.fillRect(camX, camY, vw, vh);
-  ctx.fillStyle = C.cloud;
-  const step = 720, rows = 3;
-  for (let j = 0; j < rows; j++) {
-    const py = camY * (0.55 + j * 0.1); // slower than the world, so clouds drift as you climb
-    const off = (camX * 0.25 + t * (4 + j * 2)) % step;
-    for (let i = -1; i < vw / step + 2; i++) {
-      const x = camX + i * step - off + ((i * 131 + j * 77) % 200);
-      const y = py + ((i * 97 + j * 211) % 700) - 60 + j * 160;
+export function drawClouds(ctx: CanvasRenderingContext2D, P: Palette, camX: number, camY: number, vw: number, vh: number, t: number) {
+  ctx.fillStyle = P.cloud;
+  const step = 560;
+  for (let j = 0; j < 3; j++) {
+    const px = camX * (0.3 + j * 0.08) + t * (5 + j * 3), py = camY * (0.4 + j * 0.1);
+    for (let i = Math.floor((camX - px) / step) - 1; i < (camX - px + vw) / step + 1; i++) {
+      const h = hash(i, j + 40); if (h < 0.35) continue;
+      const x = px + i * step + h * 220, y = py + ((i * 173 + j * 311) % 900) - 300 + j * 140;
       if (y < camY - 80 || y > camY + vh + 80) continue;
-      cloud(ctx, x, y, 56 + ((i * 53 + j * 31) % 40), hash(i + 7, j + 3));
+      cloud(ctx, x, y, 70 + h * 80, hash(j, i));
     }
   }
 }
-function cloud(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, v = 0.5) {
-  ctx.beginPath(); ctx.roundRect(x - w * 0.5, y - w * 0.1, w, w * 0.2, w * 0.1); ctx.fill();
-  ctx.beginPath(); ctx.arc(x - w * (0.16 + v * 0.1), y - w * 0.1, w * (0.13 + v * 0.07), 0, Math.PI * 2); ctx.arc(x + w * (0.12 - v * 0.14), y - w * (0.14 + v * 0.06), w * (0.26 - v * 0.08), 0, Math.PI * 2); ctx.arc(x + w * (0.24 + v * 0.1), y - w * 0.08, w * (0.11 + v * 0.07), 0, Math.PI * 2); ctx.fill();
+function cloud(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, v: number) {
+  const h = w * 0.36;
+  ctx.beginPath(); ctx.roundRect(x - w / 2, y - h * 0.3, w, h * 0.3, h * 0.15);
+  ctx.arc(x - w * 0.26, y - h * 0.32, h * (0.32 + v * 0.1), 0, Math.PI * 2);
+  ctx.arc(x - w * 0.02, y - h * 0.5, h * (0.5 - v * 0.08), 0, Math.PI * 2);
+  ctx.arc(x + w * 0.27, y - h * 0.3, h * (0.34 + v * 0.06), 0, Math.PI * 2);
+  ctx.fill();
 }
-
-/** Pale vine trunks and small floating islands far behind the level, with a little parallax. */
-export function drawBackdrop(ctx: CanvasRenderingContext2D, L: Level, camX: number, camY: number, vw: number, vh: number, _t: number) {
-  for (const d of L.decor) {
-    if (d.kind !== 'island' && d.kind !== 'stalk') continue;
-    const p = d.kind === 'island' ? 0.84 : 0.76;
-    const wx = (d.cx + 0.5) * T, wy = (d.cy + 0.5) * T;
-    const x = camX + vw * 0.5 + (wx - camX - vw * 0.5) * p, y = camY + vh * 0.5 + (wy - camY - vh * 0.5) * p;
-    if (x < camX - 200 || x > camX + vw + 200 || y < camY - 800 || y > camY + vh + 200) continue;
-    const s = hash(d.cx, d.cy);
-    if (d.kind === 'island') {
-      const w = 85 + s * 45, dp = 25 + s * 20;
-      ctx.save(); ctx.globalAlpha = 0.82;
-      ctx.fillStyle = C.bgWater2; ctx.beginPath(); ctx.moveTo(x - w / 2, y);
-      ctx.lineTo(x - w * 0.36, y + dp * 0.55); ctx.lineTo(x - w * 0.2, y + dp * 0.35); ctx.lineTo(x - w * 0.04, y + dp); ctx.lineTo(x + w * 0.12, y + dp * 0.5); ctx.lineTo(x + w * 0.3, y + dp * 0.72); ctx.lineTo(x + w / 2, y); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = C.bgWater; ctx.beginPath(); ctx.moveTo(x - w / 2 + 6, y + 1); ctx.lineTo(x + w / 2 - 6, y + 1); ctx.lineTo(x + w * 0.2, y + dp * 0.3); ctx.lineTo(x - w * 0.05, y + dp * 0.42); ctx.lineTo(x - w * 0.3, y + dp * 0.22); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = C.bgGrass; ctx.beginPath(); ctx.roundRect(x - w / 2 - 3, y - 7, w + 6, 9, 4.5); ctx.fill();
-      ctx.fillStyle = C.bgBush; ctx.beginPath(); ctx.moveTo(x + w * 0.1, y - 6); ctx.lineTo(x + w * 0.2, y - 20); ctx.lineTo(x + w * 0.28, y - 10); ctx.lineTo(x + w * 0.36, y - 16); ctx.lineTo(x + w * 0.42, y - 6); ctx.closePath(); ctx.fill();
-      const h = 60 + s * 50;
-      ctx.fillStyle = C.bg2; ctx.beginPath(); ctx.roundRect(x - w * 0.15 - 6, y - 7 - h, 12, h, 6); ctx.fill();
-      ctx.fillStyle = C.bg1; ctx.beginPath(); ctx.roundRect(x - w * 0.15 - 3, y - 7 - h + 3, 6, h - 6, 3); ctx.fill();
-      ctx.fillStyle = C.bgCap; ctx.beginPath(); ctx.ellipse(x - w * 0.15, y - 7 - h, 7, 3, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-    } else {
-      // a big pale trunk: goes well below and above its anchor, with cut branch stubs and a bright cap
-      const s2 = hash(d.cy, d.cx), h = 300 + s * 420, w = 12 + s2 * 32, top = y - h * (0.45 + s2 * 0.3), bottom = top + h;
-      ctx.save(); ctx.globalAlpha = 0.65; ctx.translate(x, y); ctx.rotate((s - 0.5) * 0.2); ctx.translate(-x, -y);
-      ctx.fillStyle = C.bg2; ctx.beginPath(); ctx.roundRect(x - w / 2, top, w, bottom - top, w / 2); ctx.fill();
-      ctx.fillStyle = C.bg1; ctx.beginPath(); ctx.roundRect(x - w / 2 + 5, top + 5, w - 10, bottom - top - 10, (w - 10) / 2); ctx.fill();
-      for (let i = 0; i < 4; i++) {
-        const by = top + 60 + i * ((bottom - top - 90) / 3.4) + hash(i, d.cx) * 60, side = hash(i + 3, d.cx + d.cy) < 0.5 ? 1 : -1, len = 14 + hash(d.cy, i) * 26;
-        if (hash(i + 9, d.cy) < 0.3) continue;
-        ctx.save(); ctx.translate(x + side * (w / 2 - 6), by); ctx.rotate(side * -0.5);
-        ctx.fillStyle = C.bg2; ctx.beginPath(); ctx.roundRect(side < 0 ? -len : 0, -6, len, 12, 6); ctx.fill();
-        ctx.fillStyle = C.bg1; ctx.beginPath(); ctx.roundRect((side < 0 ? -len : 0) + 3, -3, len - 6, 6, 3); ctx.fill();
-        ctx.fillStyle = C.bgCap; ctx.beginPath(); ctx.ellipse(side * len, 0, 4, 6, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
+/** Pale vine stalks on little islands far behind the level. */
+export function drawBackdrop(ctx: CanvasRenderingContext2D, P: Palette, items: BgItem[], camX: number, camY: number, vw: number, vh: number) {
+  for (const d of items) {
+    const x = camX + vw * 0.5 + (d.x - camX - vw * 0.5) * d.depth, y = camY + vh * 0.5 + (d.y - camY - vh * 0.5) * d.depth;
+    if (x < camX - 200 || x > camX + vw + 200 || y < camY - 500 || y > camY + vh + 200) continue;
+    const s = d.seed, iw = 70 + s * 60, dp = 26 + s * 18;
+    ctx.save(); ctx.globalAlpha = 0.9;
+    // the island: a lobed drop with a grass cap
+    ctx.fillStyle = P.bgIsland2; ctx.beginPath(); ctx.moveTo(x - iw / 2, y); ctx.quadraticCurveTo(x - iw * 0.42, y + dp * 0.9, x - iw * 0.18, y + dp * 0.72); ctx.quadraticCurveTo(x, y + dp * 1.15, x + iw * 0.2, y + dp * 0.7); ctx.quadraticCurveTo(x + iw * 0.44, y + dp * 0.85, x + iw / 2, y); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = P.bgIsland; ctx.beginPath(); ctx.moveTo(x - iw / 2 + 4, y + 1); ctx.lineTo(x + iw / 2 - 4, y + 1); ctx.quadraticCurveTo(x + iw * 0.1, y + dp * 0.45, x - iw * 0.3, y + dp * 0.3); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = P.bgGrass; ctx.beginPath(); ctx.roundRect(x - iw / 2 - 3, y - 7, iw + 6, 10, 5); ctx.fill();
+    ctx.fillStyle = P.bgCap; ctx.beginPath(); ctx.roundRect(x - iw / 2, y - 7, iw, 3, 1.5); ctx.fill();
+    if (d.kind === 'stalk') {
+      const sh = 130 + s * 220, sw = 22 + hash(s, 2) * 20, sx = x - iw * 0.12;
+      ctx.fillStyle = P.bgStalk2; ctx.beginPath(); ctx.roundRect(sx - sw / 2, y - 6 - sh, sw, sh, sw / 2.2); ctx.fill();
+      ctx.fillStyle = P.bgStalk; ctx.beginPath(); ctx.roundRect(sx - sw / 2 + 4, y - 6 - sh + 4, sw - 8, sh - 12, (sw - 8) / 2.2); ctx.fill();
+      ctx.fillStyle = P.bgStalk2; for (let k = 0; k < 3; k++) { const hy = y - 6 - sh + 30 + k * (sh / 3.2), r = 3 + hash(k, s) * 3; ctx.beginPath(); ctx.arc(sx + (hash(k + 1, s) - 0.5) * (sw - 10), hy, r, 0, Math.PI * 2); ctx.fill(); }
+      for (let k = 0; k < 2; k++) {
+        if (hash(k + 7, s) < 0.4) continue; const side = k ? 1 : -1, by = y - 6 - sh * (0.35 + k * 0.3), len = 14 + hash(k, s + 1) * 16;
+        ctx.save(); ctx.translate(sx + side * (sw / 2 - 5), by); ctx.rotate(side * -0.55); ctx.fillStyle = P.bgStalk2; ctx.beginPath(); ctx.roundRect(side < 0 ? -len : 0, -6, len, 12, 6); ctx.fill(); ctx.fillStyle = P.bgCap; ctx.beginPath(); ctx.ellipse(side * len, 0, 3.5, 5.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
       }
-      ctx.fillStyle = C.bgCap; ctx.beginPath(); ctx.ellipse(x, top + 2, w / 2 - 2, 6, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = C.bg2; ctx.beginPath(); ctx.ellipse(x, top + 2, Math.max(1, w / 2 - 8), 3, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
+      ctx.fillStyle = P.bgCap; ctx.beginPath(); ctx.ellipse(sx, y - 6 - sh + 2, sw / 2 - 1, 5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = P.bgStalk2; ctx.beginPath(); ctx.ellipse(sx, y - 6 - sh + 2, Math.max(1, sw / 2 - 7), 2.5, 0, 0, Math.PI * 2); ctx.fill();
+      // a leaf tuft on the island
+      ctx.fillStyle = P.bgLeaf; const lx = x + iw * 0.28, ly = y - 6;
+      for (let k = 0; k < 5; k++) { const a = -Math.PI * 0.9 + (k / 4) * Math.PI * 0.8; ctx.beginPath(); ctx.ellipse(lx + Math.cos(a) * 10, ly + Math.sin(a) * 10, 11, 3.5, a, 0, Math.PI * 2); ctx.fill(); }
     }
+    ctx.restore();
   }
 }
-
-const isBody = (v: number) => v === 1 || v === 3 || v === 5 || v === 6;
-export function drawTiles(ctx: CanvasRenderingContext2D, L: Level, solid: Uint8Array, x0: number, x1: number, y0: number, y1: number) {
-  const at = (x: number, y: number) => (x < 0 || x >= L.w || y < 0 || y >= L.h ? 0 : solid[y * L.w + x]);
-  const { loops, caps } = contours(L, solid);
-  const vx0 = x0 * T, vx1 = (x1 + 1) * T, vy0 = y0 * T, vy1 = (y1 + 1) * T;
-  const trace = () => {
-    ctx.beginPath();
-    for (const lp of loops) {
-      if (lp.maxX < vx0 || lp.minX > vx1 || lp.maxY < vy0 || lp.minY > vy1) continue;
-      lp.pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y))); ctx.closePath();
-    }
-  };
-  trace(); ctx.fillStyle = C.body; ctx.fill('evenodd');
-  // bark spots and a soft inner shade, clipped to the shape
-  ctx.save(); trace(); ctx.clip('evenodd');
-  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
-    const v = at(x, y); if (!isBody(v)) continue;
-    const h = hash(x, y);
-    if (h < 0.2 && isBody(at(x, y - 1))) { ctx.fillStyle = C.body2; ctx.beginPath(); ctx.ellipse(x * T + 12 + h * 70, y * T + 8 + hash(y, x) * 24, 6 + h * 9, 5 + h * 5, h * 3, 0, Math.PI * 2); ctx.fill(); }
-    if (!isBody(at(x, y + 1))) { ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(x * T, y * T + T - 7, T, 7); }
-    if (v === 3) { ctx.strokeStyle = C.body2; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x * T + 8, y * T + 8); ctx.lineTo(x * T + 20, y * T + 20); ctx.lineTo(x * T + 14, y * T + 32); ctx.stroke(); }
+/** Body, bark spots, outline and grass for one vine or polygon. */
+export function drawSolid(ctx: CanvasRenderingContext2D, P: Palette, s: Solid) {
+  if (s.kind === 'vine') {
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); s.pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
+    ctx.strokeStyle = P.edge; ctx.lineWidth = s.w * 2 + 7; ctx.stroke();
+    ctx.strokeStyle = P.body; ctx.lineWidth = s.w * 2; ctx.stroke();
+    ctx.fillStyle = P.spot; for (const sp of s.spots) { ctx.beginPath(); ctx.ellipse(sp.x, sp.y, sp.rx, sp.ry, sp.a, 0, Math.PI * 2); ctx.fill(); }
+  } else {
+    ctx.beginPath(); s.pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y))); ctx.closePath();
+    ctx.fillStyle = P.body; ctx.fill();
+    ctx.save(); ctx.clip();
+    ctx.fillStyle = P.spot; for (const sp of s.spots) { ctx.beginPath(); ctx.ellipse(sp.x, sp.y, sp.rx, sp.ry, sp.a, 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillStyle = P.body2; ctx.globalAlpha = 0.5; ctx.fillRect(s.bbox.x0, s.bbox.y1 - 24 - 14, s.bbox.x1 - s.bbox.x0, 14); ctx.globalAlpha = 1;
+    ctx.restore();
+    ctx.strokeStyle = P.edge; ctx.lineWidth = 3.5; ctx.lineJoin = 'round'; ctx.stroke();
   }
-  // a lighter rim just inside the left and top edges
-  trace(); ctx.strokeStyle = C.rim; ctx.lineWidth = 7; ctx.globalAlpha = 0.28; ctx.save(); ctx.translate(3, 3); trace(); ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1;
-  ctx.restore();
-  trace(); ctx.strokeStyle = C.edge; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.stroke();
-  // grass on every top edge that meets the sky
-  for (const c of caps) if (c.x1 - c.x0 >= 2 * T && c.x1 > vx0 - T && c.x0 < vx1 + T && c.y > vy0 - T && c.y < vy1 + T) grassCap(ctx, c.x0, c.y, c.x1 - c.x0, true, true);
-  // hanging planks
-  for (let y = y0; y <= y1; y++) {
-    let x = 0;
-    while (x < L.w) {
-      if (at(x, y) !== 2) { x++; continue; }
-      let len = 1; while (x + len < L.w && at(x + len, y) === 2) len++;
-      drawPlank(ctx, x * T, y * T, len * T, ropeTopFn(L, solid, y));
-      x += len;
-    }
-  }
+  for (const run of s.grass) grass(ctx, P, run, s.id);
 }
-/** Secret passages are painted over the ball, nearly opaque, so the ball only shows faintly while inside. */
-export function drawSecret(ctx: CanvasRenderingContext2D, L: Level, solid: Uint8Array, x0: number, x1: number, y0: number, y1: number) {
-  ctx.fillStyle = C.body; ctx.globalAlpha = 0.86;
-  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (x >= 0 && y >= 0 && x < L.w && y < L.h && solid[y * L.w + x] === 6) ctx.fillRect(x * T - 1, y * T - 1, T + 2, T + 2);
-  ctx.globalAlpha = 1;
+function raise(pts: Pt[], u: number): Pt[] {
+  const n = pts.length, out: Pt[] = new Array(n);
+  for (let i = 0; i < n; i++) { const a = pts[Math.min(n - 1, i + 1)], b = pts[Math.max(0, i - 1)], dx = a.x - b.x, dy = a.y - b.y, l = Math.hypot(dx, dy) || 1; let nx = dy / l, ny = -dx / l; if (ny > 0) { nx = -nx; ny = -ny; } out[i] = { x: pts[i].x + nx * u, y: pts[i].y + ny * u }; }
+  return out;
 }
-export function ropeTopFn(L: Level, solid: Uint8Array, row: number) {
-  return (col: number) => { for (let yy = row - 1; yy >= Math.max(0, row - 10); yy--) { const v = yy * L.w + col >= 0 && col < L.w ? solid[yy * L.w + col] : 0; if (isBody(v)) return (yy + 1) * T - 4; } return row * T - 10 * T; };
-}
-export function grassCap(ctx: CanvasRenderingContext2D, px: number, py: number, w: number, leftOpen: boolean, rightOpen: boolean) {
-  const x0 = px - (leftOpen ? 5 : 0), x1 = px + w + (rightOpen ? 5 : 0);
-  ctx.fillStyle = C.grass3; ctx.beginPath(); ctx.roundRect(x0, py - 4, x1 - x0, 13, 6); ctx.fill();
-  ctx.fillStyle = C.grass; ctx.beginPath(); ctx.moveTo(x0, py + 5); ctx.lineTo(x0, py - 4);
-  for (let wx = x0; wx <= x1; wx += 8) ctx.lineTo(wx, py - 6 + Math.sin(wx / 13) * 2.2 + Math.sin(wx / 31) * 1.5);
-  ctx.lineTo(x1, py - 4); ctx.lineTo(x1, py + 5); ctx.closePath(); ctx.fill();
-  // uneven humps along the top, with the odd pointed tuft
-  ctx.beginPath(); let tx = x0 + 5, k = 0;
-  while (tx < x1 - 4) {
-    const h = hash(Math.round(tx), py), r = 2.5 + h * 4;
-    if (k % 5 === 3) { ctx.moveTo(tx - 4, py - 5); ctx.lineTo(tx + 1 + h * 3, py - 12 - h * 4); ctx.lineTo(tx + 5, py - 5); ctx.closePath(); }
-    else { ctx.moveTo(tx + r, py - 6); ctx.arc(tx, py - 6, r, 0, Math.PI * 2); }
-    tx += 7 + h * 7; k++;
+const path = (ctx: CanvasRenderingContext2D, pts: Pt[]) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y))); };
+function grass(ctx: CanvasRenderingContext2D, P: Palette, run: Pt[], seed: number) {
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  path(ctx, raise(run, -6)); ctx.strokeStyle = P.grass3; ctx.lineWidth = 15; ctx.stroke();
+  path(ctx, raise(run, -3)); ctx.strokeStyle = P.grass; ctx.lineWidth = 11; ctx.stroke();
+  // scalloped tufts along the top, the odd pointed blade
+  const top = raise(run, 2); ctx.fillStyle = P.grass; ctx.beginPath();
+  let acc = 0;
+  for (let i = 1; i < top.length; i++) {
+    acc += Math.hypot(top[i].x - top[i - 1].x, top[i].y - top[i - 1].y);
+    if (acc < 11) continue; acc = 0;
+    const h = hash(top[i].x + seed, top[i].y), r = 3.5 + h * 3;
+    if (h > 0.82) { ctx.moveTo(top[i].x - 4, top[i].y + 3); ctx.lineTo(top[i].x + (h - 0.9) * 10, top[i].y - 9 - h * 5); ctx.lineTo(top[i].x + 4, top[i].y + 3); ctx.closePath(); }
+    else { ctx.moveTo(top[i].x + r, top[i].y); ctx.arc(top[i].x, top[i].y, r, 0, Math.PI * 2); }
   }
   ctx.fill();
-  ctx.fillStyle = C.grass2; ctx.beginPath(); ctx.roundRect(x0 + 3, py - 5, x1 - x0 - 6, 2.5, 1.2); ctx.fill();
+  path(ctx, raise(run, 0)); ctx.strokeStyle = P.grass2; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.85; ctx.stroke(); ctx.globalAlpha = 1;
 }
-export function drawPlank(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, ropeTop?: (col: number) => number) {
-  ctx.strokeStyle = C.rope; ctx.lineWidth = 3; ctx.lineCap = 'round';
-  for (const rx of [x + 9, x + w - 9]) { const top = ropeTop ? ropeTop(Math.floor(rx / T)) : y - 240; ctx.beginPath(); ctx.moveTo(rx, top); ctx.lineTo(rx, y + 8); ctx.stroke(); }
-  const v = hash(Math.round(x / 7), Math.round(y / 7));
-  ctx.fillStyle = C.plank2; ctx.beginPath(); ctx.roundRect(x, y + 3, w, 17, 3); ctx.fill();
-  ctx.fillStyle = v < 0.5 ? C.plank : '#C3844A'; ctx.beginPath(); ctx.roundRect(x + 2, y + 1, w - 4, 14, 2); ctx.fill();
-  // grain and board joints
-  ctx.save(); ctx.beginPath(); ctx.rect(x + 3, y + 2, w - 6, 12); ctx.clip(); ctx.strokeStyle = 'rgba(70,40,15,0.45)'; ctx.lineWidth = 1;
-  for (let i = 0; i < w / 18; i++) { const gx = x + 6 + i * 18 + hash(i, x) * 6, gy = y + 4 + hash(x, i) * 7; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.quadraticCurveTo(gx + 6, gy + 2, gx + 12, gy + (hash(i, y) - 0.5) * 3); ctx.stroke(); }
-  ctx.restore();
-  ctx.strokeStyle = C.plank2; ctx.lineWidth = 1.5; for (let i = 1; i < w / 30; i++) { ctx.beginPath(); ctx.moveTo(x + i * 30, y + 3); ctx.lineTo(x + i * 30, y + 14); ctx.stroke(); }
-  ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.fillRect(x + 4, y + 2, w - 8, 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(x + 2, y + 13, w - 4, 3);
-}
-export function drawPlatform(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, ropeTop?: (col: number) => number) { drawPlank(ctx, x, y, w, ropeTop); }
-export function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
 
-export function drawSpike(ctx: CanvasRenderingContext2D, cx: number, cy: number, dir: Dir) {
-  const px = cx * T, py = cy * T, n = 3, s = T / n;
-  ctx.fillStyle = C.spike; ctx.strokeStyle = C.spike2; ctx.lineWidth = 1.5; ctx.beginPath();
-  for (let i = 0; i < n; i++) {
-    if (dir === 'up') { ctx.moveTo(px + i * s, py + T); ctx.lineTo(px + i * s + s / 2, py + 2); ctx.lineTo(px + (i + 1) * s, py + T); }
-    else if (dir === 'down') { ctx.moveTo(px + i * s, py); ctx.lineTo(px + i * s + s / 2, py + T - 2); ctx.lineTo(px + (i + 1) * s, py); }
-    else if (dir === 'right') { ctx.moveTo(px, py + i * s); ctx.lineTo(px + T - 2, py + i * s + s / 2); ctx.lineTo(px, py + (i + 1) * s); }
-    else { ctx.moveTo(px + T, py + i * s); ctx.lineTo(px + 2, py + i * s + s / 2); ctx.lineTo(px + T, py + (i + 1) * s); }
-  }
-  ctx.fill(); ctx.stroke();
+// ---- decor ---------------------------------------------------------------------------------------------------------
+export function drawBush(ctx: CanvasRenderingContext2D, P: Palette, b: Bush) {
+  const w = 46 * b.size, h = 40 * b.size, x = b.x, y = b.y + 4;
+  const lobes: [number, number, number][] = [[-0.5, -0.28, 0.34], [-0.2, -0.6, 0.38], [0.16, -0.66, 0.4], [0.48, -0.32, 0.32], [0.02, -0.3, 0.42]];
+  const rad = (i: number, r: number) => w * r * (0.9 + hash(b.seed * 10 + i, 1) * 0.22);
+  ctx.fillStyle = P.bushLine; ctx.beginPath(); lobes.forEach(([lx, ly, r], i) => { const rr = rad(i, r) + 2.5; ctx.moveTo(x + lx * w + rr, y + ly * h); ctx.arc(x + lx * w, y + ly * h, rr, 0, Math.PI * 2); }); ctx.fill();
+  ctx.fillStyle = P.bush; ctx.beginPath(); lobes.forEach(([lx, ly, r], i) => { const rr = rad(i, r); ctx.moveTo(x + lx * w + rr, y + ly * h); ctx.arc(x + lx * w, y + ly * h, rr, 0, Math.PI * 2); }); ctx.fill();
+  ctx.fillStyle = P.bush2; ctx.beginPath(); lobes.slice(0, 4).forEach(([lx, ly, r], i) => { const rr = rad(i, r) * 0.5; ctx.moveTo(x + lx * w - w * 0.06 + rr, y + ly * h - h * 0.14); ctx.arc(x + lx * w - w * 0.06, y + ly * h - h * 0.14, rr, 0, Math.PI * 2); }); ctx.fill();
 }
-export function drawEgg(ctx: CanvasRenderingContext2D, x: number, y: number, t: number) {
-  const bob = Math.sin(t * 2.2) * 3;
-  ctx.save(); ctx.translate(x, y + bob);
-  const pear = () => { ctx.beginPath(); ctx.moveTo(0, -14); ctx.bezierCurveTo(6.5, -14, 11.5, -3, 11.5, 4); ctx.bezierCurveTo(11.5, 10.5, 6.5, 14.5, 0, 14.5); ctx.bezierCurveTo(-6.5, 14.5, -11.5, 10.5, -11.5, 4); ctx.bezierCurveTo(-11.5, -3, -6.5, -14, 0, -14); ctx.closePath(); };
-  pear(); ctx.fillStyle = C.egg; ctx.fill();
-  ctx.save(); pear(); ctx.clip(); ctx.fillStyle = C.eggShade; ctx.beginPath(); ctx.ellipse(5, 5, 10, 12, 0.3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-  ctx.fillStyle = C.eggLight; ctx.beginPath(); ctx.ellipse(-4, -5, 3, 4.5, -0.35, 0, Math.PI * 2); ctx.fill();
-  pear(); ctx.strokeStyle = C.eggLine; ctx.lineWidth = 2; ctx.stroke();
-  ctx.restore();
-}
-export function drawSpring(ctx: CanvasRenderingContext2D, cx: number, cy: number, t: number) {
-  // a curled vine on the ground: one broad sweep that stretches upward for a moment when it fires
-  const px = cx * T + T / 2, py = cy * T + T - 2, fire = Math.max(0, 1 - t * 3);
-  ctx.save(); ctx.translate(px, py); ctx.scale(1, 1 + fire * 0.7); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  const path = () => {
-    ctx.beginPath(); ctx.moveTo(-26, 0);
-    ctx.bezierCurveTo(-30, -22, -16, -38, 4, -36);
-    ctx.bezierCurveTo(24, -34, 32, -20, 22, -10);
-    ctx.bezierCurveTo(14, -2, 2, -6, 4, -14);
-    ctx.bezierCurveTo(6, -20, 14, -20, 14, -16);
-  };
-  ctx.strokeStyle = C.vine2; ctx.lineWidth = 9; path(); ctx.stroke();
-  ctx.strokeStyle = C.vine; ctx.lineWidth = 5; path(); ctx.stroke();
-  ctx.restore();
-  leaf(ctx, px - 24, py - 2, -2.3, 16);
-}
-export function drawButton(ctx: CanvasRenderingContext2D, cx: number, cy: number, pressed: boolean) {
-  const px = cx * T, py = cy * T; ctx.fillStyle = C.rock; rrect(ctx, px + 4, py + T - 10, T - 8, 10, 3); ctx.fill();
-  ctx.fillStyle = pressed ? C.grass : C.ball; rrect(ctx, px + 8, py + T - (pressed ? 14 : 22), T - 16, 12, 4); ctx.fill();
-}
-export function drawGate(ctx: CanvasRenderingContext2D, cx: number, top: number, bottom: number, open: number) {
-  const h = (bottom - top + 1) * T, px = cx * T, py = top * T - h * open;
-  ctx.fillStyle = C.plank2; rrect(ctx, px + 8, py, T - 16, h, 6); ctx.fill();
-}
-export function drawFan(ctx: CanvasRenderingContext2D, cx: number, cy: number, dir: Dir, _reach: number, t: number) {
-  const x = cx * T + T / 2, y = cy * T + T / 2;
-  ctx.save(); ctx.translate(x, y); if (dir === 'right') ctx.rotate(Math.PI / 2); if (dir === 'left') ctx.rotate(-Math.PI / 2);
-  ctx.rotate(t * 18); ctx.fillStyle = C.spike2; for (let i = 0; i < 3; i++) { ctx.rotate((Math.PI * 2) / 3); ctx.beginPath(); ctx.ellipse(0, -9, 5, 11, 0, 0, Math.PI * 2); ctx.fill(); }
-  ctx.restore();
-}
-export function drawCheckpoint(ctx: CanvasRenderingContext2D, cx: number, cy: number, hit: boolean, dir: Dir, t: number) {
-  drawSign(ctx, cx, cy, dir, C.arrow, t, hit);
-  if (hit) {
-    const px = cx * T + T / 2, py = cy * T + T - 46;
-    ctx.strokeStyle = C.stem; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px + 12, py); ctx.quadraticCurveTo(px + 14, py - 10, px + 20, py - 12 + Math.sin(t * 3) * 1.5); ctx.stroke();
-    ctx.fillStyle = C.grass; ctx.beginPath(); ctx.ellipse(px + 22, py - 13, 6, 3.5, -0.5, 0, Math.PI * 2); ctx.fill();
-  }
-}
-function drawSign(ctx: CanvasRenderingContext2D, cx: number, cy: number, dir: Dir, arrow: string, _t: number, lit = false) {
-  const px = cx * T + T / 2, py = cy * T + T;
-  ctx.fillStyle = C.sign2; ctx.beginPath(); ctx.roundRect(px - 3, py - 26, 6, 27, 2); ctx.fill();
-  ctx.fillStyle = C.sign2; ctx.beginPath(); ctx.roundRect(px - 18, py - 46, 36, 26, 4); ctx.fill();
-  ctx.fillStyle = lit ? C.signHit : C.sign; ctx.beginPath(); ctx.roundRect(px - 16, py - 44, 32, 22, 3); ctx.fill();
-  ctx.fillStyle = 'rgba(0,0,0,0.12)'; ctx.fillRect(px - 16, py - 26, 32, 4);
-  ctx.save(); ctx.translate(px, py - 33);
-  const rot = dir === 'up' ? -Math.PI / 2 : dir === 'down' ? Math.PI / 2 : dir === 'left' ? Math.PI : 0; ctx.rotate(rot);
-  ctx.fillStyle = arrow; ctx.beginPath(); ctx.moveTo(-9, -4); ctx.lineTo(1, -4); ctx.lineTo(1, -9); ctx.lineTo(11, 0); ctx.lineTo(1, 9); ctx.lineTo(1, 4); ctx.lineTo(-9, 4); ctx.closePath(); ctx.fill();
-  ctx.restore();
-}
-export function drawPad(ctx: CanvasRenderingContext2D, cx: number, cy: number, form: Form, t: number) {
-  const px = cx * T, py = cy * T; ctx.save(); ctx.translate(px + T / 2, py + T - 20 + Math.sin(t * 3) * 3); drawBall(ctx, 0, 0, 9, form, 1, 1, 0, 0, t); ctx.restore();
-}
-/** The goal: a big red flower on a tall stem with three leaves, bigger than any other bloom. Base on the E cell. */
-export function drawExit(ctx: CanvasRenderingContext2D, cx: number, cy: number, t: number) {
-  const x = (cx + 0.5) * T, base = (cy + 1) * T, sway = Math.sin(t * 1.5) * 3, h = 70;
-  ctx.strokeStyle = C.stem2; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, base); ctx.quadraticCurveTo(x + 8, base - h * 0.55, x + sway, base - h); ctx.stroke();
-  ctx.strokeStyle = C.stem; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(x, base); ctx.quadraticCurveTo(x + 8, base - h * 0.55, x + sway, base - h); ctx.stroke();
-  leaf(ctx, x - 5, base - 16, -0.95, 24); leaf(ctx, x + 6, base - 34, 0.6, 22); leaf(ctx, x - 3, base - 48, -1.15, 18);
-  drawBloom(ctx, x + sway, base - h - 12, 38, C.flower, C.flower2, t);
-}
-function leaf(ctx: CanvasRenderingContext2D, x: number, y: number, a: number, len: number) {
+function leaf(ctx: CanvasRenderingContext2D, P: Palette, x: number, y: number, a: number, len: number) {
   ctx.save(); ctx.translate(x, y); ctx.rotate(a);
-  ctx.fillStyle = C.stem2; ctx.beginPath(); ctx.ellipse(len * 0.5 + 1, 1, len * 0.5 + 1, len * 0.24 + 1, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = C.stem; ctx.beginPath(); ctx.ellipse(len * 0.5, 0, len * 0.5, len * 0.24, 0, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#1B6B1E'; ctx.lineWidth = 1.3; ctx.stroke();
-  ctx.strokeStyle = C.stem2; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(2, 0); ctx.lineTo(len - 3, 0); ctx.stroke();
+  ctx.fillStyle = P.stem; ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(len * 0.5, -len * 0.42, len, 0); ctx.quadraticCurveTo(len * 0.5, len * 0.42, 0, 0); ctx.fill();
+  ctx.strokeStyle = P.leafLine; ctx.lineWidth = 1.6; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(3, 0); ctx.lineTo(len - 4, 0); ctx.strokeStyle = P.stem2; ctx.lineWidth = 1.4; ctx.stroke();
   ctx.restore();
 }
-function drawBloom(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, petal: string, petal2: string, t: number) {
-  ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(t) * 0.05);
-  const n = 5, line = petal === C.flower ? C.flowerLine : C.whiteLine, seed = Math.round(x * 0.37 + y * 0.11);
-  const size = (i: number) => 1 + (hash(seed, i) - 0.5) * 0.16;
-  for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2 - Math.PI / 2, k = size(i); ctx.fillStyle = petal2; ctx.beginPath(); ctx.ellipse(Math.cos(a) * r * 0.58, Math.sin(a) * r * 0.58 + 2, r * 0.45 * k, r * 0.32 * k, a, 0, Math.PI * 2); ctx.fill(); }
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2 - Math.PI / 2, k = size(i);
-    ctx.fillStyle = petal; ctx.beginPath(); ctx.ellipse(Math.cos(a) * r * 0.56, Math.sin(a) * r * 0.56, r * 0.44 * k, r * 0.3 * k, a, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = line; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * 0.3, Math.sin(a) * r * 0.3); ctx.lineTo(Math.cos(a) * r * 0.82 * k, Math.sin(a) * r * 0.82 * k); ctx.globalAlpha = 0.35; ctx.stroke(); ctx.globalAlpha = 1;
+export function drawFlower(ctx: CanvasRenderingContext2D, P: Palette, f: Flower, t: number) {
+  const red = f.kind === 'red', x = f.x, base = f.y + 3, sway = Math.sin(t * 1.3 + f.seed * 7) * 2.5;
+  ctx.lineCap = 'round';
+  if (red) {
+    const h = 58 + f.seed * 10, tx = x + 6 + sway, ty = base - h;
+    ctx.strokeStyle = P.stem2; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(x, base); ctx.quadraticCurveTo(x + 3, base - h * 0.55, tx, ty); ctx.stroke();
+    ctx.strokeStyle = P.stem; ctx.lineWidth = 4; ctx.stroke();
+    leaf(ctx, P, x - 1, base - h * 0.35, -2.5, 22); leaf(ctx, P, x + 3, base - h * 0.55, -0.6, 20);
+    bloom(ctx, P, tx, ty - 22, 42, f.seed, t);
+  } else {
+    // a tall curling stem with a big white five-point bloom
+    const h = 96 + f.seed * 16, tx = x + 14 + sway, ty = base - h;
+    const stem = () => { ctx.beginPath(); ctx.moveTo(x, base); ctx.bezierCurveTo(x - 6, base - h * 0.45, x - 26, base - h * 0.85, x - 2, base - h * 0.98); ctx.bezierCurveTo(x + 10, base - h * 1.04, tx + 4, base - h * 0.96, tx, ty); };
+    stem(); ctx.strokeStyle = P.stem2; ctx.lineWidth = 8; ctx.stroke(); stem(); ctx.strokeStyle = P.stem; ctx.lineWidth = 4.5; ctx.stroke();
+    leaf(ctx, P, x - 4, base - h * 0.3, -2.7, 26); leaf(ctx, P, x + 1, base - h * 0.5, -0.5, 24); leaf(ctx, P, x - 14, base - h * 0.72, -2.9, 20);
+    whiteBloom(ctx, P, tx, ty + 6, 50, f.seed, t);
   }
-  ctx.fillStyle = '#D89A1E'; ctx.beginPath(); ctx.arc(1, 2, r * 0.3, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = C.centre; ctx.beginPath(); ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = '#8A5A2B'; ctx.lineWidth = 1.2; ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.arc(-r * 0.1, -r * 0.1, r * 0.1, 0, Math.PI * 2); ctx.fill();
+}
+function bloom(ctx: CanvasRenderingContext2D, P: Palette, x: number, y: number, r: number, seed: number, t: number) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(t * 0.9 + seed) * 0.04);
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2 - Math.PI / 2, k = 1 + (hash(seed * 9, i) - 0.5) * 0.14;
+    ctx.save(); ctx.rotate(a); ctx.beginPath(); ctx.ellipse(r * 0.56 * k, 0, r * 0.46 * k, r * 0.33 * k, 0, 0, Math.PI * 2);
+    ctx.fillStyle = P.flower; ctx.fill(); ctx.strokeStyle = P.flowerLine; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.clip(); ctx.fillStyle = P.flower2; ctx.beginPath(); ctx.ellipse(r * 0.28, 0, r * 0.26, r * 0.3, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = P.flowerLine; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.moveTo(r * 0.3, 0); ctx.lineTo(r * 0.9 * k, 0); ctx.moveTo(r * 0.34, -r * 0.1); ctx.lineTo(r * 0.82 * k, -r * 0.16); ctx.moveTo(r * 0.34, r * 0.1); ctx.lineTo(r * 0.82 * k, r * 0.16); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+  ctx.fillStyle = P.centre2; ctx.beginPath(); ctx.arc(1, 2, r * 0.27, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = P.centre; ctx.beginPath(); ctx.arc(0, 0, r * 0.25, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = P.flowerLine; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.ellipse(-r * 0.08, -r * 0.09, r * 0.1, r * 0.06, -0.6, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
 }
-export function drawDecor(ctx: CanvasRenderingContext2D, d: Decor, t: number) {
-  if (d.kind === 'island' || d.kind === 'stalk') return; // drawn in the backdrop
-  const px = d.cx * T, py = d.cy * T, base = py + T + 4, s = hash(d.cx, d.cy);
-  if (d.kind === 'bush') {
-    const x = px + T / 2, w = 34 + s * 18;
-    const blobs = [[-0.42, 0.16, 0.34], [-0.18, 0.44, 0.4], [0.16, 0.5, 0.44], [0.42, 0.2, 0.34], [0, 0.22, 0.42], [-0.28, 0.7, 0.26], [0.3, 0.74, 0.24]];
-    const rad = (bx: number, br: number) => w * br * (0.9 + hash(d.cx + bx * 10, d.cy) * 0.25);
-    ctx.fillStyle = C.edge; ctx.beginPath();
-    for (const [bx, by, br] of blobs) { const r = rad(bx, br) + 2; ctx.moveTo(x + bx * w + r, base - by * w + 1); ctx.arc(x + bx * w, base - by * w + 1, r, 0, Math.PI * 2); }
-    ctx.fill();
-    ctx.fillStyle = C.bush; ctx.beginPath();
-    for (const [bx, by, br] of blobs) { const r = rad(bx, br); ctx.moveTo(x + bx * w + r, base - by * w); ctx.arc(x + bx * w, base - by * w, r, 0, Math.PI * 2); }
-    ctx.fill();
-    ctx.fillStyle = C.bush2; ctx.beginPath();
-    for (const [bx, by, br] of blobs.slice(0, 5)) { const r = w * br * 0.5 * (0.92 + hash(d.cy, d.cx + bx * 10) * 0.16); ctx.moveTo(x + bx * w - w * 0.07 + r, base - by * w - w * 0.12); ctx.arc(x + bx * w - w * 0.07, base - by * w - w * 0.12, r, 0, Math.PI * 2); }
-    ctx.fill();
-    ctx.fillStyle = C.grass2; ctx.beginPath(); ctx.arc(x - w * 0.24, base - w * 0.64, 2, 0, Math.PI * 2); ctx.arc(x + w * 0.12, base - w * 0.78, 1.8, 0, Math.PI * 2); ctx.fill();
-  } else if (d.kind === 'flower' || d.kind === 'whiteflower') {
-    const x = px + T / 2, sway = Math.sin(t * 1.4 + s * 6) * 2, h = (d.kind === 'flower' ? 40 : 32) + s * 10;
-    ctx.strokeStyle = C.stem2; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, base); ctx.quadraticCurveTo(x + 4, base - h * 0.6, x + sway, base - h); ctx.stroke();
-    ctx.strokeStyle = C.stem; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x, base); ctx.quadraticCurveTo(x + 4, base - h * 0.6, x + sway, base - h); ctx.stroke();
-    leaf(ctx, x - 2, base - h * 0.4, -0.9, 12); leaf(ctx, x + 2, base - h * 0.6, 0.6, 11);
-    if (d.kind === 'flower') drawBloom(ctx, x + sway, base - h - 12, 28, C.flower, C.flower2, t + s * 6);
-    else drawBloom(ctx, x + sway, base - h - 9, 17, C.petalWhite, C.petalWhite2, t + s * 6);
-  } else if (d.kind === 'sign') {
-    drawSign(ctx, d.cx, d.cy, d.dir ?? 'right', C.arrow, t);
+function whiteBloom(ctx: CanvasRenderingContext2D, P: Palette, x: number, y: number, r: number, seed: number, t: number) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(t * 0.8 + seed * 3) * 0.05 + 0.3);
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2, k = 1 + (hash(seed * 7, i) - 0.5) * 0.12;
+    ctx.save(); ctx.rotate(a);
+    ctx.beginPath(); ctx.moveTo(r * 0.12, 0); ctx.quadraticCurveTo(r * 0.5, -r * 0.34 * k, r * k, -r * 0.04); ctx.quadraticCurveTo(r * 0.5, r * 0.34 * k, r * 0.12, 0); ctx.closePath();
+    ctx.fillStyle = P.white; ctx.fill(); ctx.strokeStyle = P.whiteLine; ctx.lineWidth = 1.6; ctx.stroke();
+    ctx.save(); ctx.clip(); ctx.fillStyle = P.white2; ctx.beginPath(); ctx.moveTo(r * 0.15, 0); ctx.quadraticCurveTo(r * 0.5, r * 0.3, r * 0.95, 0); ctx.quadraticCurveTo(r * 0.5, r * 0.08, r * 0.15, 0); ctx.fill(); ctx.restore();
+    ctx.restore();
+  }
+  ctx.fillStyle = P.whiteCentre; ctx.beginPath(); ctx.ellipse(0, 0, r * 0.13, r * 0.16, 0.3, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = P.whiteLine; ctx.lineWidth = 1.2; ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.beginPath(); ctx.arc(-r * 0.04, -r * 0.05, r * 0.05, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+export function drawSign(ctx: CanvasRenderingContext2D, P: Palette, s: Sign) {
+  const x = s.x, y = s.y, bw = 66, bh = 42, by = y - 17 - bh;
+  ctx.fillStyle = P.post; ctx.beginPath(); ctx.roundRect(x - 3.5, y - 20, 7, 21, 2); ctx.fill();
+  ctx.fillStyle = '#5E5E5E'; ctx.fillRect(x - 3.5, y - 20, 2, 21);
+  ctx.save(); ctx.translate(x, by + bh / 2); ctx.rotate((s.seed - 0.5) * 0.08);
+  ctx.fillStyle = P.boardLine; ctx.beginPath(); ctx.roundRect(-bw / 2 - 2.5, -bh / 2 - 2.5, bw + 5, bh + 5, 4); ctx.fill();
+  ctx.fillStyle = P.board2; ctx.beginPath(); ctx.roundRect(-bw / 2, -bh / 2, bw, bh, 3); ctx.fill();
+  ctx.fillStyle = P.board; ctx.beginPath(); ctx.roundRect(-bw / 2 + 2, -bh / 2 + 2, bw - 4, bh - 8, 2); ctx.fill();
+  ctx.strokeStyle = P.board2; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(-bw / 2 + 6, -bh / 2 + 9); ctx.quadraticCurveTo(-bw / 2 + 14, -bh / 2 + 6, -bw / 2 + 24, -bh / 2 + 10); ctx.moveTo(bw / 2 - 26, bh / 2 - 12); ctx.quadraticCurveTo(bw / 2 - 16, bh / 2 - 15, bw / 2 - 6, bh / 2 - 11); ctx.stroke(); ctx.globalAlpha = 1;
+  ctx.fillStyle = P.boardLine; ctx.beginPath(); ctx.arc(-bw / 2 + 5, -bh / 2 + 5, 1.6, 0, Math.PI * 2); ctx.arc(bw / 2 - 5, bh / 2 - 8, 1.6, 0, Math.PI * 2); ctx.fill();
+  if (s.face === 'warn') {
+    ctx.beginPath(); ctx.moveTo(0, -15); ctx.lineTo(16, 12); ctx.lineTo(-16, 12); ctx.closePath(); ctx.fillStyle = P.icon; ctx.fill(); ctx.strokeStyle = P.iconLine; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
+    ctx.fillStyle = P.iconLine; ctx.beginPath(); ctx.roundRect(-2, -6, 4, 10, 1.5); ctx.fill(); ctx.beginPath(); ctx.arc(0, 8, 2.2, 0, Math.PI * 2); ctx.fill();
+  } else {
+    ctx.save(); if (s.face === 'up') ctx.rotate(Math.PI);
+    ctx.beginPath(); ctx.moveTo(-7, -14); ctx.lineTo(7, -14); ctx.lineTo(7, 0); ctx.lineTo(15, 0); ctx.lineTo(0, 15); ctx.lineTo(-15, 0); ctx.lineTo(-7, 0); ctx.closePath();
+    ctx.fillStyle = P.icon2; ctx.fill(); ctx.strokeStyle = P.iconLine; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+export function drawEgg(ctx: CanvasRenderingContext2D, x: number, y: number, t: number, scale = 1) {
+  const bob = t >= 0 ? Math.sin(t * 2.4) * 3 : 0;
+  ctx.save(); ctx.translate(x, y + bob); ctx.scale(scale, scale); ctx.rotate(0.18);
+  const egg = () => { ctx.beginPath(); ctx.moveTo(0, -16); ctx.bezierCurveTo(8, -16, 13.5, -5, 13.5, 3); ctx.bezierCurveTo(13.5, 10.5, 7.5, 15.5, 0, 15.5); ctx.bezierCurveTo(-7.5, 15.5, -13.5, 10.5, -13.5, 3); ctx.bezierCurveTo(-13.5, -5, -8, -16, 0, -16); ctx.closePath(); };
+  egg(); ctx.fillStyle = F.egg; ctx.fill();
+  ctx.save(); egg(); ctx.clip(); ctx.fillStyle = F.egg2; ctx.beginPath(); ctx.ellipse(5, 6, 12, 13, 0.4, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.fillStyle = F.eggShine; ctx.beginPath(); ctx.ellipse(-4.5, -6, 3.2, 5, -0.3, 0, Math.PI * 2); ctx.fill();
+  egg(); ctx.strokeStyle = F.eggLine; ctx.lineWidth = 2; ctx.stroke();
+  ctx.restore();
+}
+/** The ball: a plain glossy red sphere. No face. */
+export function drawBall(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, sx: number, sy: number) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(sx, sy);
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = F.ball; ctx.fill();
+  ctx.save(); ctx.clip(); ctx.fillStyle = F.ball2; ctx.beginPath(); ctx.arc(r * 0.28, r * 0.34, r * 0.95, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = F.ball; ctx.beginPath(); ctx.arc(-r * 0.12, -r * 0.14, r * 0.78, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.beginPath(); ctx.arc(0, 0, r - 1, 0, Math.PI * 2); ctx.strokeStyle = F.ballLine; ctx.lineWidth = Math.max(2, r * 0.12); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.beginPath(); ctx.ellipse(-r * 0.36, -r * 0.4, r * 0.3, r * 0.2, -0.7, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = F.shine; ctx.beginPath(); ctx.ellipse(-r * 0.42, -r * 0.46, r * 0.16, r * 0.11, -0.7, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+export function drawPlank(ctx: CanvasRenderingContext2D, p: Plank) {
+  const w = 0.55 * D, px = p.x + w / 2, py = p.y + 10;
+  ctx.save(); ctx.translate(px, py); ctx.rotate(p.state === 'up' ? 0 : p.state === 'down' ? Math.PI / 2 : p.a);
+  ctx.fillStyle = F.plank2; ctx.beginPath(); ctx.roundRect(-w - 2, -p.len - 2, w + 4, p.len + 4, 3); ctx.fill();
+  ctx.fillStyle = F.plank; ctx.beginPath(); ctx.roundRect(-w, -p.len, w, p.len, 2); ctx.fill();
+  ctx.fillStyle = F.plankLight; ctx.fillRect(-w + 2, -p.len + 2, 6, p.len - 4);
+  ctx.strokeStyle = F.plank2; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.6; for (let k = 0; k < 4; k++) { const gy = -p.len + 20 + k * (p.len / 4.3); ctx.beginPath(); ctx.moveTo(-w + 9, gy); ctx.quadraticCurveTo(-w / 2 + 2, gy + 8, -3, gy + 2); ctx.stroke(); } ctx.globalAlpha = 1;
+  ctx.restore();
+}
+export function drawMachine(ctx: CanvasRenderingContext2D, P: Palette, m: Machine, t: number) {
+  const x = m.x, y = m.y, w = m.w, h = m.h, bottom = y + h;
+  // the trunk on the island above, dead while the machine runs, alive again after
+  const tx = m.trunk.x, ty = m.trunk.y;
+  ctx.fillStyle = P.bgStalk2; ctx.beginPath(); ctx.roundRect(tx - 12, ty - 104, 24, 108, 10); ctx.fill();
+  ctx.fillStyle = P.bgStalk; ctx.beginPath(); ctx.roundRect(tx - 8, ty - 100, 16, 100, 7); ctx.fill();
+  ctx.fillStyle = P.bgStalk2; ctx.beginPath(); ctx.arc(tx - 2, ty - 60, 3, 0, Math.PI * 2); ctx.arc(tx + 3, ty - 30, 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.save(); ctx.translate(tx + 9, ty - 70); ctx.rotate(-0.6); ctx.fillStyle = P.bgStalk2; ctx.beginPath(); ctx.roundRect(0, -5, 20, 10, 5); ctx.fill(); ctx.fillStyle = P.bgCap; ctx.beginPath(); ctx.ellipse(20, 0, 3, 5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.fillStyle = P.bgCap; ctx.beginPath(); ctx.ellipse(tx, ty - 102, 11, 4.5, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = P.bgLeaf; for (let k = 0; k < 4; k++) { const a = -Math.PI * 0.85 + (k / 3) * Math.PI * 0.7; ctx.beginPath(); ctx.ellipse(tx + 16 + Math.cos(a) * 9, ty - 4 + Math.sin(a) * 9, 10, 3.2, a, 0, Math.PI * 2); ctx.fill(); }
+  if (!m.destroyed) {
+    // the lightning from the trunk into the funnel
+    const x0 = tx, y0 = ty + 2, x1 = x + w * 0.36, y1 = y - 26, seed = Math.floor(t * 24);
+    const bolt = () => { ctx.beginPath(); ctx.moveTo(x0, y0); for (let k = 1; k < 9; k++) { const f = k / 9; ctx.lineTo(x0 + (x1 - x0) * f + (hash(seed, k) - 0.5) * 22, y0 + (y1 - y0) * f + (hash(k, seed) - 0.5) * 8); } ctx.lineTo(x1, y1); };
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; bolt(); ctx.strokeStyle = F.bolt2; ctx.lineWidth = 7; ctx.globalAlpha = 0.6; ctx.stroke(); ctx.globalAlpha = 1; bolt(); ctx.strokeStyle = F.bolt; ctx.lineWidth = 3; ctx.stroke();
+    // the rainbow pipe elbow on the left
+    const cols = ['#F04A4A', '#F5A623', '#F8E71C', '#7ED321', '#4A90E2', '#9013FE'];
+    ctx.lineCap = 'butt'; ctx.lineWidth = 3;
+    cols.forEach((c, i) => { const o = (i - 2.5) * 3; ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(x + 6, bottom - 24 + o); ctx.lineTo(x - 18 - o * 0.4, bottom - 24 + o); ctx.lineTo(x - 18 - o * 0.4, bottom - 52 + o * 0.4); ctx.stroke(); });
+    ctx.strokeStyle = F.machineLine; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 6, bottom - 34); ctx.lineTo(x - 22, bottom - 34); ctx.lineTo(x - 22, bottom - 54); ctx.moveTo(x + 6, bottom - 14); ctx.lineTo(x - 12, bottom - 14); ctx.lineTo(x - 12, bottom - 50); ctx.stroke();
+    ctx.fillStyle = F.machine2; ctx.beginPath(); ctx.roundRect(x - 26, bottom - 58, 18, 8, 2); ctx.fill();
+    // body
+    ctx.fillStyle = F.machineLine; ctx.beginPath(); ctx.roundRect(x - 2, y - 2, w + 4, h + 4, 8); ctx.fill();
+    ctx.fillStyle = F.machine; ctx.beginPath(); ctx.roundRect(x, y, w, h, 6); ctx.fill();
+    ctx.fillStyle = F.machine2; ctx.beginPath(); ctx.roundRect(x, y + h * 0.7, w, h * 0.3, 6); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.beginPath(); ctx.roundRect(x + 4, y + 3, w - 8, 6, 3); ctx.fill();
+    ctx.strokeStyle = F.machineLine; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x + 6, y + h * 0.7); ctx.lineTo(x + w - 6, y + h * 0.7); ctx.stroke();
+    ctx.fillStyle = F.machineLine; for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.arc(x + 12 + k * 10, bottom - 10, 2, 0, Math.PI * 2); ctx.fill(); }
+    // the spiral disc
+    const cx = x + w * 0.66, cy = y + h * 0.42, r = 27;
+    ctx.fillStyle = F.machineLine; ctx.beginPath(); ctx.arc(cx, cy, r + 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = F.spiral; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = F.spiralInk; ctx.lineWidth = 6; ctx.lineCap = 'butt'; ctx.beginPath();
+    const rot = t * 2.2; for (let k = 0; k <= 60; k++) { const a = rot + (k / 60) * Math.PI * 4.4, rr = 2 + (k / 60) * (r - 5); k ? ctx.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr) : ctx.moveTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } ctx.stroke();
+    // the funnel on top
+    const fx = x + w * 0.36;
+    ctx.fillStyle = F.funnel2; ctx.beginPath(); ctx.moveTo(fx - 22, y - 28); ctx.lineTo(fx + 22, y - 28); ctx.lineTo(fx + 8, y - 6); ctx.lineTo(fx + 8, y + 2); ctx.lineTo(fx - 8, y + 2); ctx.lineTo(fx - 8, y - 6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = F.funnel; ctx.beginPath(); ctx.moveTo(fx - 18, y - 26); ctx.lineTo(fx + 18, y - 26); ctx.lineTo(fx + 5, y - 8); ctx.lineTo(fx - 5, y - 8); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = F.machineLine; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx - 22, y - 28); ctx.lineTo(fx + 22, y - 28); ctx.lineTo(fx + 8, y - 6); ctx.lineTo(fx + 8, y + 2); ctx.lineTo(fx - 8, y + 2); ctx.lineTo(fx - 8, y - 6); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = F.funnel2; ctx.beginPath(); ctx.ellipse(fx, y - 28, 22, 4, 0, 0, Math.PI * 2); ctx.fill();
+  } else {
+    // the wreck: a low grey heap, the disc cracked, the funnel bent
+    const top = bottom - h * 0.55;
+    ctx.fillStyle = F.machineLine; ctx.beginPath(); ctx.moveTo(x - 6, bottom); ctx.lineTo(x + 6, top + 6); ctx.lineTo(x + 30, top - 2); ctx.lineTo(x + 58, top + 10); ctx.lineTo(x + 84, top - 6); ctx.lineTo(x + w + 4, top + 14); ctx.lineTo(x + w + 6, bottom); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = F.machine2; ctx.beginPath(); ctx.moveTo(x - 3, bottom); ctx.lineTo(x + 8, top + 9); ctx.lineTo(x + 30, top + 1); ctx.lineTo(x + 58, top + 13); ctx.lineTo(x + 84, top - 3); ctx.lineTo(x + w + 1, top + 16); ctx.lineTo(x + w + 3, bottom); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = F.machine; ctx.beginPath(); ctx.moveTo(x + 10, top + 12); ctx.lineTo(x + 30, top + 4); ctx.lineTo(x + 52, top + 14); ctx.lineTo(x + 48, top + 30); ctx.lineTo(x + 12, top + 28); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = F.machineLine; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x + 14, top + 20); ctx.lineTo(x + 40, top + 16); ctx.moveTo(x + 60, top + 22); ctx.lineTo(x + 90, top + 14); ctx.stroke();
+    const cx = x + w * 0.66, cy = top + 12, r = 24;
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-0.5);
+    ctx.fillStyle = F.machineLine; ctx.beginPath(); ctx.arc(0, 0, r + 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = F.spiral; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = F.spiralInk; ctx.lineWidth = 5; ctx.beginPath(); for (let k = 0; k <= 50; k++) { const a = (k / 50) * Math.PI * 3.8, rr = 2 + (k / 50) * (r - 5); k ? ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.stroke();
+    ctx.strokeStyle = F.machineLine; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-r, -6); ctx.lineTo(-8, 2); ctx.lineTo(-14, 14); ctx.lineTo(4, r - 2); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = F.funnel2; ctx.save(); ctx.translate(x + 8, top - 4); ctx.rotate(-0.9); ctx.beginPath(); ctx.moveTo(-16, -22); ctx.lineTo(16, -22); ctx.lineTo(5, -4); ctx.lineTo(-5, -4); ctx.closePath(); ctx.fill(); ctx.restore();
+    ctx.fillStyle = F.machine2; for (let k = 0; k < 5; k++) { const bx = x - 30 + k * 40 + hash(k, 3) * 20, br = 3 + hash(k, 5) * 4; ctx.beginPath(); ctx.arc(bx, bottom - br, br, Math.PI, 0); ctx.fill(); }
   }
 }
-export function drawHill(ctx: CanvasRenderingContext2D, w: number, h: number, groundY: number) {
-  ctx.fillStyle = C.body; ctx.beginPath(); ctx.moveTo(0, h); ctx.lineTo(0, groundY + 8); ctx.quadraticCurveTo(w * 0.5, groundY - 24, w, groundY + 8); ctx.lineTo(w, h); ctx.fill();
-  ctx.fillStyle = C.grass; ctx.beginPath(); ctx.moveTo(0, h); ctx.lineTo(0, groundY + 16); ctx.quadraticCurveTo(w * 0.5, groundY - 12, w, groundY + 16); ctx.lineTo(w, groundY + 30); ctx.quadraticCurveTo(w * 0.5, groundY + 2, 0, groundY + 30); ctx.fill();
+export function drawPumpkin(ctx: CanvasRenderingContext2D, p: Pumpkin) {
+  const x = p.x, base = p.y, rx = p.r, ry = p.r * 0.82, cy = base - ry;
+  ctx.fillStyle = F.pumpkinLine; ctx.beginPath(); ctx.ellipse(x, cy, rx + 3, ry + 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = F.pumpkin; ctx.beginPath(); ctx.ellipse(x, cy, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.save(); ctx.clip();
+  ctx.fillStyle = F.pumpkin2; ctx.beginPath(); ctx.ellipse(x + rx * 0.35, cy + ry * 0.35, rx * 0.95, ry * 0.9, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = F.pumpkin; ctx.beginPath(); ctx.ellipse(x - rx * 0.1, cy - ry * 0.12, rx * 0.8, ry * 0.78, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = F.pumpkin2; ctx.lineWidth = 4; for (const k of [-0.62, -0.28, 0.1, 0.5]) { ctx.beginPath(); ctx.ellipse(x + rx * k, cy, rx * 0.34, ry * 0.98, 0, 0, Math.PI * 2); ctx.stroke(); }
+  ctx.fillStyle = F.pumpkinLine; for (let k = 0; k < 7; k++) { ctx.beginPath(); ctx.ellipse(x - rx * 0.7 + hash(k, 8) * rx * 1.5, cy - ry * 0.7 + hash(k, 9) * ry * 1.5, 4 + hash(k, 10) * 4, 3 + hash(k, 11) * 3, hash(k, 12) * 3, 0, Math.PI * 2); ctx.fill(); }
+  ctx.restore();
+  // the door, an arch on the near side
+  const dx = x + rx * 0.12, dw = rx * 0.58, dh = ry * 0.98;
+  ctx.fillStyle = F.pumpkinLine; ctx.beginPath(); ctx.moveTo(dx - dw / 2 - 3, base + 1); ctx.lineTo(dx - dw / 2 - 3, base - dh + dw / 2); ctx.arc(dx, base - dh + dw / 2, dw / 2 + 3, Math.PI, 0); ctx.lineTo(dx + dw / 2 + 3, base + 1); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = F.pumpkinDoor; ctx.beginPath(); ctx.moveTo(dx - dw / 2, base); ctx.lineTo(dx - dw / 2, base - dh + dw / 2); ctx.arc(dx, base - dh + dw / 2, dw / 2, Math.PI, 0); ctx.lineTo(dx + dw / 2, base); ctx.closePath(); ctx.fill();
+  // stem and leaf
+  ctx.strokeStyle = F.pumpkinLine; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 4, cy - ry + 2); ctx.quadraticCurveTo(x - 10, cy - ry - 22, x + 12, cy - ry - 30); ctx.stroke();
+  ctx.strokeStyle = F.pumpkinStem; ctx.lineWidth = 7; ctx.stroke();
+  ctx.save(); ctx.translate(x + 14, cy - ry - 26); ctx.rotate(-0.4); ctx.fillStyle = F.pumpkinStem; ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(16, -14, 34, -2); ctx.quadraticCurveTo(16, 8, 0, 0); ctx.fill(); ctx.strokeStyle = F.pumpkinLine; ctx.lineWidth = 1.8; ctx.stroke(); ctx.restore();
+}
+export function drawStar(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, rot: number, fill: string, line: string) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.beginPath();
+  for (let k = 0; k < 10; k++) { const a = (k / 10) * Math.PI * 2 - Math.PI / 2, rr = k % 2 ? r * 0.45 : r; k ? ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+  ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = line; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.stroke(); ctx.restore();
+}
+export function drawSpiral(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, rot: number, color: string, alpha: number) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = Math.max(2, r * 0.22); ctx.lineCap = 'round'; ctx.beginPath();
+  for (let k = 0; k <= 30; k++) { const a = (k / 30) * Math.PI * 3.6, rr = (k / 30) * r; k ? ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : ctx.moveTo(0, 0); }
+  ctx.stroke(); ctx.restore();
+}
+export function drawSmoke(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, alpha: number, seed: number) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = F.smoke2; ctx.beginPath();
+  for (let k = 0; k < 4; k++) { const a = (k / 4) * Math.PI * 2 + seed, rr = r * (0.55 + hash(seed, k) * 0.25); ctx.moveTo(x + Math.cos(a) * r * 0.45 + rr, y + Math.sin(a) * r * 0.4); ctx.arc(x + Math.cos(a) * r * 0.45, y + Math.sin(a) * r * 0.4, rr, 0, Math.PI * 2); }
+  ctx.fill(); ctx.fillStyle = F.smoke; ctx.beginPath(); ctx.arc(x - r * 0.15, y - r * 0.15, r * 0.6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+}
+
+// ---- screen space: HUD and the notebook cards ------------------------------------------------------------------------
+const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function outlined(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, size: number, align: CanvasTextAlign, fill = F.hud, line = F.hudLine) {
+  ctx.font = `bold ${size}px ${FONT}`; ctx.textAlign = align; ctx.textBaseline = 'alphabetic'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = line; ctx.lineWidth = size * 0.22; ctx.strokeText(text, x, y); ctx.fillStyle = fill; ctx.fillText(text, x, y);
+}
+export function drawHud(ctx: CanvasRenderingContext2D, w: number, eggs: number, total: number, time: number, small: boolean) {
+  const s = small ? 0.8 : 1, top = small ? 30 : 34;
+  drawEgg(ctx, 26 * s + 4, top - 2, -1, 0.95 * s);
+  outlined(ctx, `${eggs}/${total}`, 46 * s + 6, top + 9 * s, 30 * s, 'left');
+  outlined(ctx, fmt(time), w - 56 * s, top + 9 * s, 30 * s, 'right');
+  const cx = w - 30 * s, cy = top - 2;
+  ctx.fillStyle = F.hudLine; ctx.beginPath(); ctx.arc(cx, cy, 15 * s, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx, cy, 12.5 * s, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = F.hudLine; ctx.lineWidth = 2.5 * s; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - 7 * s); ctx.moveTo(cx, cy); ctx.lineTo(cx + 5 * s, cy + 2 * s); ctx.stroke();
+}
+export interface Card { kind: 'start' | 'done'; eggs: number; total: number; time: number; best: boolean }
+export function drawCard(ctx: CanvasRenderingContext2D, w: number, h: number, c: Card, t: number) {
+  ctx.fillStyle = F.backdrop; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = F.backdrop2; ctx.globalAlpha = 0.5; for (let k = 0; k < 6; k++) { const y = (k / 6) * h + Math.sin(k * 3.1) * 8; ctx.fillRect(0, y, w, h / 12); } ctx.globalAlpha = 1;
+  ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(0, 0, w, 3); ctx.fillRect(0, h - 26, w, 26);
+  const pw = Math.min(w * 0.6, 330), ph = Math.min(h * 0.78, 420), px = w / 2 - pw / 2, py = h / 2 - ph / 2 - 8;
+  // the stacked page
+  for (let k = 3; k >= 1; k--) { ctx.save(); ctx.translate(px + pw / 2, py + ph / 2); ctx.rotate(k * 0.012); ctx.fillStyle = k === 1 ? F.paper2 : F.paperLine; ctx.beginPath(); ctx.roundRect(-pw / 2 + k * 3, -ph / 2 + k * 2, pw, ph, 4); ctx.fill(); ctx.restore(); }
+  ctx.fillStyle = F.paper; ctx.beginPath(); ctx.roundRect(px, py, pw, ph, 4); ctx.fill();
+  ctx.strokeStyle = F.paperLine; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = F.paperLine; ctx.globalAlpha = 0.35; for (let y = py + 46; y < py + ph - 10; y += 22) ctx.fillRect(px + 14, y, pw - 28, 1); ctx.globalAlpha = 1;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  const s = Math.min(1, pw / 330);
+  if (c.kind === 'start') {
+    ctx.fillStyle = F.title; ctx.font = `bold ${22 * s}px ${FONT}`; ctx.fillText('Chapter 3:', w / 2, py + 44 * s); ctx.fillText('Seeking Answers', w / 2, py + 72 * s);
+    // a sprout on a cloud
+    const cx = w / 2, cy = py + ph * 0.5;
+    ctx.fillStyle = '#DDE8F2'; cloud(ctx, cx, cy + 30 * s, 120 * s, 0.4); ctx.fillStyle = '#FFFFFF'; cloud(ctx, cx - 4, cy + 26 * s, 110 * s, 0.6);
+    ctx.strokeStyle = '#4FAE32'; ctx.lineWidth = 9 * s; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx - 6 * s, cy + 22 * s); ctx.bezierCurveTo(cx - 10 * s, cy - 10 * s, cx + 30 * s, cy - 40 * s, cx + 8 * s, cy - 58 * s); ctx.stroke();
+    ctx.strokeStyle = '#8CE05A'; ctx.lineWidth = 4 * s; ctx.stroke();
+    ctx.fillStyle = '#4FAE32'; ctx.beginPath(); ctx.ellipse(cx - 20 * s, cy - 8 * s, 18 * s, 8 * s, -0.5, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.ellipse(cx + 22 * s, cy - 30 * s, 16 * s, 7 * s, 0.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = F.text; ctx.font = `bold ${16 * s}px ${FONT}`; ctx.fillText('Score: 0', w / 2, py + ph - 52 * s);
+    drawEgg(ctx, w / 2 - 30 * s, py + ph - 26 * s, -1, 0.6 * s); ctx.fillStyle = F.text; ctx.fillText(`0/${c.total}`, w / 2 + 12 * s, py + ph - 20 * s);
+    ctx.fillStyle = '#F2E4C4'; ctx.font = `bold 13px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText('Select', 14, h - 9); ctx.textAlign = 'right'; ctx.fillText('Back', w - 14, h - 9);
+    ctx.fillStyle = '#8CE05A'; ctx.globalAlpha = 0.6 + Math.sin(t * 4) * 0.3; ctx.beginPath(); ctx.moveTo(px - 26, py + ph / 2 - 8); ctx.lineTo(px - 10, py + ph / 2); ctx.lineTo(px - 26, py + ph / 2 + 8); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(px + pw + 26, py + ph / 2 - 8); ctx.lineTo(px + pw + 10, py + ph / 2); ctx.lineTo(px + pw + 26, py + ph / 2 + 8); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+  } else {
+    ctx.fillStyle = '#E8341C'; ctx.font = `bold ${20 * s}px ${FONT}`; ctx.fillText('Chapter completed!', w / 2, py + 40 * s);
+    drawEgg(ctx, w / 2 - 40 * s, py + 84 * s, -1, 0.7 * s); ctx.fillStyle = F.text; ctx.font = `bold ${17 * s}px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(`${c.eggs}/${c.total}`, w / 2 - 20 * s, py + 90 * s);
+    ctx.fillStyle = F.hudLine; ctx.beginPath(); ctx.arc(w / 2 - 40 * s, py + 120 * s, 11 * s, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(w / 2 - 40 * s, py + 120 * s, 9 * s, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = F.hudLine; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(w / 2 - 40 * s, py + 120 * s); ctx.lineTo(w / 2 - 40 * s, py + 114 * s); ctx.moveTo(w / 2 - 40 * s, py + 120 * s); ctx.lineTo(w / 2 - 36 * s, py + 122 * s); ctx.stroke();
+    ctx.fillStyle = F.text; ctx.fillText(fmt(c.time), w / 2 - 20 * s, py + 126 * s);
+    ctx.textAlign = 'center'; if (c.best) { ctx.fillStyle = F.text; ctx.font = `bold ${15 * s}px ${FONT}`; ctx.fillText('New high score!', w / 2, py + 160 * s); }
+    ctx.fillStyle = '#F2E4C4'; ctx.font = `bold 13px ${FONT}`; ctx.fillText('OK', w / 2, h - 9);
+  }
+}
+/** The small softkey arrow in the corner of the original's screen. */
+export function drawCorner(ctx: CanvasRenderingContext2D, w: number, h: number) {
+  ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.beginPath(); ctx.moveTo(w - 22, h - 16); ctx.lineTo(w - 10, h - 16); ctx.lineTo(w - 16, h - 9); ctx.closePath(); ctx.fill();
 }

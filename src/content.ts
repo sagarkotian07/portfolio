@@ -49,10 +49,10 @@ export const links = {
 };
 
 export const game = {
-  title: 'Bounce.',
-  intro: 'A red ball in a sky forest. Climb the vines, collect the eggs, find the flower at the top.',
+  title: 'Bounce Tales.',
+  intro: 'Chapter 3, Seeking Answers. A red ball, a sky forest, thirty eggs and a machine that has drained the colour out of the far end.',
   controls: 'arrows or A D to roll · space to jump · the Nokia keys 4 6 5 work too',
   touch: 'hold the arrows to roll, tap the dot to jump',
-  win: (eggs: number, total: number, time: string) => `You bounced through. ${eggs} of ${total} eggs in ${time}.`,
-  winLine: 'The flower says thanks.',
+  win: (eggs: number, total: number, time: string) => `Chapter completed. ${eggs} of ${total} eggs in ${time}.`,
+  winLine: 'The colour came back.',
 };

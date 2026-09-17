@@ -132,11 +132,7 @@
       <div class="wrap chapter__grid">
         <p class="chapter__head">Play</p>
         <div class="game__stage" id="game-stage" style="background:#5EC5F5">
-          <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce, a ball platformer in a sky forest. Arrow keys to roll, space to jump."></canvas>
-          <div class="game__hud" id="hud" aria-live="off">
-            <span class="hud__eggs"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2c5 0 9.5 8.5 9.5 15.5S17.5 28 12 28 2.5 24.5 2.5 17.5 7 2 12 2z" fill="#F6C15A" stroke="#8A5A2B" stroke-width="2"/><path d="M14 6c4 3 6 9 5.5 14-1 5-4 7-7 7 5-2 6-8 5-13-1-4-2-6-3.5-8z" fill="#DE9A3C"/><ellipse cx="8.5" cy="10" rx="2.2" ry="3.5" transform="rotate(-20 8.5 10)" fill="#FDEBB9"/></svg><b id="hud-eggs">0/0</b></span>
-            <span class="hud__time"><b id="hud-time">0:00</b><svg class="hud__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#102A1B" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="#102A1B" stroke-width="2.2" stroke-linecap="round"/></svg></span>
-          </div>
+          <canvas class="game__canvas" id="game-canvas" tabindex="0" aria-label="Bounce Tales, chapter 3: a ball platformer in a sky forest. Arrow keys to roll, space to jump."></canvas>
           <div class="game__touch" id="game-touch" aria-hidden="true">
             <div class="touch__pad">
               <button type="button" data-key="left" aria-label="Roll left"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 3L5 10l9 7z" fill="currentColor"/></svg></button>
@@ -145,22 +141,17 @@
             <button type="button" class="touch__jump" data-key="jump" aria-label="Jump"><i></i></button>
           </div>
           <div class="game__overlay" id="game-start">
-            <div class="plate">
-              <p class="chapter__head">Play</p>
+            <div class="softbar">
               <h2 class="game__title" id="game-title"></h2>
-              <p class="game__intro" id="game-intro"></p>
-              <button class="key key--ball key--big" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
               <p class="game__controls" id="game-controls"></p>
+              <button class="key key--ball" id="game-play" type="button" data-magnetic data-cursor="play">Start</button>
             </div>
           </div>
           <div class="game__overlay" id="game-end" hidden>
-            <div class="plate">
-              <p class="chapter__head" id="game-end-label"></p>
-              <h2 class="game__title game__title--sm" id="game-end-title"></h2>
-              <p class="game__intro" id="game-end-line"></p>
-              <div class="game__actions">
-                <button class="key key--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
-              </div>
+            <div class="softbar">
+              <h2 class="game__title" id="game-end-title"></h2>
+              <p class="game__controls" id="game-end-line"></p>
+              <button class="key key--ball" id="game-again" type="button" data-magnetic data-cursor="play">Play again</button>
             </div>
           </div>
           <button class="game__leave" id="game-leave" type="button" hidden aria-label="Leave the game (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>

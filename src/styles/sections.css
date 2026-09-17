@@ -11,21 +11,8 @@ html.is-playing .game__stage { min-height: 0; }
 .game__stage::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--forest); pointer-events: none; z-index: 5; }
 .game__canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; outline: none; }
 html.is-playing .game__canvas:focus-visible { outline: none; }
-.game__hud {
-  position: absolute; top: 14px; left: 14px; right: 14px; z-index: 3; display: flex; align-items: flex-start; justify-content: space-between; pointer-events: none;
-  font-weight: 700; font-size: var(--step-0); font-variant-numeric: tabular-nums; color: var(--forest);
-}
-.hud__eggs, .hud__time { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px 0 9px; border-radius: 999px; background: var(--leaf); box-shadow: 0 2px 0 rgba(16, 42, 27, 0.3); transition: margin 0.3s var(--ease); }
-.hud__eggs svg { width: 17px; height: 21px; }
-.hud__time { padding: 0 9px 0 12px; }
-.hud__clock { width: 18px; height: 18px; }
-html.is-playing .hud__time { margin-right: 46px; }
-html.is-playing .game__hud { top: max(14px, env(safe-area-inset-top)); }
 .game__leave { position: absolute; right: 14px; top: 14px; z-index: 3; width: 36px; height: 36px; border-radius: 50%; background: var(--leaf); color: var(--forest); display: grid; place-items: center; box-shadow: 0 2px 0 rgba(16, 42, 27, 0.3); transition: background 0.2s, transform 0.2s; }
 .game__leave[hidden] { display: none; }
-/* the counters only matter while playing; idle, the window shows the level and the plate */
-.game__hud { opacity: 0; transition: opacity 0.3s var(--ease), top 0.3s var(--ease); }
-html.is-playing .game__hud { opacity: 1; }
 html.is-playing .game__leave { top: max(14px, env(safe-area-inset-top)); }
 .game__leave svg { width: 16px; height: 16px; }
 .game__leave:hover { background: var(--egg); }
@@ -46,23 +33,19 @@ html.is-playing.has-touch .game__touch { display: flex; }
 .touch__pad button:active, .touch__jump:active, .touch__pad button.is-down, .touch__jump.is-down { transform: translateY(4px); box-shadow: inset 0 0 0 2px var(--forest), 0 1px 0 0 var(--forest); background: var(--egg); }
 .touch__jump { width: 74px; height: 74px; border-radius: 50%; }
 .touch__jump i { width: 30px; height: 30px; border-radius: 50%; background: var(--ball); box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.18); }
-/* the plate: the start and win cards belong to the page, the level stays visible behind */
-.game__overlay { position: absolute; inset: 0; z-index: 3; display: flex; align-items: flex-end; justify-content: flex-end; padding: clamp(14px, 2.5vw, 32px); pointer-events: none; }
+/* the softkey bar: the chapter card is drawn on the canvas, the page only adds its key under it */
+.game__overlay { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: center; padding: 0 clamp(14px, 2.5vw, 32px) clamp(14px, 2.5vw, 28px); pointer-events: none; }
 .game__overlay[hidden] { display: none; }
-.plate {
-  pointer-events: auto; display: grid; gap: 14px; justify-items: start; width: min(100%, 580px);
-  background: var(--leaf); color: var(--forest); border-radius: var(--r-l); padding: clamp(20px, 3vw, 34px) clamp(20px, 3vw, 36px) clamp(20px, 3vw, 30px);
-  box-shadow: inset 0 0 0 2px var(--forest), 0 24px 50px -24px rgba(16, 42, 27, 0.55);
+.softbar {
+  pointer-events: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; max-width: 720px;
+  background: var(--leaf); color: var(--forest); border-radius: 999px; padding: 8px 8px 8px 20px;
+  box-shadow: inset 0 0 0 2px var(--forest), 0 18px 40px -20px rgba(16, 42, 27, 0.6);
 }
-.game__title { font-family: var(--font-display); font-weight: 400; font-size: var(--step-game); line-height: 0.9; letter-spacing: -0.01em; }
-.game__title--sm { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.4rem); line-height: 1.08; max-width: 22ch; }
-.game__intro { font-size: var(--step-1); line-height: 1.4; max-width: 34ch; }
+.game__title { font-family: var(--font-display); font-weight: 400; font-size: var(--step-1); line-height: 1; letter-spacing: -0.01em; white-space: nowrap; }
 .game__controls { font-weight: 500; color: var(--moss); font-size: var(--step--1); }
-.game__actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.plate .key { margin-top: 4px; }
 .game__stage.is-shaking { animation: shake 0.28s linear; }
 @keyframes shake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-6px, 3px); } 40% { transform: translate(5px, -3px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(3px, -2px); } }
-@media (max-width: 719px) { .game__overlay { align-items: flex-end; } .plate { width: 100%; gap: 10px; } }
+@media (max-width: 719px) { .softbar { width: 100%; border-radius: var(--r-l); padding: 12px 14px; } .game__controls { display: none; } }
 
 /* ---------- work: the map and four stops ---------- */
 .levelmap { position: relative; margin-top: clamp(20px, 3vw, 36px); }
