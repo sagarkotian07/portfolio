@@ -33,11 +33,11 @@ export function buildLevel(): Level {
   S.push(island(175.8, 179.8, 8.4)); // checkpoint 8
   S.push(island(181, 184.8, 9.0));
   // ---- beat 12: the second hill with the plateau and the drop ---------------------------------------------------
-  S.push(hill([[185.2, 10.2], [186.4, 9.3], [187.6, 8.3], [188.8, 7.5], [190, 6.95], [191, 6.65], [192.2, 6.6], [193.6, 6.6], [194.7, 6.62], [195.1, 6.9]], 17.5));
+  S.push(hill([[185.2, 10.2], [186.4, 9.3], [187.6, 8.3], [188.8, 7.5], [190, 6.95], [191, 6.65], [192.2, 6.6], [193.6, 6.6], [194.3, 6.62], [194.6, 6.9]], 17.5));
   S.push(island(186.8, 189.8, 2.4)); // the red flower island over the shaft
   // ---- beat 13: the shaft ---------------------------------------------------------------------------------------
-  S.push(ledge(196.6, 199.1, 9.6)); S.push(ledge(200.6, 203.1, 12.8)); S.push(ledge(196.9, 199.4, 16)); S.push(ledge(200.9, 203.4, 19.2));
-  S.push(ledge(197.1, 199.6, 22.4)); S.push(ledge(201.1, 203.6, 25.6));
+  S.push(ledge(197.4, 199.9, 9.6)); S.push(ledge(201, 203.5, 12.8)); S.push(ledge(197.7, 200.2, 16)); S.push(ledge(201.2, 203.7, 19.2));
+  S.push(ledge(197.9, 200.4, 22.4)); S.push(ledge(201.3, 203.8, 25.6));
   // ---- beats 15 to 16: the purple floor, the cliffs, the staircase (2.4 diameter rises) --------------------------------
   S.push(slab('ground', 186, 232.5, 34, 4.5));
   S.push(cliff(186, 191.6, 26, 34.6));
@@ -51,7 +51,7 @@ export function buildLevel(): Level {
   S.push(island(219.3, 222, 1.5, 1.1));
 
   const segs = segmentsOf(S);
-  const eggsD: [number, number][] = [[1.9, -0.05], [5.3, -2.4], [14, 3.0], [21.5, 9.9], [31.5, 7.3], [36, 5.5], [40.5, 3.7], [49.5, 8.5], [58.6, 6.4], [62, 7.9], [77.4, 6.2], [86.3, 6.9], [93.7, 6.6], [98.4, 6.5], [103.8, 6.4], [109.3, 6.3], [127.7, 12.1], [142.6, 9.2], [150.3, 7.4], [164.1, 7.3], [174.9, 7.4], [197.8, 8.7], [201.8, 11.9], [198.3, 21.5], [211.8, 28.3], [211.8, 23.5], [206.5, 21.1], [211.8, 13.9], [206.5, 11.5], [225.4, 7.3]];
+  const eggsD: [number, number][] = [[1.9, -0.05], [5.3, -2.4], [14, 3.0], [21.5, 9.9], [31.5, 7.3], [36, 5.5], [40.5, 3.7], [49.5, 8.5], [58.6, 6.4], [62, 7.9], [77.4, 6.2], [86.3, 6.9], [93.7, 6.6], [98.4, 6.5], [103.8, 6.4], [109.3, 6.3], [127.7, 12.1], [142.6, 9.2], [150.3, 7.4], [164.1, 7.3], [174.9, 7.4], [198.6, 8.7], [202.2, 11.9], [199.1, 21.5], [211.8, 28.3], [211.8, 23.5], [206.5, 21.1], [211.8, 13.9], [206.5, 11.5], [225.4, 7.3]];
   const eggs: Egg[] = eggsD.map(([x, y], i) => ({ x: x * D, y: y * D, taken: false, t: hash(i, 9) * 6 }));
   // checkpoints in route order; each is a white flower's base
   const cps: [number, number][] = [[0, 0.45], [31.5, 8.0], [61.6, 8.6], [66.2, 7.6], [81.0, 7.65], [112, 6.45], [149.6, 8.2], [161.4, 8.0], [177.8, 8.4], [192.8, 6.6], [195.4, 34]];
@@ -60,7 +60,7 @@ export function buildLevel(): Level {
   cps.slice(1).forEach(([x, y], i) => flowers.push({ x: x * D, y: y * D, kind: 'white', seed: hash(x, y), checkpoint: i + 1 }));
   const reds: [number, number][] = [[4.3, 0.98], [13, 3.15], [25.5, 10.15], [35, 10.4], [73.6, 7.6], [84.5, 7.65], [131.5, 11.1], [156.2, 9.2], [167, 9.0], [182.9, 9.0], [187, 8.85], [188.3, 2.4], [213.5, 34]];
   for (const [x, y] of reds) flowers.push({ x: x * D, y: y * D, kind: 'red', seed: hash(y, x) });
-  const signs: Sign[] = [[56.2, 6.9, 'warn'], [91.2, 7.65, 'warn'], [194.1, 6.6, 'down'], [189, 26, 'down'], [206.5, 34, 'up'], [224, 34, 'warn']].map(([x, y, f]) => ({ x: (x as number) * D, y: (y as number) * D, face: f as Sign['face'], seed: hash(x as number, 3) }));
+  const signs: Sign[] = [[56.2, 6.9, 'warn'], [91.2, 7.65, 'warn'], [193.7, 6.6, 'down'], [189, 26, 'down'], [206.5, 34, 'up'], [224, 34, 'warn']].map(([x, y, f]) => ({ x: (x as number) * D, y: (y as number) * D, face: f as Sign['face'], seed: hash(x as number, 3) }));
   const bushes: Bush[] = [[2.8, 0.98, 1], [12, 3.15, 0.9], [23, 10.2, 0.8], [70, 7.6, 1.1], [88.5, 7.65, 0.9], [126, 12.8, 0.9], [129, 12.85, 0.7], [134.6, 12.85, 0.8], [197.6, 34, 0.9], [210.5, 34, 1], [219, 34, 0.8]].map(([x, y, s]) => ({ x: x * D, y: y * D, seed: hash(x, y), size: s }));
   // background: pale stalks on little islands, placed along the route with jitter, plus a column either side of the shaft
   const profile: [number, number][] = [[-8, 1], [0, 1], [12, 3.5], [22, 10.5], [40, 4.5], [55, 8], [75, 7.6], [95, 8], [112, 6.4], [130, 12], [150, 8.5], [175, 8.5], [190, 6.6], [196, 12]];
@@ -75,7 +75,7 @@ export function buildLevel(): Level {
     machine: { x: 219 * D, y: 5.8 * D, w: 3 * D, h: 2.2 * D, destroyed: false, contact: 0, trunk: { x: 220.65 * D, y: 1.5 * D } },
     pumpkin: { x: 227.6 * D, y: 8 * D, r: 2.3 * D },
     kills: [{ x0: -10 * D, x1: 191.9 * D, y: 17.6 * D }, { x0: -10 * D, x1: 246 * D, y: 41 * D }],
-    start: { x: 0, y: 0 }, corruptY: PARAMS.corruptY * D, eggTotal: eggs.length,
+    start: { x: 0, y: 0 }, corruptY: PARAMS.corruptY * D, corruptX: 194 * D, eggTotal: eggs.length,
   };
   return L;
 }

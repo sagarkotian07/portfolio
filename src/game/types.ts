@@ -32,7 +32,7 @@ export interface Level {
   solids: Solid[]; segs: Seg[];
   eggs: Egg[]; flowers: Flower[]; checkpoints: Checkpoint[]; signs: Sign[]; bushes: Bush[]; bg: BgItem[];
   plank: Plank; machine: Machine; pumpkin: Pumpkin; kills: KillZone[];
-  start: Pt; corruptY: number; eggTotal: number;
+  start: Pt; corruptY: number; corruptX: number; eggTotal: number;
 }
 
 export interface InputState { left: boolean; right: boolean; jumpPressed: boolean; jumpHeld: boolean }

@@ -50,7 +50,11 @@ export function vine(w: number, ctrl: [number, number][]): Solid {
 }
 /** A closed polygon from control points in diameters, smoothed unless `sharp`. Grass grows on every upward-facing run. */
 export function poly(role: PolyRole, ctrl: [number, number][], sharp = false): Solid {
-  let pts = sharp ? ctrl.map(([x, y]) => P(x, y)) : spline(ctrl.map(([x, y]) => P(x, y)), true);
+  return polyPts(role, sharp ? ctrl.map(([x, y]) => P(x, y)) : spline(ctrl.map(([x, y]) => P(x, y)), true));
+}
+/** A polygon from points already in px. */
+export function polyPts(role: PolyRole, raw: Pt[]): Solid {
+  let pts = raw;
   if (area(pts) < 0) pts = pts.slice().reverse();
   const id = nextId++;
   const bb = bbox(pts);
@@ -96,8 +100,10 @@ export function cliff(x0: number, x1: number, top: number, bottom: number): Soli
 }
 /** A hill or ridge: the top profile is given, the shape is closed straight down to `bottom`. */
 export function hill(profile: [number, number][], bottom: number): Solid {
-  const first = profile[0], last = profile[profile.length - 1];
-  return poly('hill', [...profile, [last[0] + 0.02, bottom], [first[0] - 0.02, bottom]]);
+  // the top is a smooth curve; the sides drop straight down so the edges are crisp
+  const top = spline(profile.map(([x, y]) => P(x, y)));
+  const first = top[0], last = top[top.length - 1];
+  return polyPts('hill', [...top, { x: last.x, y: bottom * D }, { x: first.x, y: bottom * D }]);
 }
 
 // ---- segment index ------------------------------------------------------------------------------------------------

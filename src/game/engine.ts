@@ -27,6 +27,8 @@ export class Game {
   corrupted = false; private flicker = 0; private best = false;
   private wps: Waypoint[] = []; private wpi = 0; private holdT = 0; private afterWait = false; private braking = false;
   private raf = 0; private last = 0; private visible = false;
+  /** Tests set this so the page's own frame loop leaves the scripted ticks alone. */
+  paused = false;
   private near: Seg[] = [];
   readonly input: InputState = { left: false, right: false, jumpPressed: false, jumpHeld: false };
 
@@ -92,7 +94,7 @@ export class Game {
   private loop(now: number) {
     this.raf = requestAnimationFrame(this.loop);
     const dt = Math.min(0.033, (now - this.last) / 1000 || 0.016); this.last = now;
-    if (!this.visible || document.hidden) return;
+    if (!this.visible || document.hidden || this.paused) return;
     this.tick(dt); this.draw();
   }
 
@@ -158,7 +160,7 @@ export class Game {
     L.checkpoints.forEach((c, i) => { if (!c.hit && Math.abs(c.x - this.x) < 1.1 * D && c.y - this.y < 2.2 * D && c.y - this.y > -0.9 * D) { c.hit = true; this.cpIndex = Math.max(this.cpIndex, i); this.ring(this.x, this.y, 10); } });
     for (const k of L.kills) if (this.x > k.x0 && this.x < k.x1 && this.y > k.y) { this.die(); return; }
     if (this.y > L.y0 + L.h) { this.die(); return; }
-    if (!this.corrupted && !L.machine.destroyed && this.y > L.corruptY) this.corrupted = true;
+    if (!this.corrupted && !L.machine.destroyed && this.y > L.corruptY && this.x > L.corruptX) this.corrupted = true;
     // the pumpkin's door
     const pk = L.pumpkin, doorX = pk.x + pk.r * 0.12;
     if (this.state === 'running' && this.x > doorX - 6 && Math.abs(this.y - (pk.y - R)) < 1.6 * D) { this.state = 'won'; this.wonT = 0; this.best = this.saveBest(); this.hooks.onWin(this.eggs, L.eggTotal, this.time); }
