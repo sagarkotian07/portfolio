@@ -21,7 +21,7 @@ export const stops: Stop[] = [
 export type Project = { id: string; title: string; line: string; label: string; url: string; cta: string; repo?: string } &
   ({ kind: 'video'; preview: string; poster: 'posterInvoice' } | { kind: 'site'; image: 'bengaluruRun' | 'desilingo' });
 export const projects: Project[] = [
-  { id: 'invoice-po', kind: 'video', preview: '/video/invoice-po-preview.mp4', poster: 'posterInvoice', url: 'https://screen.studio/share/62w9eq8a', cta: 'Watch', label: 'demo',
+  { id: 'invoice-po', kind: 'video', preview: '/video/invoice-po-preview.mp4', poster: 'posterInvoice', url: 'https://screen.studio/share/62w9eq8a', repo: 'https://github.com/sagarkotian07/invoice-decision-pipeline', cta: 'Watch', label: 'demo',
     title: 'Invoice to PO reconciliation', line: 'Drop in invoices and purchase orders. It matches them so nobody has to.' },
   { id: 'desilingo', kind: 'site', image: 'desilingo', url: 'https://desilingo-omega.vercel.app/', repo: 'https://github.com/sagarkotian07/desilingo', cta: 'Open', label: 'live',
     title: 'Desilingo', line: 'Learn Indian languages by ear. Say a phrase and it tells you which word slipped.' },
