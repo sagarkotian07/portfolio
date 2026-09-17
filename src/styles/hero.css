@@ -22,8 +22,10 @@ html.is-playing .nav { opacity: 0; pointer-events: none; }
 .nav__links a:hover::after, .nav__links a:focus-visible::after { transform: scaleX(1); }
 @media (max-width: 479px) { .nav__logo span { display: none; } .nav__links { gap: 12px; font-size: 0.82rem; } }
 
-/* ---------- hero: the person, then the ball on the line ---------- */
+/* ---------- hero: a line he lives by, then the person, then the ball on the line ---------- */
 .hero { position: relative; padding-top: clamp(96px, 14vh, 150px); }
+/* no max-width: it sits on one line on a desktop, and balance keeps the phone's two lines even */
+.hero__quote { font-weight: 500; font-size: var(--step--1); color: var(--moss); margin-bottom: clamp(14px, 2vw, 22px); text-wrap: balance; }
 .hero__name { font-family: var(--font-display); font-weight: 400; font-size: var(--step-name); line-height: 0.9; letter-spacing: -0.015em; display: flex; flex-wrap: wrap; column-gap: 0.22em; }
 .hero__line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
 .hero__word { display: block; will-change: transform; }

@@ -3,6 +3,7 @@
 export const hero = {
   first: 'Sagar',
   last: 'Kotian',
+  quote: '“Having fun is the greatest competitive advantage there is.”',
   line: 'I like the part of a startup where nothing has an owner yet.',
   photoAlt: 'Sagar Kotian in a dark blazer, smiling, in front of a wall of green ivy.',
   hint: 'press space to play',
